@@ -1,0 +1,134 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: i8sans,"Helvetica Neue","Arial",sans-serif;
+	font-size: 16px;
+}
+
+#main {
+	padding: 20px 20px 0 50px;
+}
+
+#menu {
+	width: 100%;
+    float: left;
+}
+
+#content {
+	width: 100%;
+    float: left;
+	padding: 20px 0 0 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: stretch;
+	flex-grow: 1;
+}
+
+#bottom-menu {
+	width: 100%;
+    float: left;
+	padding: 20px 0;	
+}
+
+#read-more {
+	color: #767676;
+	font-size: 12px;
+}
+
+.entry {
+	flex-basis: 12%;
+	margin: 20px 40px 20px 0;
+	flex-grow: 1;
+	max-width: 20%;
+}
+
+.entry.long {
+	flex-basis: 15%;
+	max-width: 25%;
+}
+
+.entry.verylong {
+	flex-basis: 18%;
+	max-width: 30%;
+}
+
+.entry.veryverylong {
+	flex-basis: 25%;
+	max-width: 40%;
+}
+
+.entry .title {
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+}
+
+.entry .title a {
+	color: #000000;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	text-decoration: none;
+}
+
+.entry .description {
+	font-size: 14px;
+}
+
+.entry .description img {
+	max-width: 90%;
+	height: auto;
+    margin: 0 auto;
+}
+
+.entry .description font {
+	color: #000000 !important;
+}
+
+.entry .description p {
+	margin: 0;
+}
+
+.entry .description code {
+	font-family: inherit;
+}
+
+.entry .description blockquote {
+	font-style: italic;
+    color: #767676;
+	margin: 0;
+}
+
+.entry .description h1,
+.entry .description h2 {
+	font-size: 14px;
+    margin: 0;
+}
+
+.entry .description ol {
+	margin: 0;
+    padding: 0 0 0 20px;
+}
+
+.menu-item {
+	padding: 10px 0;
+	margin: 0 20px 0 0;
+	display: flex;
+	float: left;
+}
+
+.menu-item.empty {
+	opacity: 0.6;
+}
+
+.menu-item .title {
+	font-size: 14px;
+	margin: auto 0;
+}
+
+.menu-item .counter {
+	font-size: 12px;
+	font-weight: bold;
+	margin: auto 0 auto 10px;
+	background: #fffada;
+    padding: 2px 4px;
+}
