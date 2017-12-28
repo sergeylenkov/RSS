@@ -203,7 +203,7 @@ $(document).ready(function() {
 		addFeed();
 	});
 
-	$("menu-channels-add-form-link").onfocus(function() {
+	$("menu-channels-add-form-link").on("focus", function() {
 		if ($(this).hasClass("error")) {
 			$(this).removeClass("error");
 			$(this).val($(this).attr("link"));
