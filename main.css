@@ -5,13 +5,24 @@ html, body {
 	font-size: 16px;
 }
 
+input {
+	font-weight: normal;
+    font-family: i8sans,"Helvetica Neue","Arial",sans-serif;
+}
+
 #main {
 	padding: 20px 20px 0 50px;
 }
 
-#menu {
+#header {
 	width: 100%;
     float: left;
+}
+
+#menu {
+	width: 100%;
+	float: left;
+	display: flex;
 }
 
 #content {
@@ -36,26 +47,64 @@ html, body {
 	font-size: 12px;
 }
 
+.main-title {
+	float: left;
+	font-size: 28px;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+}
+
+#reload-button {
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin: 0 0 0 10px;
+	cursor: pointer;
+	stroke: #000000;
+	stroke-width: 2px;
+	fill: none;
+}
+
+#reload-button > svg {
+	width: 100%;
+    height: 100%;
+}
+
+#reload-button.active {
+	opacity: 0.6;
+	pointer-events: none;
+	animation: spin 2s linear infinite;
+}
+
+.hidden {
+	display: none !important;
+}
+
 .entry {
-	flex-basis: 12%;
+	flex-basis: 220px;
 	margin: 20px 40px 20px 0;
 	flex-grow: 1;
-	max-width: 20%;
+	max-width: 400px;
+	min-width: 220px;
+}
+
+.entry.read {
+	opacity: 0.6;
 }
 
 .entry.long {
-	flex-basis: 15%;
-	max-width: 25%;
+	flex-basis: 300px;
+	max-width: 500px;
 }
 
 .entry.verylong {
-	flex-basis: 18%;
-	max-width: 30%;
+	flex-basis: 400px;
+	max-width: 500px;
 }
 
 .entry.veryverylong {
-	flex-basis: 25%;
-	max-width: 40%;
+	flex-basis: 500px;
+	max-width: 800px;
 }
 
 .entry .title {
@@ -109,11 +158,19 @@ html, body {
     padding: 0 0 0 20px;
 }
 
+#menu-channels {
+	margin: auto 20px auto 0;
+	display: flex;
+}
+
+#menu-channels:empty {
+	display: none;
+}
+
 .menu-item {
 	padding: 10px 0;
-	margin: 0 20px 0 0;
+	margin: auto 20px auto 0;
 	display: flex;
-	float: left;
 }
 
 .menu-item.empty {
@@ -131,4 +188,63 @@ html, body {
 	margin: auto 0 auto 10px;
 	background: #fffada;
     padding: 2px 4px;
+}
+
+#menu-channels-edit {
+	margin: auto 0;
+	display: flex;
+}
+
+.menu-channels-item {
+	padding: 0;
+	margin: auto 15px auto 0;
+	display: flex;
+	cursor: pointer;
+}
+
+.menu-channels-item .icon {
+	width: 16px;
+	height: 16px;
+	stroke: #000000;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.menu-channels-item .icon > svg {
+	width: 100%;
+	height: 100%;
+}
+
+#menu-channels-add-form {
+	display: flex;
+}
+
+#menu-channels-add-form.disabled {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+#menu-channels-add-form-link {
+    width: 300px;
+    margin: auto 20px auto 0;
+    font-size: 14px;
+}
+
+#menu-channels-add-form-link.error {
+	color: #ce1616;
+}
+#menu-channels-item-add.menu-channels-item .icon {
+	width: 18px;
+	height: 18px;
+}
+
+#menu-channels-item-edit.menu-channels-item.active .icon {
+	stroke: #2f74f1;
+}
+
+
+@keyframes spin { 
+	100% { 
+		transform: rotate(360deg);
+	}
 }

@@ -13,10 +13,22 @@
 <body>
 	<div id="main">
 		<div id="header">
-			<h2>RSS Reader</h2>
+			<div class="main-title">RSS Reader</div>
+			<div id="reload-button"><svg><use xlink:href="img/icons.svg#refresh"></use></svg></div>
 		</div>		
 		
-		<div id="menu"></div>
+		<div id="menu">
+			<div id="menu-channels"></div>
+			<div id="menu-channels-edit">
+				<div id="menu-channels-item-add" class="menu-channels-item"><div class="icon"><svg><use xlink:href="img/icons.svg#add"></use></svg></div></div>
+				<div id="menu-channels-item-edit" class="menu-channels-item"><div class="icon"><svg><use xlink:href="img/icons.svg#edit"></use></svg></div></div>
+				<div id="menu-channels-add-form">
+					<input id="menu-channels-add-form-link" placeholder="ссылка на канал" type="text"/>
+					<div id="menu-channels-add-form-add" class="menu-channels-item"><div class="icon"><svg><use xlink:href="img/icons.svg#add"></use></svg></div></div>
+					<div id="menu-channels-add-form-close" class="menu-channels-item"><div class="icon"><svg><use xlink:href="img/icons.svg#x"></use></svg></div></div>
+				</div>
+			</div>
+		</div>
 		<div id="content">
 		</div>
 		<div id="bottom-menu">
