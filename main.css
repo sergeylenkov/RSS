@@ -45,6 +45,7 @@ input {
 #read-more {
 	color: #767676;
 	font-size: 12px;
+	cursor: pointer;
 }
 
 .main-title {
@@ -233,6 +234,7 @@ input {
 #menu-channels-add-form-link.error {
 	color: #ce1616;
 }
+
 #menu-channels-item-add.menu-channels-item .icon {
 	width: 18px;
 	height: 18px;
@@ -241,7 +243,6 @@ input {
 #menu-channels-item-edit.menu-channels-item.active .icon {
 	stroke: #2f74f1;
 }
-
 
 @keyframes spin { 
 	100% { 

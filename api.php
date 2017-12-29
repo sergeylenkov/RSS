@@ -37,7 +37,28 @@ if ($_GET["action"] == "new") {
 		$channel["count"] = count($newItems);
 	}
 	
-	echo json_encode(array("channels" => $channels, "entries" => $items));
+	$total = $db->query("SELECT COUNT(*) FROM entries")->fetch();
+
+	echo json_encode(array("channels" => $channels, "items" => $items, "total" => $total[0]));
+}
+
+if ($_GET["action"] == "news_all") {
+	global $db;
+	$items = array();
+	$limit = $_GET["to"] - $_GET["from"];
+
+	foreach ($db->query("SELECT * FROM entries ORDER BY id DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
+		$items[] = array("id" => $row["id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "date" => $row["date"]);
+	}
+
+	echo json_encode($items);
+}
+
+if ($_GET["action"] == "mark_as_read") {
+	$statement = $db->prepare("UPDATE entries SET read = ? WHERE id = ?");
+	$statement->execute(array(true, $_GET["id"]));
+
+	echo json_encode(array("id" => $_GET["id"], "read" => true));
 }
 
 if ($_GET["action"] == "feed_add") {
@@ -88,14 +109,18 @@ function addFeed($link) {
 function addEntry($feed, $entry) {
 	global $db;
 
-	$result = $db->query("SELECT guid FROM entries WHERE feed_id = " . $feed . " AND guid = '" . $entry["guid"] . "'")->fetch();
+	$result = $db->query("SELECT id FROM entries WHERE feed_id = " . $feed . " AND guid = '" . $entry["guid"] . "'")->fetch();
 
 	if (empty($result)) {
 		$statement = $db->prepare("INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		$statement->execute(array($feed, $entry["guid"], $entry["link"], $entry["title"], $entry["description"], false, false, false, $entry["date"]));
 
+		$entry["id"] = $db->lastInsertId();
+
 		return true;
 	}
+
+	$entry["id"] = $result["id"];
 
 	return false;
 }
@@ -135,50 +160,45 @@ function parseChannel($xml) {
 function parseItems($xml) {
 	$entries = array();
 
-	foreach ($xml->channel->item as $entry) {			
-		$title = "";
-		$description = "";
-		$guid = "";
-		$link = "";
+	foreach ($xml->channel->item as $item) {
+		$entry = array("id" => "-1", "title" => "", "description" => "", "guid" => "", "link" => "", "date" => date('Y-m-d H:i:s'));			
+		
+		if ($item->title instanceof \SimpleXMLElement) {
+			$entry["title"] = (string)$item->title[0];						
+		} else {
+			$entry["title"] = $item->title;
+		}
+		
+		if ($item->description instanceof \SimpleXMLElement) {
+			$entry["description"] = (string)$item->description[0];
+		} else {
+			$entry["description"] = $item->description;
+		}
+
+		if ($item->guid instanceof \SimpleXMLElement) {
+			$entry["guid"] = (string)$item->guid[0];
+		} else {
+			$entry["guid"] = $item->guid;
+		}
+		
+		if ($item->link instanceof \SimpleXMLElement) {
+			$entry["link"] = (string)$item->link[0];
+		} else {
+			$entry["link "]= $item->link;
+		}
+
 		$dateStr = "";
-		//echo var_dump($entry);
-		
-		if ($entry->title instanceof \SimpleXMLElement) {
-			$title = (string)$entry->title[0];				
-			//echo var_dump((string)$entry->title[0]);
-		} else {
-			$title = $entry->title;
-		}
-		
-		if ($entry->description instanceof \SimpleXMLElement) {
-			$description = (string)$entry->description[0];
-			//echo var_dump((string)$entry->description[0]);
-		} else {
-			$description = $entry->description;
-		}
 
-		if ($entry->guid instanceof \SimpleXMLElement) {
-			$guid = (string)$entry->guid[0];
+		if ($item->pubDate instanceof \SimpleXMLElement) {
+			$dateStr = (string)$item->pubDate[0];
 		} else {
-			$guid = $entry->guid;
-		}
-		
-		if ($entry->link instanceof \SimpleXMLElement) {
-			$link = (string)$entry->link[0];
-		} else {
-			$link = $entry->link;
-		}
-
-		if ($entry->pubDate instanceof \SimpleXMLElement) {
-			$dateStr = (string)$entry->pubDate[0];
-		} else {
-			$dateStr = $entry->pubDate;
+			$dateStr = $item->pubDate;
 		}
 
 		$dateArray = date_parse($dateStr);
-		$date = date('Y-m-d H:i:s', mktime($dateArray['hour'], $dateArray['minute'], $dateArray['second'], $dateArray['month'], $dateArray['day'], $dateArray['year']));
+		$entry["date"] = date('Y-m-d H:i:s', mktime($dateArray['hour'], $dateArray['minute'], $dateArray['second'], $dateArray['month'], $dateArray['day'], $dateArray['year']));
 		
-		$entries[] = array("title" => $title, "description" => $description, "guid" => $guid, "link" => $link, "date" => $date);
+		$entries[] = $entry;
 	}
 
 	return $entries;

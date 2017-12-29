@@ -1,3 +1,5 @@
+var startCount = 0;
+
 function getNews(callback) {
 	$.ajax({
     	url: "api.php",
@@ -28,9 +30,29 @@ function getFeeds(callback) {
 	});
 }
 
+function getAllNews(from, to, callback) {
+	$.ajax({
+    	url: "api.php",
+    	dataType: "json",
+    	data: { action: "news_all", from: from, to: to },
+	}).done(function(response) {
+		callback(response);
+	});
+}
+
+function markAsRead(id, callback) {
+	$.ajax({
+    	url: "api.php",
+    	dataType: "json",
+    	data: { action: "mark_as_read", id: id },
+	}).done(function(response) {
+		callback(response);
+	});
+}
+
 function fillNews(data) {
 	$("#content").html("");
-
+	console.log(data);
 	data.forEach((entry) => {
 		console.log(entry);
 		appendEntry(entry);
@@ -40,6 +62,8 @@ function fillNews(data) {
 function appendEntry(entry) {
 	var item = $("<div/>", { class: "entry" });
 		
+	item.attr("identifier", entry.id);
+
 	if (entry.description.length > 1500 && entry.description.length < 2500) {
 		item.addClass("long");
 	} else if (entry.description.length >= 2500 && entry.description.length < 4000) {
@@ -56,12 +80,20 @@ function appendEntry(entry) {
 	item.append(title);
 	item.append(description);
 
+	if (entry.read) {
+		item.addClass("read");
+	}
+	
 	$("#content").append(item);
 
 	clearLinks(description, entry.link);
 
 	title[0].addEventListener("mouseup", function() {
-		$(this).closest(".entry").addClass("read");
+		var item = $(this).closest(".entry");
+		
+		markAsRead(parseInt(item.attr("identifier")), function() {
+			item.addClass("read");
+		});
 	});
 }
 
@@ -140,7 +172,12 @@ function updateNews() {
 		$("#reload-button").removeClass("active");
 
 		updateMenu(data.channels);
-		fillNews(data.entries);
+		fillNews(data.items);
+
+		if (data.items.length < parseInt(data.total)) {
+			startCount = data.items.length;
+			$("#read-more").removeClass("hidden");
+		}
 	});
 }
 
@@ -175,16 +212,34 @@ function addFeed() {
 	}
 }
 
+function getViewedNews() {
+	$("#reload-button").addClass("active");
+
+	getAllNews(startCount, startCount + 30, (data) => {
+		$("#reload-button").removeClass("active");
+
+		startCount = startCount + data.length;
+
+		data.forEach((entry) => {
+			appendEntry(entry);
+		});
+	});
+}
+
 $(document).ready(function() {
 	$("#read-more").addClass("hidden");
 	$("#menu-channels-add-form").addClass("hidden");
 
-	getFeeds(function(data) {
+	getFeeds((data) => {
 		updateMenu(data);
 	});
 
-	$("#reload-button").click(function() {
+	$("#reload-button").click(() => {
 		updateNews();
+	});
+
+	$("#read-more").click(() => {
+		getViewedNews();
 	});
 
 	$("#menu-channels-item-add").click(function() {
