@@ -63,6 +63,7 @@ function appendEntry(entry) {
 	var item = $("<div/>", { class: "entry" });
 		
 	item.attr("identifier", entry.id);
+	item.attr("feed_id", entry.feed_id);
 
 	if (entry.description.length > 1500 && entry.description.length < 2500) {
 		item.addClass("long");
@@ -83,7 +84,7 @@ function appendEntry(entry) {
 	if (entry.read) {
 		item.addClass("read");
 	}
-	
+
 	$("#content").append(item);
 
 	clearLinks(description, entry.link);
@@ -118,6 +119,16 @@ function appendMenuItem(channel) {
 	}
 
 	$("#menu-channels").append(item);
+
+	item.click(function() {
+		if ($(this).hasClass("selected")) {
+			$(this).removeClass("selected");
+		} else {
+			$(this).addClass("selected");
+		}
+
+		showSelectedChannels();
+	});
 }
 
 function clearLinks(item, link) {
@@ -134,6 +145,21 @@ function clearLinks(item, link) {
 	for (var i = 0; i < links.length; i++) {
 		links[i].remove();
 	}
+}
+
+function updateEntriesCount() {
+	$("#menu-channels").find(".menu-item").each(function() {
+		var id = parseInt($(this).attr("identifier"));
+
+		var count = $("#content").find(".entry[feed_id='" + id + "']").length;
+		$(this).find(".counter").text(count);
+
+		if (count == 0) {
+			$(this).addClass("empty");
+		} else {
+			$(this).removeClass("empty");
+		}
+	});
 }
 
 function showAddForm() {
@@ -223,6 +249,28 @@ function getViewedNews() {
 		data.forEach((entry) => {
 			appendEntry(entry);
 		});
+
+		updateEntriesCount();
+	});
+}
+
+function showSelectedChannels() {
+	var ids = [];
+
+	$("#menu-channels").find(".menu-item").each(function() {
+		if ($(this).hasClass("selected")) {
+			ids.push(parseInt($(this).attr("identifier")));
+		}
+	});
+	
+	$("#content").find(".entry").each(function() {
+		var id = parseInt($(this).attr("feed_id"));
+	
+		$(this).removeClass("hidden");
+
+		if (ids.length > 0 && ids.indexOf(id) == -1) {
+			$(this).addClass("hidden");	
+		}
 	});
 }
 
@@ -232,6 +280,16 @@ $(document).ready(function() {
 
 	getFeeds((data) => {
 		updateMenu(data);
+
+		var total = 0;
+
+		data.forEach(function(channel) {
+			total = total + channel.total;
+		});
+
+		if (total > 0) {
+			$("#read-more").removeClass("hidden");
+		}
 	});
 
 	$("#reload-button").click(() => {

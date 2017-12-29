@@ -21,12 +21,14 @@ if ($_GET["action"] == "new") {
 	$channels = getFeeds();
 	$items = array();
 	
-	foreach ($channels as $channel) {	
+	foreach ($channels as &$channel) {	
 		$xml = simplexml_load_file($channel["rss"]);
 		$channelItems = parseItems($xml);
 		$newItems = array();
 
-		foreach ($channelItems as $item) {
+		foreach ($channelItems as &$item) {
+			$item["feed_id"] = $channel["id"];
+
 			if (addEntry($channel["id"], $item)) {
 				$newItems[] = $item;
 			}
@@ -48,7 +50,7 @@ if ($_GET["action"] == "news_all") {
 	$limit = $_GET["to"] - $_GET["from"];
 
 	foreach ($db->query("SELECT * FROM entries ORDER BY id DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
-		$items[] = array("id" => $row["id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "date" => $row["date"]);
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "date" => $row["date"]);
 	}
 
 	echo json_encode($items);
@@ -70,8 +72,8 @@ function getFeeds() {
 	global $db;
 	$channels = array();
 
-	foreach ($db->query("SELECT * FROM feeds") as $row) {
-		$channels[] = array("id" => $row["id"], "rss" => $row["rss"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "count" => 0);
+	foreach ($db->query("SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id GROUP BY f.id") as $row) {
+		$channels[] = array("id" => $row["id"], "rss" => $row["rss"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "count" => 0, "total" => $row["total"]);
 	}
 
 	return $channels;
@@ -106,7 +108,7 @@ function addFeed($link) {
 	}
 }
 
-function addEntry($feed, $entry) {
+function addEntry($feed, &$entry) {
 	global $db;
 
 	$result = $db->query("SELECT id FROM entries WHERE feed_id = " . $feed . " AND guid = '" . $entry["guid"] . "'")->fetch();

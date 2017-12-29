@@ -176,11 +176,13 @@ input {
 
 .menu-item.empty {
 	opacity: 0.6;
+	pointer-events: none;
 }
 
 .menu-item .title {
 	font-size: 14px;
 	margin: auto 0;
+	cursor: pointer;
 }
 
 .menu-item .counter {
@@ -189,6 +191,10 @@ input {
 	margin: auto 0 auto 10px;
 	background: #fffada;
     padding: 2px 4px;
+}
+
+.menu-item.selected .title {
+	font-weight: bold;
 }
 
 #menu-channels-edit {
