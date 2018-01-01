@@ -82,11 +82,10 @@ input {
 }
 
 .entry {
-	flex-basis: 220px;
+	flex-basis: 250px;
 	margin: 20px 40px 20px 0;
 	flex-grow: 1;
-	max-width: 400px;
-	min-width: 220px;
+	flex-shrink: 0;
 }
 
 .entry.read {
