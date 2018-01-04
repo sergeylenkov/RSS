@@ -68,11 +68,18 @@ if ($_GET["action"] == "feed_add") {
 	addFeed($link);	
 }
 
+if ($_GET["action"] == "feed_delete") {
+	$statement = $db->prepare("UPDATE feeds SET deleted = ? WHERE id = ?");
+	$statement->execute(array(true, $_GET["id"]));
+
+	echo json_encode(array("id" => $_GET["id"], "deleted" => true));
+}
+
 function getFeeds() {
 	global $db;
 	$channels = array();
 
-	foreach ($db->query("SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id GROUP BY f.id") as $row) {
+	foreach ($db->query("SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id WHERE f.deleted = 0 GROUP BY f.id") as $row) {
 		$channels[] = array("id" => $row["id"], "rss" => $row["rss"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "count" => 0, "total" => $row["total"]);
 	}
 

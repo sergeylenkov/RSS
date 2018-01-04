@@ -20,6 +20,16 @@ function addNewFeed(link, callback) {
 	});
 }
 
+function deleteFeed(id, callback) {
+	$.ajax({
+		url: "api.php",
+		dataType: "json",
+		data: { action: "feed_delete", id: id },
+	}).done(function(response) {
+		callback(response);
+	});
+}
+
 function getFeeds(callback) {
 	$.ajax({
     	url: "api.php",
@@ -114,6 +124,9 @@ function appendMenuItem(channel) {
 	item.append($("<div/>", { class: "title", text: channel.title }));
 	item.append($("<div/>", { class: "counter", text: channel.count }));
 
+	var deleteButton = $("<div/>", { class: "deleteButton hidden", html: '<svg><use xlink:href="img/icons.svg#delete"></use></svg' });
+	item.append(deleteButton);
+
 	if (channel.count == 0) {
 		item.addClass("empty");
 	}
@@ -128,6 +141,14 @@ function appendMenuItem(channel) {
 		}
 
 		showSelectedChannels();
+	});
+
+	deleteButton.click(function() {
+		var item = $(this).closest(".menu-item");
+
+		deleteFeed(parseInt(item.attr("identifier")), function() {
+			item.remove();
+		});
 	});
 }
 
@@ -185,8 +206,18 @@ function hideAddForm() {
 function editMenu() {
 	if ($("#menu-channels-item-edit").hasClass("active")) {
 		$("#menu-channels-item-edit").removeClass("active");
+
+		$("#menu-channels").find(".menu-item").each(function() {
+			$(this).find(".counter").removeClass("hidden");
+			$(this).find(".deleteButton").addClass("hidden");
+		});
 	} else {
 		$("#menu-channels-item-edit").addClass("active");
+
+		$("#menu-channels").find(".menu-item").each(function() {
+			$(this).find(".counter").addClass("hidden");
+			$(this).find(".deleteButton").removeClass("hidden");
+		});
 	}
 }
 
