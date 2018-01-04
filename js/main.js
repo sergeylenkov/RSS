@@ -120,7 +120,19 @@ function appendMenuItem(channel) {
 	var item = $("<div/>", { class: "menu-item" });
 
 	item.attr("identifier", channel.id);
-		
+	
+	var icon = $("<div/>", { class: "icon" });
+
+	if (channel.image.length == 0) {
+		var a = document.createElement('a');
+		a.href = channel.link;
+
+		icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
+	} else {
+		icon.css("background-image", "url(" + channel.image + ")");
+	}
+
+	item.append(icon);
 	item.append($("<div/>", { class: "title", text: channel.title }));
 	item.append($("<div/>", { class: "counter", text: channel.count }));
 
@@ -208,6 +220,7 @@ function editMenu() {
 		$("#menu-channels-item-edit").removeClass("active");
 
 		$("#menu-channels").find(".menu-item").each(function() {
+			$(this).removeClass("editing");
 			$(this).find(".counter").removeClass("hidden");
 			$(this).find(".deleteButton").addClass("hidden");
 		});
@@ -215,6 +228,7 @@ function editMenu() {
 		$("#menu-channels-item-edit").addClass("active");
 
 		$("#menu-channels").find(".menu-item").each(function() {
+			$(this).addClass("editing");
 			$(this).find(".counter").addClass("hidden");
 			$(this).find(".deleteButton").removeClass("hidden");
 		});

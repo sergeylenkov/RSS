@@ -28,6 +28,7 @@ if ($_GET["action"] == "new") {
 
 		foreach ($channelItems as &$item) {
 			$item["feed_id"] = $channel["id"];
+			$item["feed_image"] = $channel["image"];
 
 			if (addEntry($channel["id"], $item)) {
 				$newItems[] = $item;
@@ -80,7 +81,7 @@ function getFeeds() {
 	$channels = array();
 
 	foreach ($db->query("SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id WHERE f.deleted = 0 GROUP BY f.id") as $row) {
-		$channels[] = array("id" => $row["id"], "rss" => $row["rss"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "count" => 0, "total" => $row["total"]);
+		$channels[] = array("id" => $row["id"], "rss" => $row["rss"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "image" => $row["image"], "count" => 0, "total" => $row["total"]);
 	}
 
 	return $channels;

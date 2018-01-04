@@ -173,13 +173,26 @@ input {
 
 .menu-item {
 	height: 30px;
-	margin: auto 20px auto 0;
+	margin: auto 30px auto 0;
 	display: flex;
 }
 
 .menu-item.empty {
 	opacity: 0.6;
 	pointer-events: none;
+}
+
+.menu-item.editing {
+	opacity: 1;
+}
+
+.menu-item .icon {
+	margin: auto 10px auto 0;
+	width: 16px;
+	height: 16px;
+	background-image: "";
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .menu-item .title {
