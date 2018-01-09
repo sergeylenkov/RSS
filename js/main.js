@@ -99,6 +99,10 @@ function appendEntry(entry) {
 
 	clearLinks(description, entry.link);
 
+	if (item.find("img").length > 3) {
+		item.addClass("images");
+	}
+
 	title[0].addEventListener("mouseup", function() {
 		var item = $(this).closest(".entry");
 		
@@ -123,14 +127,10 @@ function appendMenuItem(channel) {
 	
 	var icon = $("<div/>", { class: "icon" });
 
-	if (channel.image.length == 0) {
-		var a = document.createElement('a');
-		a.href = channel.link;
+	var a = document.createElement('a');
+	a.href = channel.link;
 
-		icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
-	} else {
-		icon.css("background-image", "url(" + channel.image + ")");
-	}
+	icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
 
 	item.append(icon);
 	item.append($("<div/>", { class: "title", text: channel.title }));

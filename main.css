@@ -83,7 +83,7 @@ input {
 }
 
 .entry {
-	flex-basis: 250px;
+	flex-basis: 300px;
 	margin: 20px 40px 20px 0;
 	flex-grow: 1;
 	flex-shrink: 0;
@@ -95,18 +95,24 @@ input {
 }
 
 .entry.long {
-	flex-basis: 300px;
+	flex-basis: 400px;
 	max-width: 500px;
 }
 
 .entry.verylong {
-	flex-basis: 400px;
+	flex-basis: 500px;
 	max-width: 600px;
 }
 
 .entry.veryverylong {
-	flex-basis: 500px;
+	flex-basis: 800px;
 	max-width: 800px;
+}
+
+.entry.images {
+	flex-basis: 800px;
+	min-width: 800px;
+	max-width: auto;
 }
 
 .entry .title {
@@ -178,7 +184,7 @@ input {
 }
 
 .menu-item.empty {
-	opacity: 0.6;
+	opacity: 0.4;
 	pointer-events: none;
 }
 
