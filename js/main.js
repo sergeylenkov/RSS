@@ -62,9 +62,8 @@ function markAsRead(id, callback) {
 
 function fillNews(data) {
 	$("#content").html("");
-	console.log(data);
-	data.forEach((entry) => {
-		console.log(entry);
+	
+	data.forEach((entry) => {	
 		appendEntry(entry);
 	});
 }
@@ -91,7 +90,7 @@ function appendEntry(entry) {
 	item.append(title);
 	item.append(description);
 
-	if (entry.read) {
+	if (parseInt(entry.read)) {
 		item.addClass("read");
 	}
 
@@ -103,7 +102,7 @@ function appendEntry(entry) {
 		item.addClass("images");
 	}
 
-	title[0].addEventListener("mouseup", function() {
+	item[0].addEventListener("mouseup", function() {
 		var item = $(this).closest(".entry");
 		
 		markAsRead(parseInt(item.attr("identifier")), function() {
@@ -241,6 +240,10 @@ function updateNews() {
 	getNews(function(data) {
 		console.log(data);
 		$("#reload-button").removeClass("active");
+
+		data.items.sort((a, b) => {
+			return b.id - a.id;
+		});
 
 		updateMenu(data.channels);
 		fillNews(data.items);

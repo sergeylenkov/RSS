@@ -118,7 +118,8 @@ input {
 .entry .title {
 	font-size: 16px;
 	font-weight: bold;
-	margin: 0 0 10px 0;
+	line-height: 22px;
+	margin: 0 0 15px 0;
 }
 
 .entry .title a {
@@ -129,13 +130,15 @@ input {
 
 .entry .description {
 	font-size: 14px;
+	line-height: 18px;
 	overflow: hidden;
 }
 
 .entry .description img {
-	max-width: 90%;
+	width: 100%;
+	padding: 0px;
 	height: auto;
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
 }
 
 .entry .description font {
@@ -165,6 +168,10 @@ input {
 .entry .description ol {
 	margin: 0;
     padding: 0 0 0 20px;
+}
+
+.entry .description a {
+	color: #4076cc;
 }
 
 #menu-channels {

@@ -99,7 +99,7 @@ function addFeed($link) {
 	if (empty($result)) {
 		$statement = $db->prepare("INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-		if ($statement->execute(array($channel["rss"], $channel["link"], $channel["title"], $channel["description"], $channel["image"], $channel["active"], $channel["status"], $channel["date"], false))) {
+		if ($statement->execute(array($channel["rss"], $channel["link"], $channel["title"], $channel["description"], $channel["image"], $channel["active"], $channel["status"], $channel["date"], (int)false))) {
 			$channel["id"] = $db->lastInsertId();
 			$items = parseItems($xml);
 
@@ -123,7 +123,7 @@ function addEntry($feed, &$entry) {
 
 	if (empty($result)) {
 		$statement = $db->prepare("INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		$statement->execute(array($feed, $entry["guid"], $entry["link"], $entry["title"], $entry["description"], false, false, false, $entry["date"]));
+		$statement->execute(array($feed, $entry["guid"], $entry["link"], $entry["title"], $entry["description"], (int)false, (int)false, (int)false, $entry["date"]));
 
 		$entry["id"] = $db->lastInsertId();
 
@@ -136,7 +136,7 @@ function addEntry($feed, &$entry) {
 }
 
 function parseChannel($xml) {
-	$channel = array("id" => -1, "rss" => "", "link" => "", "title" => "", "description" => "", "active" => true, "status" => "ok", "image" => "", "date" => date('Y-m-d H:i:s'));
+	$channel = array("id" => -1, "rss" => "", "link" => "", "title" => "", "description" => "", "active" => (int)true, "status" => "ok", "image" => "", "date" => date('Y-m-d H:i:s'));
 
 	if ($xml->channel->title instanceof \SimpleXMLElement) {
 		$channel["title"] = (string)$xml->channel->title[0];
