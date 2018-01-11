@@ -107,6 +107,7 @@ input {
 .entry.veryverylong {
 	flex-basis: 800px;
 	max-width: 800px;
+	column-count: 2;
 }
 
 .entry.images {
