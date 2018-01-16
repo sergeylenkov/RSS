@@ -102,7 +102,7 @@ function appendEntry(entry) {
 		item.addClass("images");
 	}
 
-	item[0].addEventListener("mouseup", function() {
+	title[0].addEventListener("mouseup", function() {
 		var item = $(this).closest(".entry");
 		
 		markAsRead(parseInt(item.attr("identifier")), function() {
