@@ -12,23 +12,29 @@ input {
 
 #main {
 	padding: 20px 20px 0 50px;
+	display: flex;
+    flex-direction: column;
 }
 
 #header {
 	width: 100%;
-    float: left;
+    margin: 0;
 }
 
 #menu {
-	width: 100%;
-	float: left;
+	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
+	position: absolute;
+	top: 120px;
+	left: 20px;
 }
 
 #content {
-	width: 100%;
-    float: left;
+    max-width: 800px;
+    min-width: 800px;
+    margin: 20px auto 0 auto;
 	padding: 20px 0 0 0;
 	display: flex;
 	flex-direction: row;
@@ -38,8 +44,8 @@ input {
 }
 
 #bottom-menu {
-	width: 100%;
-    float: left;
+	 width: 800px;
+    margin: 0 auto;
 	padding: 20px 0;	
 }
 
@@ -83,18 +89,17 @@ input {
 }
 
 .entry {
-	flex-basis: 300px;
-	margin: 20px 40px 20px 0;
-	flex-grow: 1;
+	width: 100%;
+	margin: 20px 0 40px 0;
 	flex-shrink: 0;
-	max-width: 400px;
+	border-bottom: 1px solid #ececec;
 }
 
 .entry.read {
 	opacity: 0.6;
 }
 
-.entry.long {
+/*.entry.long {
 	flex-basis: 400px;
 	max-width: 500px;
 }
@@ -113,10 +118,10 @@ input {
 	flex-basis: 800px;
 	min-width: 800px;
 	max-width: auto;
-}
+}*/
 
 .entry .title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: bold;
 	line-height: 22px;
 	margin: 0 0 15px 0;
@@ -132,6 +137,7 @@ input {
 	font-size: 14px;
 	line-height: 18px;
 	overflow: hidden;
+	margin: 20px 0 40px 0;
 }
 
 .entry .description img {
@@ -174,10 +180,32 @@ input {
 	color: #4076cc;
 }
 
+.entry .channel {	
+	margin: 10px 0;	
+	display: flex;
+}
+
+.entry .channel-icon {
+	width: 14px;
+	height: 14px;
+	margin: auto 0;
+	background-image: "";
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #ebebeb;
+}
+
+.entry .channel-title {
+	font-size: 12px;
+	margin: auto 0 auto 10px;
+	color: #909090;
+}
+
 #menu-channels {
 	margin: auto 20px auto 0;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
 }
 
 #menu-channels:empty {
@@ -206,6 +234,7 @@ input {
 	background-image: "";
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: #ebebeb;
 }
 
 .menu-item .title {

@@ -1,4 +1,5 @@
 var startCount = 0;
+var channels = [];
 
 function getNews(callback) {
 	$.ajax({
@@ -86,8 +87,25 @@ function appendEntry(entry) {
 	var description = $("<div/>", { class: "description", html: entry.description });
 
 	title.append($("<a/>", { href: entry.link, text: entry.title }));
-
 	item.append(title);
+
+	var channel = getChannelById(parseInt(entry.feed_id));
+
+	if (channel) {
+		var channelItem = $("<div/>", { class: "channel" });
+		var icon = $("<div/>", { class: "channel-icon" });
+
+		var a = document.createElement('a');
+		a.href = channel.link;
+
+		icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
+
+		channelItem.append(icon);
+		channelItem.append($("<div/>", { class: "channel-title", text: channel.title }));	
+
+		item.append(channelItem);
+	}
+	
 	item.append(description);
 
 	if (parseInt(entry.read)) {
@@ -113,9 +131,11 @@ function appendEntry(entry) {
 
 function updateMenu(data) {
 	$("#menu-channels").html("");
+	channels = [];
 
 	data.forEach((channel) => {
 		appendMenuItem(channel);
+		channels.push(channel);
 	});
 }
 
@@ -322,6 +342,18 @@ function showSelectedChannels() {
 	});
 }
 
+function getChannelById(id) {
+	let result = null;
+
+	channels.forEach((channel) => {
+		if (parseInt(channel.id) == id) {
+			result = channel;
+		}
+	});
+
+	return result;
+}
+
 $(document).ready(function() {
 	$("#read-more").addClass("hidden");
 	$("#menu-channels-add-form").addClass("hidden");
@@ -331,7 +363,7 @@ $(document).ready(function() {
 
 		var total = 0;
 
-		data.forEach(function(channel) {
+		data.forEach((channel) => {
 			total = total + channel.total;
 		});
 
