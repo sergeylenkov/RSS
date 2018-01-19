@@ -354,7 +354,7 @@ function getChannelById(id) {
 	return result;
 }
 
-$(document).ready(function() {
+function init() {
 	$("#read-more").addClass("hidden");
 	$("#menu-channels-add-form").addClass("hidden");
 
@@ -402,4 +402,16 @@ $(document).ready(function() {
 			$(this).val($(this).attr("link"));
 		}
 	});
-});
+
+	window.addEventListener('scroll', function(e) {
+		if (window.scrollY > 120) {
+			$("#menu").addClass("fixed");
+		} else {
+			$("#menu").removeClass("fixed");
+		}
+	});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    init();
+}, false);

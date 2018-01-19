@@ -11,7 +11,7 @@ input {
 }
 
 #main {
-	padding: 20px 20px 0 50px;
+	padding: 20px 20px 0 20px;
 	display: flex;
     flex-direction: column;
 }
@@ -19,6 +19,7 @@ input {
 #header {
 	width: 100%;
     margin: 0;
+    padding: 0 0 0 10px;
 }
 
 #menu {
@@ -27,15 +28,20 @@ input {
 	flex-wrap: wrap;
 	flex-direction: column;
 	position: absolute;
-	top: 120px;
-	left: 20px;
+	top: 100px;
+	left: 30px;
+}
+
+#menu.fixed {
+	position: fixed;
+    top: -20px;
 }
 
 #content {
     max-width: 800px;
     min-width: 800px;
     margin: 20px auto 0 auto;
-	padding: 20px 0 0 0;
+	padding: 0;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -57,30 +63,43 @@ input {
 
 .main-title {
 	float: left;
-	font-size: 28px;
+	font-size: 22px;
 	font-weight: bold;
 	margin: 0 0 10px 0;
 }
 
 #reload-button {
+	margin: 0 0 20px 0;
+    display: flex;
+    flex-direction: row;
+	cursor: pointer;
+}
+
+#reload-button-icon {
 	width: 16px;
 	height: 16px;
-	float: left;
-	margin: 0 0 0 10px;
-	cursor: pointer;
+	margin: auto 0;
 	stroke: #000000;
 	stroke-width: 2px;
 	fill: none;
 }
 
-#reload-button > svg {
+#reload-button-icon > svg {
 	width: 100%;
     height: 100%;
 }
 
+#reload-button-label {
+	font-size: 14px;
+	margin: auto 0 auto 10px;
+}
+
 #reload-button.active {
 	opacity: 0.6;
-	pointer-events: none;
+	pointer-events: none;	
+}
+
+#reload-button.active #reload-button-icon {
 	animation: spin 2s linear infinite;
 }
 
@@ -152,7 +171,7 @@ input {
 }
 
 .entry .description p {
-	margin: 0;
+	margin: 0 0 10px 0;
 }
 
 .entry .description code {
@@ -272,8 +291,8 @@ input {
 }
 
 #menu-channels-edit {
-	margin: auto 0;
-	padding: 10px 0;
+	margin: 20px 0 0 0;
+	padding: 0;
 	display: flex;
 }
 
