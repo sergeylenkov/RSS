@@ -160,7 +160,7 @@ input {
 }
 
 .entry .description img {
-	width: 100%;
+	max-width: 100%;
 	padding: 0px;
 	height: auto;
     margin: 0 auto 10px auto;
