@@ -60,7 +60,7 @@ input {
 	width: 16px;
 	height: 16px;
 	float: left;
-	margin: 0 0 0 10px;
+	margin: auto 15px auto 0;
 	cursor: pointer;
 	stroke: #000000;
 	stroke-width: 2px;
@@ -174,6 +174,27 @@ input {
 	color: #4076cc;
 }
 
+.entry .channel {
+	margin: 0 0 15px 0;
+	display: flex;
+}
+
+.entry .channel .channel-icon {
+	margin: auto 10px auto 0;
+	width: 14px;
+	height: 14px;
+	background-image: "";
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #bebebe;
+}
+
+.entry .channel .channel-title {
+	font-size: 12px;
+	margin: auto 0;
+    color: #7d7d7d;
+}
+
 #menu-channels {
 	margin: auto 20px auto 0;
 	display: flex;
@@ -206,6 +227,7 @@ input {
 	background-image: "";
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: #bebebe;
 }
 
 .menu-item .title {
