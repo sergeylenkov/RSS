@@ -71,7 +71,10 @@ function fillNews(data) {
 
 function appendEntry(entry) {
 	var item = $("<div/>", { class: "entry" });
-		
+	
+	var content = $("<div/>", { class: "content" });
+	item.append(content);
+
 	item.attr("identifier", entry.id);
 	item.attr("feed_id", entry.feed_id);
 
@@ -88,7 +91,7 @@ function appendEntry(entry) {
 
 	title.append($("<a/>", { href: entry.link, text: entry.title }));
 
-	item.append(title);
+	content.append(title);
 
 	var channel = getChannelById(parseInt(entry.feed_id));
 
@@ -104,10 +107,10 @@ function appendEntry(entry) {
         channelItem.append(icon);
         channelItem.append($("<div/>", { class: "channel-title", text: channel.title }));   
 
-        item.append(channelItem);
+        content.append(channelItem);
     }
 
-	item.append(description);
+	content.append(description);
 
 	if (parseInt(entry.read)) {
 		item.addClass("read");
