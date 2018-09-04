@@ -1,13 +1,13 @@
 var startCount = 0;
 var channels = [];
 
-function getNews(callback) {
-	$.ajax({
-    	url: "api.php",
-    	dataType: "json",
-    	data: { action: "new" },
-	}).done(function(response) {
-		callback(response);
+function getNews() {
+	return new Promise((resolve) => {
+		fetch('api.php?action=new').then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
 	});
 }
 
@@ -31,23 +31,23 @@ function deleteFeed(id, callback) {
 	});
 }
 
-function getFeeds(callback) {
-	$.ajax({
-    	url: "api.php",
-    	dataType: "json",
-    	data: { action: "feeds" },
-	}).done(function(response) {
-		callback(response);
+function getFeeds() {
+	return new Promise((resolve) => {
+		fetch('api.php?action=feeds').then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
 	});
 }
 
-function getAllNews(from, to, callback) {
-	$.ajax({
-    	url: "api.php",
-    	dataType: "json",
-    	data: { action: "news_all", from: from, to: to },
-	}).done(function(response) {
-		callback(response);
+function getAllNews(from, to) {
+	return new Promise((resolve) => {
+		fetch(`api.php?action=news_all&from=${from}&to=${to}`).then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
 	});
 }
 
@@ -257,7 +257,7 @@ function editMenu() {
 function updateNews() {
 	$("#reload-button").addClass("active");
 
-	getNews(function(data) {
+	getNews().then((data) => {
 		console.log(data);
 		$("#reload-button").removeClass("active");
 
@@ -309,7 +309,7 @@ function addFeed() {
 function getViewedNews() {
 	$("#reload-button").addClass("active");
 
-	getAllNews(startCount, startCount + 30, (data) => {
+	getAllNews(startCount, startCount + 30).then((data) => {
 		$("#reload-button").removeClass("active");
 
 		startCount = startCount + data.length;
@@ -358,7 +358,7 @@ function init() {
 	$("#read-more").addClass("hidden");
 	$("#menu-channels-add-form").addClass("hidden");
 
-	getFeeds((data) => {
+	getFeeds().then((data) => {
 		updateMenu(data);
 
 		var total = 0;
