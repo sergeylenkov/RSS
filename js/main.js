@@ -1,3 +1,4 @@
+var apiUrl = 'api.php?';
 var startCount = 0;
 var channels = [];
 
@@ -5,7 +6,7 @@ var channels = [];
 
 function getNews() {
 	return new Promise((resolve) => {
-		fetch('api.php?action=new').then((response) => {				 
+		fetch(`${apiUrl}action=new`).then((response) => {				 
 			return response.json();
 		}).then((data) => {
 			resolve(data);
@@ -35,7 +36,7 @@ function deleteFeed(id, callback) {
 
 function getFeeds() {
 	return new Promise((resolve) => {
-		fetch('api.php?action=feeds').then((response) => {				 
+		fetch(`${apiUrl}action=feeds`).then((response) => {				 
 			return response.json();
 		}).then((data) => {
 			resolve(data);
@@ -45,7 +46,7 @@ function getFeeds() {
 
 function getAllNews(from, to) {
 	return new Promise((resolve) => {
-		fetch(`api.php?action=news_all&from=${from}&to=${to}`).then((response) => {				 
+		fetch(`${apiUrl}action=news_all&from=${from}&to=${to}`).then((response) => {				 
 			return response.json();
 		}).then((data) => {
 			resolve(data);
@@ -66,71 +67,90 @@ function markAsRead(id, callback) {
 /* UI */
 
 function fillNews(data) {
-	$("#content").html("");
+	let content = document.getElementById('content');
+	content.innerHTML = '';
 	
 	data.forEach((entry) => {	
-		appendEntry(entry);
+		let entryItem = createEntry(entry);
+		content.appendChild(entryItem);
 	});
 }
 
-function appendEntry(entry) {
-	var item = $("<div/>", { class: "entry" });
+function createEntry(entry) {
+	let item = document.createElement('div');
+	item.className = 'entry';
 		
-	item.attr("identifier", entry.id);
-	item.attr("feed_id", entry.feed_id);
+	item.setAttribute('identifier', entry.id);
+	item.setAttribute('feed_id', entry.feed_id);
 
 	if (entry.description.length > 1500 && entry.description.length < 2500) {
-		item.addClass("long");
+		item.classList.add('long');
 	} else if (entry.description.length >= 2500 && entry.description.length < 4000) {
-		item.addClass("verylong");
+		item.classList.add('verylong');
 	} else if (entry.description.length >= 4000) {
-		item.addClass("veryverylong");
+		item.classList.add('veryverylong');
 	}
 
-	var title = $("<div/>", { class: "title" });
-	var description = $("<div/>", { class: "description", html: entry.description });
+	let title = document.createElement('div');
+	title.className = 'title';
 
-	title.append($("<a/>", { href: entry.link, text: entry.title }));
-	item.append(title);
+	let link = document.createElement('a');
+	link.setAttribute('href', entry.link);
+	link.innerText = entry.title;
+	
+	title.appendChild(link);
+	item.appendChild(title);
 
-	var channel = getChannelById(parseInt(entry.feed_id));
+	let channel = getChannelById(parseInt(entry.feed_id));
 
 	if (channel) {
-		var channelItem = $("<div/>", { class: "channel" });
-		var icon = $("<div/>", { class: "channel-icon" });
+		let channelItem = document.createElement('div');
+		channelItem.className = 'channel';
+
+		let icon = document.createElement('div');
+		icon.className = 'channel-icon';
 
 		var a = document.createElement('a');
 		a.href = channel.link;
 
-		icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
+		icon.style.backgroundImage = `url(${a.protocol}//${a.hostname}/favicon.ico)`;
 
-		channelItem.append(icon);
-		channelItem.append($("<div/>", { class: "channel-title", text: channel.title }));	
+		channelItem.appendChild(icon);
 
-		item.append(channelItem);
+		let channelTitle = document.createElement('div');
+		channelTitle.className = 'channel-title';
+		channelTitle.innerText = channel.title;
+
+		channelItem.appendChild(channelTitle);
+
+		item.appendChild(channelItem);
 	}
-	
-	item.append(description);
+
+	let description = document.createElement('div');
+	description.className = 'description';
+	description.innerHTML = entry.description;
+
+	item.appendChild(description);
 
 	if (parseInt(entry.read)) {
-		item.addClass("read");
+		item.classList.add('read');
 	}
 
-	$("#content").append(item);
+	//clearLinks(description, entry.link);
 
-	clearLinks(description, entry.link);
-
-	if (item.find("img").length > 3) {
+	/*if (item.find("img").length > 3) {
 		item.addClass("images");
-	}
+	}*/
 
-	title[0].addEventListener("mouseup", function() {
+	/*title[0].addEventListener("mouseup", function() {
 		var item = $(this).closest(".entry");
 		
 		markAsRead(parseInt(item.attr("identifier")), function() {
 			item.addClass("read");
 		});
-	});
+	});*/
+
+	return item;
 }
 
 function updateMenu(data) {
@@ -337,8 +357,11 @@ function getViewedNews() {
 
 		startCount = startCount + data.length;
 
+		let content = document.getElementById('content');
+
 		data.forEach((entry) => {
-			appendEntry(entry);
+			let entryItem = createEntry(entry);
+			content.appendChild(entryItem);
 		});
 
 		updateEntriesCount();
