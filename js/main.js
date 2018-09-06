@@ -1,6 +1,8 @@
 var startCount = 0;
 var channels = [];
 
+/* API */
+
 function getNews() {
 	return new Promise((resolve) => {
 		fetch('api.php?action=new').then((response) => {				 
@@ -60,6 +62,8 @@ function markAsRead(id, callback) {
 		callback(response);
 	});
 }
+
+/* UI */
 
 function fillNews(data) {
 	$("#content").html("");
@@ -130,57 +134,76 @@ function appendEntry(entry) {
 }
 
 function updateMenu(data) {
-	$("#menu-channels").html("");
+	let menu = document.getElementById('menu-channels');
+	menu.innerHTML = '';
+	
 	channels = [];
 
 	data.forEach((channel) => {
-		appendMenuItem(channel);
+		let menuItem = createMenuItem(channel);
+		menu.appendChild(menuItem);
+	
 		channels.push(channel);
 	});
 }
 
-function appendMenuItem(channel) {
-	var item = $("<div/>", { class: "menu-item" });
-
-	item.attr("identifier", channel.id);
+function createMenuItem(channel) {
+	let item = document.createElement("div");
+	item.className = 'menu-item';	
+	item.setAttribute('identifier', channel.id);
 	
-	var icon = $("<div/>", { class: "icon" });
-
-	var a = document.createElement('a');
+	let a = document.createElement('a');
 	a.href = channel.link;
 
-	icon.css("background-image", "url(" + a.protocol + "//" + a.hostname + "/favicon.ico)");
+	let icon = document.createElement('div');
+	icon.className = 'icon';
+	icon.style.backgroundImage = `url(${a.protocol}//${a.hostname}/favicon.ico)`;	
 
-	item.append(icon);
-	item.append($("<div/>", { class: "title", text: channel.title }));
-	item.append($("<div/>", { class: "counter", text: channel.count }));
+	item.appendChild(icon);
 
-	var deleteButton = $("<div/>", { class: "deleteButton hidden", html: '<svg><use xlink:href="img/icons.svg#delete"></use></svg' });
-	item.append(deleteButton);
+	let title = document.createElement('div');
+	title.className = 'title';
+	title.innerText = channel.title;
+
+	item.appendChild(title);
+
+	let counter = document.createElement('div');
+	counter.className = 'counter';
+	counter.innerText = channel.count;
+
+	item.appendChild(counter);	
+
+	//var deleteButton = $("<div/>", { class: "deleteButton hidden", html: '<svg><use xlink:href="img/icons.svg#delete"></use></svg' });
+	//item.append(deleteButton);
 
 	if (channel.count == 0) {
-		item.addClass("empty");
+		item.classList.add('empty');
 	}
 
-	$("#menu-channels").append(item);
-
-	item.click(function() {
-		if ($(this).hasClass("selected")) {
+	item.addEventListener('click', (e) => {
+		/*if ($(this).hasClass("selected")) {
 			$(this).removeClass("selected");
 		} else {
 			$(this).addClass("selected");
-		}
+		}*/
 
+		toggleChannel(e.target);
 		showSelectedChannels();
 	});
 
-	deleteButton.click(function() {
+	/*deleteButton.click(function() {
 		var item = $(this).closest(".menu-item");
 
 		deleteFeed(parseInt(item.attr("identifier")), function() {
 			item.remove();
 		});
-	});
+	});*/
+
+	return item;
+}
+
+function toggleChannel(sender) {
+	sender.classList.toggle('selected');
 }
 
 function clearLinks(item, link) {
