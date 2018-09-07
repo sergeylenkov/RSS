@@ -258,7 +258,7 @@ input {
 	width: 16px;
 	height: 16px;
 	stroke: #000000;
-	stroke-width: 2px;
+	stroke-width: 1px;
 	fill: none;
 	pointer-events: auto;
 	cursor: pointer;

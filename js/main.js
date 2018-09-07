@@ -194,6 +194,11 @@ function createMenuItem(channel) {
 
 	item.appendChild(counter);	
 
+	let deleteButton = document.createElement('div');
+	deleteButton.className = 'deleteButton hidden';
+	deleteButton.innerHTML = '<svg><use xlink:href="img/icons.svg#delete"></use></svg';
+
+	item.appendChild(deleteButton);
 	//var deleteButton = $("<div/>", { class: "deleteButton hidden", html: '<svg><use xlink:href="img/icons.svg#delete"></use></svg' });
 	//item.append(deleteButton);
 
