@@ -1,6 +1,7 @@
 var apiUrl = 'api.php?';
 var startCount = 0;
 var channels = [];
+var reloadButton;
 
 /* API */
 
@@ -292,11 +293,11 @@ function editMenu() {
 }
 
 function updateNews() {
-	$("#reload-button").addClass("active");
+	reloadButton.classList.add('active');
 
 	getNews().then((data) => {
 		console.log(data);
-		$("#reload-button").removeClass("active");
+		reloadButton.classList.remove('active');
 
 		data.items.sort((a, b) => {
 			return b.id - a.id;
@@ -318,12 +319,12 @@ function addFeed() {
 
 	if (link.length > 0) {
 		$("#menu-channels-add-form").addClass("disabled");
-		$("#reload-button").addClass("active");
+		reloadButton.classList.add('active');
 
 		addNewFeed(link, function(response) {
 			console.log(response);
 			$("#menu-channels-add-form").removeClass("disabled");
-			$("#reload-button").removeClass("active");
+			reloadButton.classList.remove('active');
 
 			if (response.error) {
 				field.attr("link", link);
@@ -344,10 +345,10 @@ function addFeed() {
 }
 
 function getViewedNews() {
-	$("#reload-button").addClass("active");
+	reloadButton.classList.add('active');
 
 	getAllNews(startCount, startCount + 30).then((data) => {
-		$("#reload-button").removeClass("active");
+		reloadButton.classList.remove('active');
 
 		startCount = startCount + data.length;
 
@@ -380,6 +381,8 @@ function showSelectedChannels() {
 			$(this).addClass("hidden");	
 		}
 	});
+
+	window.scrollTo(0, 0);
 }
 
 function getChannelById(id) {
@@ -412,7 +415,8 @@ function init() {
 		}
 	});
 
-	$("#reload-button").click(() => {
+	reloadButton = document.getElementById('reload-button');
+	reloadButton.addEventListener('click', () => {
 		updateNews();
 	});
 
