@@ -139,9 +139,9 @@ function createEntry(entry) {
 
 	clearSelfLinks(description, entry.link);
 
-	/*if (item.find("img").length > 3) {
-		item.addClass("images");
-	}*/
+	if (item.getElementsByTagName('img').length > 3) {
+		item.classList.add('images');
+	}
 
 	/*title[0].addEventListener("mouseup", function() {
 		var item = $(this).closest(".entry");
