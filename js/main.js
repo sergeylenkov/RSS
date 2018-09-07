@@ -137,7 +137,7 @@ function createEntry(entry) {
 		item.classList.add('read');
 	}
 
-	//clearLinks(description, entry.link);
+	clearSelfLinks(description, entry.link);
 
 	/*if (item.find("img").length > 3) {
 		item.addClass("images");
@@ -171,7 +171,7 @@ function updateMenu(data) {
 function createMenuItem(channel) {
 	let item = document.createElement("div");
 	item.className = 'menu-item';	
-	item.setAttribute('identifier', channel.id);
+	item.setAttribute('feed_id', channel.id);
 	
 	let a = document.createElement('a');
 	a.href = channel.link;
@@ -221,25 +221,27 @@ function toggleChannel(sender) {
 	sender.classList.toggle('selected');
 }
 
-function clearLinks(item, link) {
-	var links = [];
+function clearSelfLinks(description, link) {	
+	let items = Array.from(description.getElementsByTagName('a'));
 
-	item.find("a").each(function() {
-		var href = $(this)[0].getAttribute("href");
+	let links = items.filter((item) => {
+		let href = item.getAttribute('href');
 
 		if (href && href.indexOf(link) != -1) {
-			links.push($(this));
+			return true;
 		}
+
+		return false;
 	});
 
-	for (var i = 0; i < links.length; i++) {
+	for (let i = 0; i < links.length; i++) {
 		links[i].remove();
 	}
 }
 
 function updateEntriesCount() {
 	$("#menu-channels").find(".menu-item").each(function() {
-		var id = parseInt($(this).attr("identifier"));
+		var id = parseInt($(this).attr("feed_id"));
 
 		var count = $("#content").find(".entry[feed_id='" + id + "']").length;
 		$(this).find(".counter").text(count);
@@ -364,12 +366,12 @@ function getViewedNews() {
 }
 
 function showSelectedChannels() {
-	var ids = [];
-
-	$("#menu-channels").find(".menu-item").each(function() {
-		if ($(this).hasClass("selected")) {
-			ids.push(parseInt($(this).attr("identifier")));
-		}
+	let channelItems = Array.from(document.getElementById('menu-channels').childNodes);
+	
+	let ids = channelItems.filter((item) => {
+		return item.classList.contains('selected');
+	}).map((item) => {
+		return parseInt(item.getAttribute('feed_id'));
 	});
 	
 	$("#content").find(".entry").each(function() {
