@@ -200,14 +200,8 @@ function createMenuItem(channel) {
 		item.classList.add('empty');
 	}
 
-	item.addEventListener('click', (e) => {
-		/*if ($(this).hasClass("selected")) {
-			$(this).removeClass("selected");
-		} else {
-			$(this).addClass("selected");
-		}*/
-
-		toggleChannel(e.target);
+	item.addEventListener('click', (e) => {		
+		toggleChannel(item);
 		showSelectedChannels();
 	});
 
