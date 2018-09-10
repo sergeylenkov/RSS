@@ -10,23 +10,23 @@ function getNews() {
 	});
 }
 
-function addNewFeed(link, callback) {
-	$.ajax({
-		url: "api.php",
-		dataType: "json",
-		data: { action: "feed_add", link: link },
-	}).done(function(response) {
-		callback(response);
-	});
+function addNewFeed(link) {
+    return new Promise((resolve) => {
+		fetch(`${apiUrl}action=feed_add&link=${link}`).then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
+    });
 }
 
-function deleteFeed(id, callback) {
-	$.ajax({
-		url: "api.php",
-		dataType: "json",
-		data: { action: "feed_delete", id: id },
-	}).done(function(response) {
-		callback(response);
+function deleteFeed(id) {
+    return new Promise((resolve) => {
+		fetch(`${apiUrl}action=feed_delete&id=${id}`).then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
 	});
 }
 
@@ -58,11 +58,4 @@ function markAsRead(id) {
 			resolve(data);
 		});
 	});
-	/*$.ajax({
-    	url: "api.php",
-    	dataType: "json",
-    	data: { action: "mark_as_read", id: id },
-	}).done(function(response) {
-		callback(response);
-	});*/
 }

@@ -1,5 +1,5 @@
 var startCount = 0;
-var channels = [];
+var feeds = [];
 
 var mainMenu;
 var reloadButton;
@@ -82,9 +82,9 @@ function createEntry(entry) {
 	}
 
 	title.addEventListener('mouseup', () => {
-		let feedId = item.getAttribute('identifier');
+		let entryId = item.getAttribute('identifier');
 
-		markAsRead(feedId).then(() => {
+		markAsRead(entryId).then(() => {
 			item.classList.add('read');
 		});
 	});
@@ -96,23 +96,23 @@ function updateMenu(data) {
 	let menu = document.getElementById('menu-channels');
 	menu.innerHTML = '';
 	
-	channels = [];
+	feeds = [];
 
-	data.forEach((channel) => {
-		let menuItem = createMenuItem(channel);
+	data.forEach((feed) => {
+		let menuItem = createMenuItem(feed);
 		menu.appendChild(menuItem);
 	
-		channels.push(channel);
+		feeds.push(feed);
 	});
 }
 
-function createMenuItem(channel) {
+function createMenuItem(feed) {
 	let item = document.createElement("div");
 	item.className = 'menu-item';	
-	item.setAttribute('feed_id', channel.id);
+	item.setAttribute('feed_id', feed.id);
 	
 	let a = document.createElement('a');
-	a.href = channel.link;
+	a.href = feed.link;
 
 	let icon = document.createElement('div');
 	icon.className = 'icon';
@@ -122,13 +122,13 @@ function createMenuItem(channel) {
 
 	let title = document.createElement('div');
 	title.className = 'title';
-	title.innerText = channel.title;
+	title.innerText = feed.title;
 
 	item.appendChild(title);
 
 	let counter = document.createElement('div');
 	counter.className = 'counter';
-	counter.innerText = channel.count;
+	counter.innerText = feed.count;
 
 	item.appendChild(counter);	
 
@@ -138,7 +138,7 @@ function createMenuItem(channel) {
 
 	item.appendChild(deleteButton);
 
-	if (channel.count == 0) {
+	if (feed.count == 0) {
 		item.classList.add('empty');
 	}
 
@@ -148,11 +148,11 @@ function createMenuItem(channel) {
 	});
 
 	deleteButton.addEventListener('click', () => {		
-		/*var item = $(this).closest(".menu-item");
+		let feedId = parseInt(item.getAttribute('identifier'));
 
-		deleteFeed(parseInt(item.attr("identifier")), function() {
+		deleteFeed(feedId).then(() => {
 			item.remove();
-		});*/
+		});
 	});
 
 	return item;
@@ -264,7 +264,7 @@ function addFeed() {
 		$("#menu-channels-add-form").addClass("disabled");
 		reloadButton.classList.add('active');
 
-		addNewFeed(link, function(response) {
+		addNewFeed(link).then((response) => {
 			console.log(response);
 			$("#menu-channels-add-form").removeClass("disabled");
 			reloadButton.classList.remove('active');
@@ -331,7 +331,7 @@ function showSelectedChannels() {
 function getChannelById(id) {
 	let result = null;
 
-	channels.forEach((channel) => {
+	feeds.forEach((channel) => {
 		if (parseInt(channel.id) == id) {
 			result = channel;
 		}
