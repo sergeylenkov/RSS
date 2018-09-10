@@ -1,71 +1,9 @@
-var apiUrl = 'api.php?';
 var startCount = 0;
 var channels = [];
+
+var mainMenu;
 var reloadButton;
-
-/* API */
-
-function getNews() {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=new`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
-	});
-}
-
-function addNewFeed(link, callback) {
-	$.ajax({
-		url: "api.php",
-		dataType: "json",
-		data: { action: "feed_add", link: link },
-	}).done(function(response) {
-		callback(response);
-	});
-}
-
-function deleteFeed(id, callback) {
-	$.ajax({
-		url: "api.php",
-		dataType: "json",
-		data: { action: "feed_delete", id: id },
-	}).done(function(response) {
-		callback(response);
-	});
-}
-
-function getFeeds() {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=feeds`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
-	});
-}
-
-function getAllNews(from, to) {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=news_all&from=${from}&to=${to}`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
-	});
-}
-
-function markAsRead(id, callback) {
-	$.ajax({
-    	url: "api.php",
-    	dataType: "json",
-    	data: { action: "mark_as_read", id: id },
-	}).done(function(response) {
-		callback(response);
-	});
-}
-
-/* UI */
+var readMoreButton;
 
 function fillNews(data) {
 	let content = document.getElementById('content');
@@ -143,13 +81,13 @@ function createEntry(entry) {
 		item.classList.add('images');
 	}
 
-	/*title[0].addEventListener("mouseup", function() {
-		var item = $(this).closest(".entry");
-		
-		markAsRead(parseInt(item.attr("identifier")), function() {
-			item.addClass("read");
+	title.addEventListener('mouseup', () => {
+		let feedId = item.getAttribute('identifier');
+
+		markAsRead(feedId).then(() => {
+			item.classList.add('read');
 		});
-	});*/
+	});
 
 	return item;
 }
@@ -199,25 +137,23 @@ function createMenuItem(channel) {
 	deleteButton.innerHTML = '<svg><use xlink:href="img/icons.svg#delete"></use></svg';
 
 	item.appendChild(deleteButton);
-	//var deleteButton = $("<div/>", { class: "deleteButton hidden", html: '<svg><use xlink:href="img/icons.svg#delete"></use></svg' });
-	//item.append(deleteButton);
 
 	if (channel.count == 0) {
 		item.classList.add('empty');
 	}
 
-	item.addEventListener('click', (e) => {		
+	item.addEventListener('click', () => {		
 		toggleChannel(item);
 		showSelectedChannels();
 	});
 
-	/*deleteButton.click(function() {
-		var item = $(this).closest(".menu-item");
+	deleteButton.addEventListener('click', () => {		
+		/*var item = $(this).closest(".menu-item");
 
 		deleteFeed(parseInt(item.attr("identifier")), function() {
 			item.remove();
-		});
-	});*/
+		});*/
+	});
 
 	return item;
 }
@@ -315,7 +251,7 @@ function updateNews() {
 
 		if (data.items.length < parseInt(data.total)) {
 			startCount = data.items.length;
-			$("#read-more").removeClass("hidden");
+			readMoreButton.classList.remove('hidden');
 		}
 	});
 }
@@ -405,7 +341,15 @@ function getChannelById(id) {
 }
 
 function init() {
-	$("#read-more").addClass("hidden");
+	mainMenu = document.getElementById('menu');
+	readMoreButton = document.getElementById('read-more');
+	reloadButton = document.getElementById('reload-button');
+
+	reloadButton.addEventListener('click', () => {
+		updateNews();
+	});
+
+	readMoreButton.classList.add('hidden');
 	$("#menu-channels-add-form").addClass("hidden");
 
 	getFeeds().then((data) => {
@@ -418,16 +362,12 @@ function init() {
 		});
 
 		if (total > 0) {
-			$("#read-more").removeClass("hidden");
+			readMoreButton.classList.remove('hidden');
 		}
 	});
 
-	reloadButton = document.getElementById('reload-button');
-	reloadButton.addEventListener('click', () => {
-		updateNews();
-	});
-
-	$("#read-more").click(() => {
+	
+	readMoreButton.addEventListener('click', () => {
 		getViewedNews();
 	});
 
@@ -456,13 +396,13 @@ function init() {
 
 	window.addEventListener('scroll', function(e) {
 		if (window.scrollY > 120) {
-			$("#menu").addClass("fixed");
+			mainMenu.classList.add('fixed');
 		} else {
-			$("#menu").removeClass("fixed");
+			mainMenu.classList.remove('fixed');
 		}
 	});
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     init();
 }, false);
