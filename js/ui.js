@@ -1,9 +1,16 @@
 var startCount = 0;
 var feeds = [];
+var entryItems = [];
 
 var mainMenu;
+var feedsMenu;
 var reloadButton;
 var readMoreButton;
+var feedAddForm;
+var addFeedButton;
+var editFeedButton;
+var formLinkField;
+var formCloseButton;
 
 function fillNews(data) {
 	let content = document.getElementById('content');
@@ -12,6 +19,8 @@ function fillNews(data) {
 	data.forEach((entry) => {	
 		let entryItem = createEntry(entry);
 		content.appendChild(entryItem);
+
+		entryItems.push({ entry: entry, item: entryItem });
 	});
 }
 
@@ -92,15 +101,14 @@ function createEntry(entry) {
 	return item;
 }
 
-function updateMenu(data) {
-	let menu = document.getElementById('menu-channels');
-	menu.innerHTML = '';
+function updateMenu(data) {	
+	feedsMenu.innerHTML = '';
 	
 	feeds = [];
 
 	data.forEach((feed) => {
 		let menuItem = createMenuItem(feed);
-		menu.appendChild(menuItem);
+		feedsMenu.appendChild(menuItem);
 	
 		feeds.push(feed);
 	});
@@ -133,7 +141,7 @@ function createMenuItem(feed) {
 	item.appendChild(counter);	
 
 	let deleteButton = document.createElement('div');
-	deleteButton.className = 'deleteButton hidden';
+	deleteButton.className = 'deleteButton';
 	deleteButton.innerHTML = '<svg><use xlink:href="img/icons.svg#delete"></use></svg';
 
 	item.appendChild(deleteButton);
@@ -196,42 +204,31 @@ function updateEntriesCount() {
 }
 
 function showAddForm() {
-	$("#menu-channels-add-form").removeClass("hidden");
+	feedAddForm.classList.remove('hidden');
+	addFeedButton.classList.add('hidden');
+	editFeedButton.classList.add('hidden');
 
-	$("#menu-channels-item-add").addClass("hidden");
-	$("#menu-channels-item-edit").addClass("hidden");
-
-	$("#menu-channels-add-form-link").focus();
+	formLinkField.focus();
 }
 
 function hideAddForm() {
-	$("#menu-channels-add-form").addClass("hidden");
+	feedAddForm.classList.add('hidden');
 
-	$("#menu-channels-item-add").removeClass("hidden");
-	$("#menu-channels-item-edit").removeClass("hidden");
+	addFeedButton.classList.remove('hidden');
+	editFeedButton.classList.remove('hidden');
 
-	$("#menu-channels-add-form-link").val("");
-	$("#menu-channels-add-form-link").removeClass("error");
-	$("#menu-channels-add-form-link").attr("link", "");
+	formLinkField.value = '';
+	formLinkField.classList.remove('error');
+	formLinkField.setAttribute('link', "");
 }
 
 function editMenu() {
-	if ($("#menu-channels-item-edit").hasClass("active")) {
-		$("#menu-channels-item-edit").removeClass("active");
-
-		$("#menu-channels").find(".menu-item").each(function() {
-			$(this).removeClass("editing");
-			$(this).find(".counter").removeClass("hidden");
-			$(this).find(".deleteButton").addClass("hidden");
-		});
+	if (editFeedButton.classList.contains('active')) {
+		editFeedButton.classList.remove('active');
+		feedsMenu.classList.remove('editing');
 	} else {
-		$("#menu-channels-item-edit").addClass("active");
-
-		$("#menu-channels").find(".menu-item").each(function() {
-			$(this).addClass("editing");
-			$(this).find(".counter").addClass("hidden");
-			$(this).find(".deleteButton").removeClass("hidden");
-		});
+		editFeedButton.classList.add('active');
+		feedsMenu.classList.add('editing');
 	}
 }
 
@@ -257,22 +254,21 @@ function updateNews() {
 }
 
 function addFeed() {
-	var field = $("#menu-channels-add-form-link");
-	var link = field.val().trim();
+	let link = formLinkField.value.trim();
 
 	if (link.length > 0) {
-		$("#menu-channels-add-form").addClass("disabled");
+		feedAddForm.classList.add('disabled');
 		reloadButton.classList.add('active');
 
 		addNewFeed(link).then((response) => {
 			console.log(response);
-			$("#menu-channels-add-form").removeClass("disabled");
+			feedAddForm.classList.remove('disabled');
 			reloadButton.classList.remove('active');
 
 			if (response.error) {
-				field.attr("link", link);
-				field.addClass("error");
-				field.val(response.info);
+				formLinkField.setAttribute('link', link);
+				formLinkField.classList.add('error');
+				formLinkField.value = response.info;
 			} else {				
 				hideAddForm();
 
@@ -300,6 +296,8 @@ function getViewedNews() {
 		data.forEach((entry) => {
 			let entryItem = createEntry(entry);
 			content.appendChild(entryItem);
+
+			entryItems.push({ entry: entry, item: entryItem });
 		});
 
 		updateEntriesCount();
@@ -307,21 +305,21 @@ function getViewedNews() {
 }
 
 function showSelectedChannels() {
-	let channelItems = Array.from(document.getElementById('menu-channels').childNodes);
+	let channelItems = Array.from(feedsMenu.childNodes);
 	
 	let ids = channelItems.filter((item) => {
 		return item.classList.contains('selected');
 	}).map((item) => {
 		return parseInt(item.getAttribute('feed_id'));
 	});
-	
-	$("#content").find(".entry").each(function() {
-		var id = parseInt($(this).attr("feed_id"));
-	
-		$(this).removeClass("hidden");
+
+	entryItems.forEach(entryItem => {		
+		let id = parseInt(entryItem.entry.feed_id);
 
 		if (ids.length > 0 && ids.indexOf(id) == -1) {
-			$(this).addClass("hidden");	
+			entryItem.item.classList.add('hidden');
+		} else {
+			entryItem.item.classList.remove('hidden');
 		}
 	});
 
@@ -342,15 +340,49 @@ function getChannelById(id) {
 
 function init() {
 	mainMenu = document.getElementById('menu');
+	feedsMenu = document.getElementById('menu-channels');
 	readMoreButton = document.getElementById('read-more');
 	reloadButton = document.getElementById('reload-button');
+	feedAddForm = document.getElementById('menu-channels-add-form');
+	addFeedButton = document.getElementById('menu-channels-item-add');
+	editFeedButton = document.getElementById('menu-channels-item-edit');
+	formLinkField = document.getElementById('menu-channels-add-form-link');
+	formCloseButton = document.getElementById('menu-channels-add-form-close');
+	formSendButton = document.getElementById('menu-channels-add-form-add');
 
 	reloadButton.addEventListener('click', () => {
 		updateNews();
 	});
 
+	readMoreButton.addEventListener('click', () => {
+		getViewedNews();
+	});
+
+	addFeedButton.addEventListener('click', () => {
+		showAddForm();
+	});
+
+	editFeedButton.addEventListener('click', () => {
+		editMenu();
+	});
+
+	formCloseButton.addEventListener('click', () => {
+		hideAddForm();
+	});	
+
+	formSendButton.addEventListener('click', () => {
+		addFeed();
+	});
+
+	formLinkField.addEventListener('focus', () => {
+		if (formLinkField.classList.contains('error')) {
+			formLinkField.formLink.remove('error');
+			formLinkField.value = formLinkField.getAttribute('link');
+		}
+	});
+
 	readMoreButton.classList.add('hidden');
-	$("#menu-channels-add-form").addClass("hidden");
+	feedAddForm.classList.add('hidden');
 
 	getFeeds().then((data) => {
 		updateMenu(data);
@@ -364,35 +396,7 @@ function init() {
 		if (total > 0) {
 			readMoreButton.classList.remove('hidden');
 		}
-	});
-
-	
-	readMoreButton.addEventListener('click', () => {
-		getViewedNews();
-	});
-
-	$("#menu-channels-item-add").click(function() {
-		showAddForm();
-	});
-
-	$("#menu-channels-add-form-close").click(function() {
-		hideAddForm();
-	});
-
-	$("#menu-channels-item-edit").click(function() {
-		editMenu();
-	});
-
-	$("#menu-channels-add-form-add").click(function() {
-		addFeed();
-	});
-
-	$("menu-channels-add-form-link").on("focus", function() {
-		if ($(this).hasClass("error")) {
-			$(this).removeClass("error");
-			$(this).val($(this).attr("link"));
-		}
-	});
+	});	
 
 	window.addEventListener('scroll', function(e) {
 		if (window.scrollY > 120) {
