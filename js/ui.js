@@ -1,6 +1,9 @@
 var startCount = 0;
+
 var feeds = [];
+var entries = [];
 var entryItems = [];
+var menuItems = [];
 
 var mainMenu;
 var feedsMenu;
@@ -21,6 +24,7 @@ function fillNews(data) {
 		content.appendChild(entryItem);
 
 		entryItems.push({ entry: entry, item: entryItem });
+		entries.push(entry);
 	});
 }
 
@@ -105,12 +109,14 @@ function updateMenu(data) {
 	feedsMenu.innerHTML = '';
 	
 	feeds = [];
+	menuItems = [];
 
 	data.forEach((feed) => {
 		let menuItem = createMenuItem(feed);
 		feedsMenu.appendChild(menuItem);
 	
 		feeds.push(feed);
+		menuItems.push({ feed: feed, item: menuItem });
 	});
 }
 
@@ -145,6 +151,9 @@ function createMenuItem(feed) {
 	deleteButton.innerHTML = '<svg><use xlink:href="img/icons.svg#delete"></use></svg';
 
 	item.appendChild(deleteButton);
+
+	item.title = title;
+	item.counter = counter;
 
 	if (feed.count == 0) {
 		item.classList.add('empty');
@@ -189,16 +198,22 @@ function clearSelfLinks(description, link) {
 }
 
 function updateEntriesCount() {
-	$("#menu-channels").find(".menu-item").each(function() {
-		var id = parseInt($(this).attr("feed_id"));
+	menuItems.forEach(menuItem => {
+		let feed = menuItem.feed;
+		let item = menuItem.item;
 
-		var count = $("#content").find(".entry[feed_id='" + id + "']").length;
-		$(this).find(".counter").text(count);
+		let feedItems = entries.filter((entry) => {
+			return entry.feed_id == feed.id;
+		});
+
+		let count = feedItems.length;
+
+		item.counter.innerText = count;
 
 		if (count == 0) {
-			$(this).addClass("empty");
+			item.classList.add('empty');
 		} else {
-			$(this).removeClass("empty");
+			item.classList.remove('empty');
 		}
 	});
 }
@@ -298,6 +313,7 @@ function getViewedNews() {
 			content.appendChild(entryItem);
 
 			entryItems.push({ entry: entry, item: entryItem });
+			entries.push(entry);
 		});
 
 		updateEntriesCount();
