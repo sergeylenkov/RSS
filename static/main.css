@@ -11,30 +11,38 @@ input {
 }
 
 #main {
-	padding: 20px 20px 0 50px;
+	padding: 20px 20px 0 20px;
+	display: flex;
+    flex-direction: column;
 }
 
 #header {
 	display: none;
 	width: 100%;
-    float: left;
+    margin: 0;
+    padding: 0 0 0 10px;
 }
 
 #menu {
-	position: fixed;
-    background: rgba(255,255,255,0.95);
-    top: 0;
-    padding: 10px 0;
-	width: 100%;
-	float: left;
+	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
+	position: absolute;
+	top: 40px;
+	left: 30px;
+}
+
+#menu.fixed {
+	position: fixed;
+    top: -20px;
 }
 
 #content {
-	width: 100%;
-    float: left;
-	padding: 40px 0 0 0;
+    max-width: 800px;
+    min-width: 800px;
+    margin: 20px auto 0 auto;
+	padding: 0;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -43,8 +51,8 @@ input {
 }
 
 #bottom-menu {
-	width: 100%;
-    float: left;
+	width: 800px;
+    margin: 0 auto;
 	padding: 20px 0;	
 }
 
@@ -56,30 +64,43 @@ input {
 
 .main-title {
 	float: left;
-	font-size: 28px;
+	font-size: 22px;
 	font-weight: bold;
 	margin: 0 0 10px 0;
 }
 
 #reload-button {
+	margin: 0 0 20px 0;
+    display: flex;
+    flex-direction: row;
+	cursor: pointer;
+}
+
+#reload-button-icon {
 	width: 16px;
 	height: 16px;
-	float: left;
-	margin: auto 15px auto 0;
-	cursor: pointer;
+	margin: auto 0;
 	stroke: #000000;
 	stroke-width: 2px;
 	fill: none;
 }
 
-#reload-button > svg {
+#reload-button-icon > svg {
 	width: 100%;
     height: 100%;
 }
 
+#reload-button-label {
+	font-size: 14px;
+	margin: auto 0 auto 10px;
+}
+
 #reload-button.active {
 	opacity: 0.6;
-	pointer-events: none;
+	pointer-events: none;	
+}
+
+#reload-button.active #reload-button-icon {
 	animation: spin 2s linear infinite;
 }
 
@@ -88,55 +109,18 @@ input {
 }
 
 .entry {
-	flex-basis: 300px;
-	margin: 20px 40px 20px 0;
-	flex-grow: 1;
+	width: 100%;
+	margin: 20px 0 40px 0;
 	flex-shrink: 0;
-	max-width: 400px;
+	border-bottom: 1px solid #ececec;
 }
 
 .entry.read {
 	opacity: 0.6;
 }
 
-.entry.long {
-	flex-basis: 400px;
-	max-width: 500px;
-}
-
-.entry.verylong {
-	flex-basis: 500px;
-	max-width: 600px;
-}
-
-.entry.veryverylong {
-	max-width: 100%;
-    flex-basis: 100%;
-}
-
-.entry.images {
-	flex-basis: 800px;
-	min-width: 800px;
-	max-width: auto;
-}
-
-.entry.verylong.images {
-	max-width: 100%;
-    flex-basis: 100%;
-} 
-
-.entry .content {
-	width: 100%;
-}
-
-.entry.veryverylong .content,
-.entry.verylong.images .content {
-	width: 1000px;
-	margin: 0 auto;
-}
-
 .entry .title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: bold;
 	line-height: 22px;
 	margin: 0 0 15px 0;
@@ -152,6 +136,7 @@ input {
 	font-size: 14px;
 	line-height: 18px;
 	overflow: hidden;
+	margin: 20px 0 40px 0;
 }
 
 .entry .description img {
@@ -166,7 +151,7 @@ input {
 }
 
 .entry .description p {
-	margin: 0;
+	margin: 0 0 10px 0;
 }
 
 .entry .description code {
@@ -194,31 +179,32 @@ input {
 	color: #4076cc;
 }
 
-.entry .channel {
-	margin: 0 0 15px 0;
+.entry .channel {	
+	margin: 10px 0;	
 	display: flex;
 }
 
-.entry .channel .channel-icon {
-	margin: auto 10px auto 0;
+.entry .channel-icon {
 	width: 14px;
 	height: 14px;
+	margin: auto 0;
 	background-image: "";
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: #bebebe;
+    background-color: #ebebeb;
 }
 
-.entry .channel .channel-title {
+.entry .channel-title {
 	font-size: 12px;
-	margin: auto 0;
-    color: #7d7d7d;
+	margin: auto 0 auto 10px;
+	color: #909090;
 }
 
 #menu-channels {
 	margin: auto 20px auto 0;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
 }
 
 #menu-channels:empty {
@@ -236,10 +222,6 @@ input {
 	pointer-events: none;
 }
 
-.menu-item.editing {
-	opacity: 1;
-}
-
 .menu-item .icon {
 	margin: auto 10px auto 0;
 	width: 16px;
@@ -247,7 +229,7 @@ input {
 	background-image: "";
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: #bebebe;
+    background-color: #ebebeb;
 }
 
 .menu-item .title {
@@ -273,10 +255,11 @@ input {
 	width: 16px;
 	height: 16px;
 	stroke: #000000;
-	stroke-width: 2px;
+	stroke-width: 1px;
 	fill: none;
 	pointer-events: auto;
 	cursor: pointer;
+	display: none;
 }
 
 .menu-item .deleteButton > svg {
@@ -284,9 +267,21 @@ input {
 	height: 100%;
 }
 
+#menu-channels.editing .menu-item {
+	opacity: 1;
+}
+
+#menu-channels.editing .menu-item .counter {
+	display: none;
+}
+
+#menu-channels.editing .menu-item .deleteButton {
+	display: initial;
+}
+
 #menu-channels-edit {
-	margin: auto 0;
-	padding: 10px 0;
+	margin: 20px 0 0 0;
+	padding: 0;
 	display: flex;
 }
 
