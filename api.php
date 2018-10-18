@@ -17,41 +17,24 @@ if ($_GET["action"] == "feeds") {
 	echo json_encode($channels);
 }
 
-if ($_GET["action"] == "new") {
-	$channels = getFeeds();
+if ($_GET["action"] == "update") {
 	$items = array();
-	
-	foreach ($channels as &$channel) {	
-		$xml = simplexml_load_file($channel["rss"]);
-		$channelItems = parseItems($xml);
-		$newItems = array();
 
-		foreach ($channelItems as &$item) {
-			$item["feed_id"] = $channel["id"];
-			$item["feed_image"] = $channel["image"];
+	updateFeeds();
 
-			if (addEntry($channel["id"], $item)) {
-				$newItems[] = $item;
-			}
-		}
-
-		$items = array_merge($items, $newItems);
-
-		$channel["count"] = count($newItems);
+	foreach ($db->query("SELECT * FROM entries WHERE viewed = 0 ORDER BY id DESC") as $row) {
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
-	
-	$total = $db->query("SELECT COUNT(*) FROM entries")->fetch();
 
-	echo json_encode(array("channels" => $channels, "items" => $items, "total" => $total[0]));
+	echo json_encode($items);	
 }
 
 if ($_GET["action"] == "news_all") {
-	global $db;
 	$items = array();
 	$limit = $_GET["to"] - $_GET["from"];
 
 	foreach ($db->query("SELECT * FROM entries ORDER BY id DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
-		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "date" => $row["date"]);
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
 
 	echo json_encode($items);
@@ -62,6 +45,13 @@ if ($_GET["action"] == "mark_as_read") {
 	$statement->execute(array(true, $_GET["id"]));
 
 	echo json_encode(array("id" => $_GET["id"], "read" => true));
+}
+
+if ($_GET["action"] == "mark_as_viewed") {
+	$statement = $db->prepare("UPDATE entries SET viewed = ? WHERE id IN(" . $_GET["ids"] . ")");
+	$statement->execute(array(true));
+
+	echo json_encode(array("ids" => $_GET["ids"], "viewed" => true));
 }
 
 if ($_GET["action"] == "feed_add") {
@@ -75,6 +65,12 @@ if ($_GET["action"] == "feed_delete") {
 
 	echo json_encode(array("id" => $_GET["id"], "deleted" => true));
 }
+
+if ($_GET["action"] == "total") {
+	$total = $db->query("SELECT COUNT(*) FROM entries")->fetch();
+	echo json_encode($total[0]);
+}
+
 
 function getFeeds() {
 	global $db;
@@ -113,6 +109,22 @@ function addFeed($link) {
 		}
 	} else {
 		echo json_encode(array("error" => true, "info" => "Канал уже есть в базе"));
+	}
+}
+
+function updateFeeds() {
+	$channels = getFeeds();
+	
+	foreach ($channels as &$channel) {	
+		$xml = simplexml_load_file($channel["rss"]);
+		$channelItems = parseItems($xml);
+
+		foreach ($channelItems as &$item) {
+			$item["feed_id"] = $channel["id"];
+			$item["feed_image"] = $channel["image"];
+
+			addEntry($channel["id"], $item);
+		}
 	}
 }
 

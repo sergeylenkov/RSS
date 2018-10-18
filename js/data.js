@@ -1,12 +1,20 @@
-var apiUrl = 'api.php?';
+const apiUrl = 'api.php?';
+const native = false;
 
 function getNews() {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=new`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
+    return new Promise((resolve) => {
+        if (native) {
+            bridge.call('updateFeeds').then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=update`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
 	});
 }
 
@@ -30,23 +38,37 @@ function deleteFeed(id) {
 	});
 }
 
-function getFeeds() {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=feeds`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
+function getFeeds() {   
+    return new Promise((resolve) => {
+        if (native) {
+            bridge.call('getFeeds').then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=feeds`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
 	});
 }
 
 function getAllNews(from, to) {
-	return new Promise((resolve) => {
-		fetch(`${apiUrl}action=news_all&from=${from}&to=${to}`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
+    return new Promise((resolve) => {
+        if (native) {
+            bridge.call('getAllNews', { from: from, to: to }).then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=news_all&from=${from}&to=${to}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
 	});
 }
 
@@ -58,4 +80,33 @@ function markAsRead(id) {
 			resolve(data);
 		});
 	});
+}
+
+function markAsViewed(ids) {
+    return new Promise((resolve) => {
+        let idsParam = ids.join(',');
+
+		fetch(`${apiUrl}action=mark_as_viewed&ids=${idsParam}`).then((response) => {				 
+			return response.json();
+		}).then((data) => {
+			resolve(data);
+		});
+	});
+}
+
+function getTotalCount() {
+    return new Promise((resolve) => {
+        if (native) {
+            bridge.call('getTotalCount').then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=total`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
+    });
 }

@@ -1,4 +1,5 @@
 var startCount = 0;
+var totalCount = 0;
 
 var feeds = [];
 var entries = [];
@@ -14,6 +15,21 @@ var addFeedButton;
 var editFeedButton;
 var formLinkField;
 var formCloseButton;
+
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+}
 
 function fillNews(data) {
 	let content = document.getElementById('content');
@@ -253,16 +269,12 @@ function updateNews() {
 	getNews().then((data) => {
 		console.log(data);
 		reloadButton.classList.remove('active');
+		
+		fillNews(data);
+		updateEntriesCount();
 
-		data.items.sort((a, b) => {
-			return b.id - a.id;
-		});
-
-		updateMenu(data.channels);
-		fillNews(data.items);
-
-		if (data.items.length < parseInt(data.total)) {
-			startCount = data.items.length;
+		if (data.length < totalCount) {
+			startCount = data.length;
 			readMoreButton.classList.remove('hidden');
 		}
 	});
@@ -303,7 +315,7 @@ function getViewedNews() {
 
 	getAllNews(startCount, startCount + 30).then((data) => {
 		reloadButton.classList.remove('active');
-
+		console.log(data);
 		startCount = startCount + data.length;
 
 		let content = document.getElementById('content');
@@ -354,6 +366,51 @@ function getChannelById(id) {
 	return result;
 }
 
+function updateViewed() {
+	let ids = [];
+
+	entryItems.forEach(entryItem => {
+		if (!parseInt(entryItem.entry.viewed)) {
+			let rect = entryItem.item.getBoundingClientRect();
+			
+			if (rect.top < window.innerHeight) {
+				entryItem.entry.viewed = 1;
+				ids.push(entryItem.entry.id);
+			}
+		}
+	});
+
+	if (ids.length > 0) {
+		markAsViewed(ids);
+		updateViewedCount();
+	}
+}
+
+function updateViewedCount() {
+	menuItems.forEach(menuItem => {
+		let feed = menuItem.feed;
+		let item = menuItem.item;
+
+		let feedItems = entries.filter((entry) => {
+			if (entry.feed_id == feed.id && !parseInt(entry.viewed)) {
+				return true;
+			}
+
+			return false;
+		});
+
+		let count = feedItems.length;
+
+		item.counter.innerText = count;
+
+		if (count == 0) {
+			item.classList.add('empty');
+		} else {
+			item.classList.remove('empty');
+		}
+	});
+}
+
 function init() {
 	mainMenu = document.getElementById('menu');
 	feedsMenu = document.getElementById('menu-channels');
@@ -402,24 +459,28 @@ function init() {
 
 	getFeeds().then((data) => {
 		updateMenu(data);
-
-		var total = 0;
-
-		data.forEach((channel) => {
-			total = total + channel.total;
-		});
-
-		if (total > 0) {
-			readMoreButton.classList.remove('hidden');
-		}
 	});	
 
+	getTotalCount().then((count) => {
+		totalCount = parseInt(count);
+		console.log(totalCount);
+		if (totalCount > 0) {
+			readMoreButton.classList.remove('hidden');
+		}
+	});
+
+	let _updateViewed = debounce(function() {
+		updateViewed();
+	}, 1000);
+
 	window.addEventListener('scroll', function(e) {
-		if (window.scrollY > 120) {
+		if (window.scrollY > 80) {
 			mainMenu.classList.add('fixed');
 		} else {
 			mainMenu.classList.remove('fixed');
 		}
+
+		_updateViewed();
 	});
 }
 
