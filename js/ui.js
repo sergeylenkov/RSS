@@ -31,6 +31,19 @@ function debounce(func, wait, immediate) {
 	};
 }
 
+function throttled(func, delay) {
+	let lastCall = 0;
+	return function (...args) {
+	  	const now = (new Date).getTime();
+	  	if (now - lastCall < delay) {
+			return;
+		}
+		  
+	  	lastCall = now;
+	  	return func(...args);
+	}
+}
+
 function fillNews(data) {
 	let content = document.getElementById('content');
 	content.innerHTML = '';
@@ -277,6 +290,16 @@ function updateNews() {
 			startCount = data.length;
 			readMoreButton.classList.remove('hidden');
 		}
+
+		// set viewed first page on user action
+		setTimeout(() => {
+			let _updateViewed = () => {				
+				updateViewed(true);
+				window.removeEventListener('mousemove', _updateViewed);
+			}
+	
+			window.addEventListener('mousemove', _updateViewed);
+		}, 1000);		
 	});
 }
 
@@ -366,14 +389,18 @@ function getChannelById(id) {
 	return result;
 }
 
-function updateViewed() {
+function updateViewed(force) {
 	let ids = [];
-
+	console.log('updateViewed');
 	entryItems.forEach(entryItem => {
 		if (!parseInt(entryItem.entry.viewed)) {
 			let rect = entryItem.item.getBoundingClientRect();
-			
-			if (rect.top < window.innerHeight) {
+			let height = window.innerHeight / 2;
+
+			if (force) {
+				height = window.innerHeight;
+			}
+			if (rect.top < height) {
 				entryItem.entry.viewed = 1;
 				ids.push(entryItem.entry.id);
 			}
@@ -469,18 +496,23 @@ function init() {
 		}
 	});
 
-	let _updateViewed = debounce(function() {
-		updateViewed();
-	}, 1000);
+	let _updateViewed = throttled(() => {
+		updateViewed(false);
+	}, 500);
 
-	window.addEventListener('scroll', function(e) {
+	window.addEventListener('scroll', (e) => {
 		if (window.scrollY > 80) {
 			mainMenu.classList.add('fixed');
 		} else {
 			mainMenu.classList.remove('fixed');
 		}
 
-		_updateViewed();
+		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+			this.console.log('scroll to end');
+			updateViewed(true);
+		} else {
+			_updateViewed(false);
+		}		
 	});
 }
 

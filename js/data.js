@@ -86,11 +86,18 @@ function markAsViewed(ids) {
     return new Promise((resolve) => {
         let idsParam = ids.join(',');
 
-		fetch(`${apiUrl}action=mark_as_viewed&ids=${idsParam}`).then((response) => {				 
-			return response.json();
-		}).then((data) => {
-			resolve(data);
-		});
+        if (native) {
+            bridge.call('getAllNews', { ids: idsParam }).then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=mark_as_viewed&ids=${idsParam}`).then((response) => {				 
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
 	});
 }
 
