@@ -279,6 +279,9 @@ function editMenu() {
 function updateNews() {
 	reloadButton.classList.add('active');
 
+	entries = [];
+	entryItems = [];
+	
 	getNews().then((data) => {
 		console.log(data);
 		reloadButton.classList.remove('active');
@@ -299,7 +302,7 @@ function updateNews() {
 			}
 	
 			window.addEventListener('mousemove', _updateViewed);
-		}, 1000);		
+		}, 3000);		
 	});
 }
 

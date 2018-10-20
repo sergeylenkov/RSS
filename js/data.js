@@ -87,7 +87,7 @@ function markAsViewed(ids) {
         let idsParam = ids.join(',');
 
         if (native) {
-            bridge.call('getAllNews', { ids: idsParam }).then((result) => {
+            bridge.call('markAsViewed', { ids: idsParam }).then((result) => {
                 let data = JSON.parse(result);
                 resolve(data);
             });
