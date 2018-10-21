@@ -18,15 +18,10 @@ if ($_GET["action"] == "feeds") {
 }
 
 if ($_GET["action"] == "update") {
-	$items = array();
-
 	updateFeeds();
 
-	foreach ($db->query("SELECT * FROM entries WHERE viewed = 0 ORDER BY id DESC") as $row) {
-		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
-	}
-
-	echo json_encode($items);	
+	$items = getUnviewed();
+	echo json_encode($items);
 }
 
 if ($_GET["action"] == "news_all") {
@@ -37,6 +32,11 @@ if ($_GET["action"] == "news_all") {
 		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
 
+	echo json_encode($items);
+}
+
+if ($_GET["action"] == "unviewed") {
+	$items = getUnviewed();
 	echo json_encode($items);
 }
 
@@ -70,7 +70,6 @@ if ($_GET["action"] == "total") {
 	$total = $db->query("SELECT COUNT(*) FROM entries")->fetch();
 	echo json_encode($total[0]);
 }
-
 
 function getFeeds() {
 	global $db;
@@ -126,6 +125,17 @@ function updateFeeds() {
 			addEntry($channel["id"], $item);
 		}
 	}
+}
+
+function getUnviewed() {
+	global $db;
+	$items = array();
+
+	foreach ($db->query("SELECT * FROM entries WHERE viewed = 0 ORDER BY id DESC") as $row) {
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
+	}
+
+	return $items;
 }
 
 function addEntry($feed, &$entry) {
@@ -206,7 +216,7 @@ function parseItems($xml) {
 		if ($item->link instanceof \SimpleXMLElement) {
 			$entry["link"] = (string)$item->link[0];
 		} else {
-			$entry["link "]= $item->link;
+			$entry["link"] = $item->link;
 		}
 
 		$dateStr = "";
@@ -220,6 +230,10 @@ function parseItems($xml) {
 		$dateArray = date_parse($dateStr);
 		$entry["date"] = date('Y-m-d H:i:s', mktime($dateArray['hour'], $dateArray['minute'], $dateArray['second'], $dateArray['month'], $dateArray['day'], $dateArray['year']));
 		
+		if (!$entry["guid"]) {
+			$entry["guid"] = $entry["link"];
+		}
+
 		$entries[] = $entry;
 	}
 

@@ -177,7 +177,7 @@ function createMenuItem(feed) {
 
 	let deleteButton = document.createElement('div');
 	deleteButton.className = 'deleteButton';
-	deleteButton.innerHTML = '<svg><use xlink:href="img/icons.svg#delete"></use></svg';
+	deleteButton.innerHTML = '<svg><use xlink:href="static/icons.svg#delete"></use></svg';
 
 	item.appendChild(deleteButton);
 
@@ -282,7 +282,7 @@ function updateNews() {
 	entries = [];
 	entryItems = [];
 	
-	getNews().then((data) => {
+	updateFeeds().then((data) => {
 		console.log(data);
 		reloadButton.classList.remove('active');
 		
@@ -394,7 +394,7 @@ function getChannelById(id) {
 
 function updateViewed(force) {
 	let ids = [];
-	console.log('updateViewed');
+
 	entryItems.forEach(entryItem => {
 		if (!parseInt(entryItem.entry.viewed)) {
 			let rect = entryItem.item.getBoundingClientRect();
@@ -438,6 +438,23 @@ function updateViewedCount() {
 		} else {
 			item.classList.remove('empty');
 		}
+	});
+}
+
+function getUnviewedNews() {
+	getUnviewed().then((data) => {
+		console.log(data);		
+		fillNews(data);
+		updateEntriesCount();
+
+		setTimeout(() => {
+			let _updateViewed = () => {				
+				updateViewed(true);
+				window.removeEventListener('mousemove', _updateViewed);
+			}
+	
+			window.addEventListener('mousemove', _updateViewed);
+		}, 3000);
 	});
 }
 
@@ -489,11 +506,12 @@ function init() {
 
 	getFeeds().then((data) => {
 		updateMenu(data);
+		getUnviewedNews();
 	});	
 
 	getTotalCount().then((count) => {
 		totalCount = parseInt(count);
-		console.log(totalCount);
+		
 		if (totalCount > 0) {
 			readMoreButton.classList.remove('hidden');
 		}

@@ -1,7 +1,7 @@
 const apiUrl = 'api.php?';
 const native = false;
 
-function getNews() {
+function updateFeeds() {
     return new Promise((resolve) => {
         if (native) {
             bridge.call('updateFeeds').then((result) => {
@@ -70,6 +70,23 @@ function getAllNews(from, to) {
             });
         }
 	});
+}
+
+function getUnviewed() {
+    return new Promise((resolve) => {
+        if (native) {
+            bridge.call('getUnviewed').then((result) => {
+                let data = JSON.parse(result);
+                resolve(data);
+            });
+        } else {
+            fetch(`${apiUrl}action=unviewed`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        }
+    });
 }
 
 function markAsRead(id) {
