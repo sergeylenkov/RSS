@@ -16,6 +16,8 @@ var editFeedButton;
 var formLinkField;
 var formCloseButton;
 
+var data = new Data('api.php?', false);
+
 function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
@@ -126,7 +128,7 @@ function createEntry(entry) {
 	title.addEventListener('mouseup', () => {
 		let entryId = item.getAttribute('identifier');
 
-		markAsRead(entryId).then(() => {
+		data.markAsRead(entryId).then(() => {
 			item.classList.add('read');
 		});
 	});
@@ -282,7 +284,7 @@ function updateNews() {
 	entries = [];
 	entryItems = [];
 	
-	updateFeeds().then((data) => {
+	data.update().then((data) => {
 		console.log(data);
 		reloadButton.classList.remove('active');
 		
@@ -339,7 +341,7 @@ function addFeed() {
 function getViewedNews() {
 	reloadButton.classList.add('active');
 
-	getAllNews(startCount, startCount + 30).then((data) => {
+	data.allNews(startCount, startCount + 30).then((data) => {
 		reloadButton.classList.remove('active');
 		console.log(data);
 		startCount = startCount + data.length;
@@ -411,7 +413,7 @@ function updateViewed(force) {
 	});
 
 	if (ids.length > 0) {
-		markAsViewed(ids);
+		data.markAsViewed(ids);
 		updateViewedCount();
 	}
 }
@@ -442,7 +444,7 @@ function updateViewedCount() {
 }
 
 function getUnviewedNews() {
-	getUnviewed().then((data) => {
+	data.unviewed().then((data) => {
 		console.log(data);		
 		fillNews(data);
 		updateEntriesCount();
@@ -504,12 +506,12 @@ function init() {
 	readMoreButton.classList.add('hidden');
 	feedAddForm.classList.add('hidden');
 
-	getFeeds().then((data) => {
+	data.feeds().then((data) => {
 		updateMenu(data);
 		getUnviewedNews();
 	});	
 
-	getTotalCount().then((count) => {
+	data.totalCount().then((count) => {
 		totalCount = parseInt(count);
 		
 		if (totalCount > 0) {
@@ -523,13 +525,12 @@ function init() {
 
 	window.addEventListener('scroll', (e) => {
 		if (window.scrollY > 80) {
-			mainMenu.classList.add('fixed');
+			mainMenu.classList.add('scrolled');
 		} else {
-			mainMenu.classList.remove('fixed');
+			mainMenu.classList.remove('scrolled');
 		}
 
 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-			this.console.log('scroll to end');
 			updateViewed(true);
 		} else {
 			_updateViewed(false);

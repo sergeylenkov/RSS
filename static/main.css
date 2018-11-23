@@ -24,18 +24,18 @@ input {
 }
 
 #menu {
+	position: fixed;
 	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: column;
-	position: absolute;
+	flex-direction: column;	
 	top: 40px;
 	left: 30px;
 }
 
-#menu.fixed {
-	position: fixed;
+#menu.scrolled {
     top: -20px;
+    transition: top 0.2s ease-in-out;
 }
 
 #content {
@@ -72,8 +72,15 @@ input {
 #reload-button {
 	margin: 0 0 20px 0;
     display: flex;
-    flex-direction: row;
+	flex-direction: row;
+	overflow: hidden;
 	cursor: pointer;
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+}
+
+#menu.scrolled #reload-button {	
+	opacity: 0;    
 }
 
 #reload-button-icon {
@@ -283,6 +290,12 @@ input {
 	margin: 20px 0 0 0;
 	padding: 0;
 	display: flex;
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+}
+
+#menu.scrolled #menu-channels-edit {
+	opacity: 0;
 }
 
 .menu-channels-item {

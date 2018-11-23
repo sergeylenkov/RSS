@@ -28,7 +28,7 @@ if ($_GET["action"] == "news_all") {
 	$items = array();
 	$limit = $_GET["to"] - $_GET["from"];
 
-	foreach ($db->query("SELECT * FROM entries ORDER BY id DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
+	foreach ($db->query("SELECT * FROM entries ORDER BY date DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
 		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
 
@@ -131,7 +131,7 @@ function getUnviewed() {
 	global $db;
 	$items = array();
 
-	foreach ($db->query("SELECT * FROM entries WHERE viewed = 0 ORDER BY id DESC") as $row) {
+	foreach ($db->query("SELECT * FROM entries WHERE viewed = 0 ORDER BY date DESC") as $row) {
 		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
 
