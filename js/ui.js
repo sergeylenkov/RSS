@@ -8,13 +8,16 @@ var menuItems = [];
 
 var mainMenu;
 var feedsMenu;
+var emptyPlaceholder;
 var reloadButton;
-var readMoreButton;
+var readPreviousButton;
+var readNextButton;
 var feedAddForm;
 var addFeedButton;
 var editFeedButton;
 var formLinkField;
 var formCloseButton;
+var showViewedButton;
 
 var data = new Data('api.php?', false);
 
@@ -47,7 +50,7 @@ function throttled(func, delay) {
 }
 
 function fillNews(data) {
-	let content = document.getElementById('content');
+	let content = document.getElementById('news-content');
 	content.innerHTML = '';
 	
 	data.forEach((entry) => {	
@@ -179,7 +182,7 @@ function createMenuItem(feed) {
 
 	let deleteButton = document.createElement('div');
 	deleteButton.className = 'deleteButton';
-	deleteButton.innerHTML = '<svg><use xlink:href="static/icons.svg#delete"></use></svg';
+	deleteButton.innerHTML = '<svg><use xlink:href="static/icons.svg#delete"></use></svg>';
 
 	item.appendChild(deleteButton);
 
@@ -293,7 +296,9 @@ function updateNews() {
 
 		if (data.length < totalCount) {
 			startCount = data.length;
-			readMoreButton.classList.remove('hidden');
+			
+			readNextButton.classList.remove('hidden');
+			emptyPlaceholder.classList.add('hidden');
 		}
 
 		// set viewed first page on user action
@@ -315,7 +320,7 @@ function addFeed() {
 		feedAddForm.classList.add('disabled');
 		reloadButton.classList.add('active');
 
-		addNewFeed(link).then((response) => {
+		data.addNewFeed(link).then((response) => {
 			console.log(response);
 			feedAddForm.classList.remove('disabled');
 			reloadButton.classList.remove('active');
@@ -328,11 +333,25 @@ function addFeed() {
 				hideAddForm();
 
 				response.channel.count = response.items.length;
-				appendMenuItem(response.channel);
+				let feed = response.channel;
+
+				let menuItem = createMenuItem(feed);
+				feedsMenu.appendChild(menuItem);
+	
+				feeds.push(feed);
+				menuItems.push({ feed: feed, item: menuItem });
+				
+				let content = document.getElementById('news-content');
 
 				response.items.forEach((entry) => {
-					appendEntry(entry);
+					let entryItem = createEntry(entry);
+					content.appendChild(entryItem);
+
+					entryItems.push({ entry: entry, item: entryItem });
+					entries.push(entry);
 				});
+
+				updateEntriesCount();
 			}
 		});
 	}
@@ -346,7 +365,9 @@ function getViewedNews() {
 		console.log(data);
 		startCount = startCount + data.length;
 
-		let content = document.getElementById('content');
+		emptyPlaceholder.classList.add('hidden');
+
+		let content = document.getElementById('news-content');
 
 		data.forEach((entry) => {
 			let entryItem = createEntry(entry);
@@ -449,6 +470,14 @@ function getUnviewedNews() {
 		fillNews(data);
 		updateEntriesCount();
 
+		if (totalCount > 0) {
+			if (data.length == 0) {
+				emptyPlaceholder.classList.remove('hidden');
+			} else {
+				readNextButton.classList.remove('hidden');
+			}
+		}
+
 		setTimeout(() => {
 			let _updateViewed = () => {				
 				updateViewed(true);
@@ -463,7 +492,9 @@ function getUnviewedNews() {
 function init() {
 	mainMenu = document.getElementById('menu');
 	feedsMenu = document.getElementById('menu-channels');
-	readMoreButton = document.getElementById('read-more');
+	readPreviousButton = document.getElementById('read-previous');
+	readNextButton = document.getElementById('read-next');
+	emptyPlaceholder = document.getElementById('empty-placeholder');
 	reloadButton = document.getElementById('reload-button');
 	feedAddForm = document.getElementById('menu-channels-add-form');
 	addFeedButton = document.getElementById('menu-channels-item-add');
@@ -471,12 +502,17 @@ function init() {
 	formLinkField = document.getElementById('menu-channels-add-form-link');
 	formCloseButton = document.getElementById('menu-channels-add-form-close');
 	formSendButton = document.getElementById('menu-channels-add-form-add');
+	showViewedButton = document.getElementById('show-viewed-button');
 
 	reloadButton.addEventListener('click', () => {
 		updateNews();
 	});
 
-	readMoreButton.addEventListener('click', () => {
+	readPreviousButton.addEventListener('click', () => {
+		
+	});
+
+	readNextButton.addEventListener('click', () => {
 		getViewedNews();
 	});
 
@@ -496,6 +532,10 @@ function init() {
 		addFeed();
 	});
 
+	showViewedButton.addEventListener('click', () => {
+		getViewedNews();
+	});
+
 	formLinkField.addEventListener('focus', () => {
 		if (formLinkField.classList.contains('error')) {
 			formLinkField.formLink.remove('error');
@@ -503,20 +543,18 @@ function init() {
 		}
 	});
 
-	readMoreButton.classList.add('hidden');
-	feedAddForm.classList.add('hidden');
-
-	data.feeds().then((data) => {
-		updateMenu(data);
-		getUnviewedNews();
-	});	
+	emptyPlaceholder.classList.add('hidden');
+	readPreviousButton.classList.add('hidden');
+	readNextButton.classList.add('hidden');
+	feedAddForm.classList.add('hidden');	
 
 	data.totalCount().then((count) => {
 		totalCount = parseInt(count);
 		
-		if (totalCount > 0) {
-			readMoreButton.classList.remove('hidden');
-		}
+		data.feeds().then((data) => {
+			updateMenu(data);
+			getUnviewedNews();
+		});	
 	});
 
 	let _updateViewed = throttled(() => {
@@ -540,4 +578,11 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', () => {
     init();
+}, false);
+
+document.addEventListener('keydown', (event) => {
+	console.log(event);
+	if (event.ctrlKey && event.keyCode == 40) {
+		getViewedNews();
+	}
 }, false);

@@ -44,7 +44,7 @@ input {
     margin: 20px auto 0 auto;
 	padding: 0;
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	flex-wrap: wrap;
 	align-content: stretch;
 	flex-grow: 1;
@@ -56,10 +56,36 @@ input {
 	padding: 20px 0;	
 }
 
-#read-more {
+.read-more {
+	margin: 10px auto 10px 0;
 	color: #767676;
 	font-size: 12px;
 	cursor: pointer;
+}
+
+.read-more-label {
+	color: #337ab7;
+	border-bottom: 1px solid rgba(51, 122, 183, 0.3);
+}
+
+.read-more-shortcut {
+}
+
+#empty-placeholder {
+	font-size: 14px;
+}
+
+.empty-placeholder-button {
+	color: #337ab7;
+	cursor: pointer;
+	border-bottom: 1px solid rgba(51, 122, 183, 0.3);
+}
+
+#news-content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 }
 
 .main-title {

@@ -1,6 +1,3 @@
-const apiUrl = 'api.php?';
-const native = false;
-
 class Data {
     constructor(url, native) {
         this.url = url;
@@ -9,7 +6,7 @@ class Data {
 
     update() {
         return new Promise((resolve) => {
-            if (native) {
+            if (this.native) {
                 bridge.call('updateFeeds').then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
@@ -26,7 +23,7 @@ class Data {
 
     feeds() {   
         return new Promise((resolve) => {
-            if (native) {
+            if (this.native) {
                 bridge.call('getFeeds').then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
@@ -43,7 +40,7 @@ class Data {
 
     allNews(from, to) {
         return new Promise((resolve) => {
-            if (native) {
+            if (this.native) {
                 bridge.call('getAllNews', { from: from, to: to }).then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
@@ -60,7 +57,7 @@ class Data {
 
     unviewed() {
         return new Promise((resolve) => {
-            if (native) {
+            if (this.native) {
                 bridge.call('getUnviewed').then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
@@ -79,7 +76,7 @@ class Data {
         return new Promise((resolve) => {
             let idsParam = ids.join(',');
     
-            if (native) {
+            if (this.native) {
                 bridge.call('markAsViewed', { ids: idsParam }).then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
@@ -106,7 +103,7 @@ class Data {
 
     totalCount() {
         return new Promise((resolve) => {
-            if (native) {
+            if (this.native) {
                 bridge.call('getTotalCount').then((result) => {
                     let data = JSON.parse(result);
                     resolve(data);
