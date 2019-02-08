@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu } from './components/menu/Menu.js';
+import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 
 export default class App extends React.Component {
@@ -7,7 +8,8 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
-            feeds: []
+            feeds: [],
+            entries: []
         }
 
         this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
@@ -25,8 +27,15 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="application">
-                <Menu feeds={this.state.feeds}/>
+                <Menu feeds={this.state.feeds} onReload={() => this.reload()}/>
+                <EntriesList entries={this.state.entries}/>
             </div>
         );
+    }
+
+    reload() {
+        this.dataHelper.update().then(data => {
+            console.log(data);
+        });
     }
 }
