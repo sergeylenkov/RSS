@@ -1,0 +1,16 @@
+.container {
+    position: fixed;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;	
+	top: 40px;
+	left: 30px;
+}
+
+.feeds {
+    margin: 20px 0 0 0;
+    display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
