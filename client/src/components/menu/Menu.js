@@ -9,7 +9,7 @@ export class Menu extends React.Component {
     render() {
         return (
             <div className={styles.container}>
-                <ReloadButton onClick={() => this.props.onReload()}/>
+                <ReloadButton isActive={this.props.isUpdating} onClick={() => this.props.onReload()}/>
 
                 <div className={styles.feeds}>
                     {this.props.feeds.map((feed, i) => {
@@ -22,7 +22,7 @@ export class Menu extends React.Component {
                     })}
                 </div>
 
-                <MenuEdit onEdit={() => this.onEdit()}/>
+                <MenuEdit isDisabled={this.props.isUpdating} onEdit={() => this.onEdit()}/>
             </div>
         );
     }

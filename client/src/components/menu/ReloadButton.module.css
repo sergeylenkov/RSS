@@ -26,3 +26,18 @@
 	font-size: 14px;
 	margin: auto 0 auto 10px;
 }
+
+.container.active {
+	opacity: 0.6;
+	pointer-events: none;	
+}
+
+.container.active .icon {
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin { 
+	100% { 
+		transform: rotate(360deg);
+	}
+}

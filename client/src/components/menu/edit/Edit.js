@@ -5,8 +5,14 @@ import styles from './Edit.module.css';
 
 export class MenuEdit extends React.Component {
     render() {
+        let className = styles.container;
+
+        if (this.props.isDisabled) {
+            className += ` ${styles.disabled}`;
+        }
+
         return (
-            <div className={styles.container}>
+            <div className={className}>
                 <button className={styles.button} onClick={() => this.onAdd()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
 				<button className={styles.button} onClick={() => this.props.onEdit()}><div className={styles.icon}><Icon svg={Icons.edit}/></div></button>
             </div>

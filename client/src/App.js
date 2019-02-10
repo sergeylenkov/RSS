@@ -9,7 +9,8 @@ export default class App extends React.Component {
 
         this.state = {
             feeds: [],
-            entries: []
+            entries: [],
+            isUpdating: false
         }
 
         this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
@@ -27,15 +28,22 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="application">
-                <Menu feeds={this.state.feeds} onReload={() => this.reload()}/>
+                <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()}/>
                 <EntriesList entries={this.state.entries}/>
             </div>
         );
     }
 
     reload() {
+        this.setState({
+            isUpdating: true
+        });
+
         this.dataHelper.update().then(data => {
             console.log(data);
+            this.setState({
+                isUpdating: false
+            });
         });
     }
 }

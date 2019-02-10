@@ -25,3 +25,8 @@
 	width: 100%;
 	height: 100%;
 }
+
+.container.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
