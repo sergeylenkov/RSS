@@ -40,10 +40,29 @@ export default class App extends React.Component {
         });
 
         this.dataHelper.update().then(data => {
-            console.log(data);
+            console.log(data);            
             this.setState({
+                entries: data,
                 isUpdating: false
             });
+
+            this.updateFeeds();
         });
+    }
+
+    updateFeeds() {
+        const feeds = [...this.state.feeds];
+
+        feeds.forEach(feed => {
+            const count = this.state.entries.filter(el => {
+                return el.feed_id === feed.id;
+            });
+
+            feed.count = count;
+        });
+        console.log('updateFeeds', feeds);
+        this.setState({
+            feeds: feeds
+        })
     }
 }
