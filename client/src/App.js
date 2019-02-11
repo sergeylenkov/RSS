@@ -17,11 +17,17 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        this.dataHelper.feeds().then(data => {
-            console.log(data);
-            this.setState({
-                feeds: data
-            });
+        this.dataHelper.feeds().then(feeds => {
+            console.log(feeds);
+            this.dataHelper.unviewed().then((entries) => {
+                console.log(entries);
+                this.setState({
+                    feeds: feeds,
+                    entries: entries
+                });
+
+                this.updateFeedsCount();
+            });            
         });
     }
 
@@ -46,17 +52,17 @@ export default class App extends React.Component {
                 isUpdating: false
             });
 
-            this.updateFeeds();
+            this.updateFeedsCount();
         });
     }
 
-    updateFeeds() {
+    updateFeedsCount() {
         const feeds = [...this.state.feeds];
 
         feeds.forEach(feed => {
             const count = this.state.entries.filter(el => {
                 return el.feed_id === feed.id;
-            });
+            }).length;
 
             feed.count = count;
         });
