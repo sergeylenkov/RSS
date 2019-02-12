@@ -4,6 +4,9 @@ export class DataHelper {
     constructor(url, native) {
         this.url = url;
         this.native = native;
+
+        this._feeds = [];
+        this._feedsDict = {};
     }
 
     update() {
@@ -23,7 +26,7 @@ export class DataHelper {
         });
     }
 
-    feeds() {   
+    getFeeds() {   
         return new Promise((resolve) => {
             if (this.native) {
                 bridge.call('getFeeds').then((result) => {
@@ -34,13 +37,29 @@ export class DataHelper {
                 fetch(`${this.url}action=feeds`).then((response) => {
                     return response.json();
                 }).then((data) => {
+                    this._feeds = data;
+
+                    this._feeds.forEach(feed => {
+                        const a = document.createElement('a');
+                        a.href = feed.link;
+
+                        if (feed.image && feed.image.length > 0) {
+                            feed.icon = feed.image;
+                        } else {
+                            const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+                            feed.icon = icon;
+                        }
+
+                        this._feedsDict[feed.id] = feed;
+                    });
+
                     resolve(data);
                 });
             }
         });
     }
 
-    allNews(from, to) {
+    getAllNews(from, to) {
         return new Promise((resolve) => {
             if (this.native) {
                 bridge.call('getAllNews', { from: from, to: to }).then((result) => {
@@ -57,7 +76,7 @@ export class DataHelper {
         });
     }
 
-    unviewed() {
+    getUnviewed() {
         return new Promise((resolve) => {
             if (this.native) {
                 bridge.call('getUnviewed').then((result) => {
@@ -138,6 +157,10 @@ export class DataHelper {
                 resolve(data);
             });
         });
+    }
+
+    getFeedById(id) {
+        return this._feedsDict[id];
     }
 }
 

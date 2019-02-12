@@ -17,10 +17,14 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        this.dataHelper.feeds().then(feeds => {
+        this.dataHelper.getFeeds().then(feeds => {
             console.log(feeds);
-            this.dataHelper.unviewed().then((entries) => {
+            this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
+                entries.forEach(entry => {
+                    entry.feed = this.dataHelper.getFeedById(entry.feed_id);
+                });
+
                 this.setState({
                     feeds: feeds,
                     entries: entries
@@ -32,7 +36,7 @@ export default class App extends React.Component {
     }
 
     render() {
-        return (
+        return (            
             <div className="application">
                 <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()}/>
                 <EntriesList entries={this.state.entries}/>
@@ -66,7 +70,7 @@ export default class App extends React.Component {
 
             feed.count = count;
         });
-        console.log('updateFeeds', feeds);
+
         this.setState({
             feeds: feeds
         })

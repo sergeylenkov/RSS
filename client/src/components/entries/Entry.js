@@ -9,6 +9,7 @@ export class Entry extends React.Component {
         return (
             <div className={styles.container}>
                 <div className={styles.title}><a href={this.props.link}>{this.props.title}</a></div>
+                <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${this.props.feedIcon})` }}></div><div className={styles.feedTitle}>{this.props.feedTitle}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
             </div>
         );

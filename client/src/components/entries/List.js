@@ -8,7 +8,7 @@ export class EntriesList extends React.Component {
         return (
             <div className={styles.container}>
                 {this.props.entries.map((entry, i) => {
-                    return (<Entry key={entry.id} title={entry.title} description={entry.description} link={entry.link} />)
+                    return (<Entry key={entry.id} title={entry.title} description={entry.description} link={entry.link} feedIcon={entry.feed.icon} feedTitle={entry.feed.title} />)
                 })}
             </div>
         );

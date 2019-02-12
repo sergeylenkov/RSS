@@ -13,12 +13,7 @@ export class Menu extends React.Component {
 
                 <div className={styles.feeds}>
                     {this.props.feeds.map((feed, i) => {
-                        const a = document.createElement('a');
-                        a.href = feed.link;
-
-                        const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-
-                        return (<MenuButton key={feed.id} icon={icon} title={feed.title} count={feed.count} />)
+                        return (<MenuButton key={feed.id} icon={feed.icon} title={feed.title} count={feed.count} />)
                     })}
                 </div>
 

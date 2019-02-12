@@ -69,12 +69,12 @@
 	color: #4076cc;
 }
 
-.channel {	
+.feed {	
 	margin: 10px 0;	
 	display: flex;
 }
 
-.channelIcon {
+.feedIcon {
 	width: 14px;
 	height: 14px;
 	margin: auto 0;
@@ -84,7 +84,7 @@
     background-color: #ebebeb;
 }
 
-.channelTitle {
+.feedTitle {
 	font-size: 12px;
 	margin: auto 0 auto 10px;
 	color: #909090;
