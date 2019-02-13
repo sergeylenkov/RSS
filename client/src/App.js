@@ -38,8 +38,8 @@ export default class App extends React.Component {
     render() {
         return (            
             <div className="application">
-                <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()}/>
-                <EntriesList entries={this.state.entries}/>
+                <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} />
+                <EntriesList entries={this.state.entries} onScroll={() => this.onScroll()} />
             </div>
         );
     }
@@ -74,5 +74,9 @@ export default class App extends React.Component {
         this.setState({
             feeds: feeds
         })
+    }
+
+    onScroll() {
+        
     }
 }

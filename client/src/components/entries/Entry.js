@@ -3,13 +3,42 @@ import React from 'react';
 import styles from './Entry.module.css';
 
 export class Entry extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isViewed: false
+        }
+
+        this.itemRef = element => {
+            this.elementRef = element;  
+        };
+
+        this.handleScroll = this.handleScroll.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll);
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
     render() {
-        const description = this.clearSelfLinks(this.props.description, this.props.link);
+        const entry = this.props.entry;
+        const description = this.clearSelfLinks(entry.description, entry.link);
         
+        let className = styles.container;
+
+        if (this.props.isRead) {
+            className += ` ${styles.read}`;
+        }
+
         return (
-            <div className={styles.container}>
-                <div className={styles.title}><a href={this.props.link}>{this.props.title}</a></div>
-                <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${this.props.feedIcon})` }}></div><div className={styles.feedTitle}>{this.props.feedTitle}</div></div>
+            <div className={className} ref={this.itemRef}>
+                <div className={styles.title}><a href={entry.link}>{entry.title}</a></div>
+                <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feedIcon})` }}></div><div className={styles.feedTitle}>{entry.feedTitle}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
             </div>
         );
@@ -36,5 +65,20 @@ export class Entry extends React.Component {
         }
     
         return el.innerHTML;
-    }    
+    }
+
+    handleScroll() {
+        if (!this.state.isViewed) {
+            const rect = this.elementRef.getBoundingClientRect();
+            const height = window.innerHeight / 2;
+           
+            if (rect.top < height) {
+                console.log(this.elementRef, rect);
+                console.log('isViewed');
+                this.setState({
+                    isViewed: true
+                });
+            }
+        }
+    }
 }
