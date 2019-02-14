@@ -30,7 +30,7 @@ export default class App extends React.Component {
                     entries: entries
                 });
 
-                this.updateFeedsCount();
+                this.updateFeedsCount(false);
             });            
         });
     }
@@ -39,7 +39,7 @@ export default class App extends React.Component {
         return (            
             <div className="application">
                 <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} />
-                <EntriesList entries={this.state.entries} onScroll={() => this.onScroll()} />
+                <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} />
             </div>
         );
     }
@@ -49,23 +49,26 @@ export default class App extends React.Component {
             isUpdating: true
         });
 
-        this.dataHelper.update().then(data => {
-            console.log(data);            
+        this.dataHelper.update().then(entries => {                     
             this.setState({
-                entries: data,
+                entries: entries,
                 isUpdating: false
             });
 
-            this.updateFeedsCount();
+            this.updateFeedsCount(false);
         });
     }
 
-    updateFeedsCount() {
+    updateFeedsCount(unviewed) {
         const feeds = [...this.state.feeds];
 
         feeds.forEach(feed => {
-            const count = this.state.entries.filter(el => {
-                return el.feed_id === feed.id;
+            const count = this.state.entries.filter(entry => {
+                if (unviewed) {
+                    return entry.feed_id === feed.id && entry.viewed !== true
+                }
+
+                return entry.feed_id === feed.id;
             }).length;
 
             feed.count = count;
@@ -76,7 +79,8 @@ export default class App extends React.Component {
         })
     }
 
-    onScroll() {
-        
+    onUpdateViewed(ids) {        
+        this.updateFeedsCount(true);
+        this.dataHelper.markAsViewed(ids);
     }
 }

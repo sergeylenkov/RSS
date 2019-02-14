@@ -38,7 +38,7 @@ export class Entry extends React.Component {
         return (
             <div className={className} ref={this.itemRef}>
                 <div className={styles.title}><a href={entry.link}>{entry.title}</a></div>
-                <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feedIcon})` }}></div><div className={styles.feedTitle}>{entry.feedTitle}</div></div>
+                <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feed.icon})` }}></div><div className={styles.feedTitle}>{entry.feed.title}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
             </div>
         );
@@ -73,11 +73,13 @@ export class Entry extends React.Component {
             const height = window.innerHeight / 2;
            
             if (rect.top < height) {
-                console.log(this.elementRef, rect);
-                console.log('isViewed');
+                this.props.entry.viewed = true;
+
                 this.setState({
                     isViewed: true
                 });
+
+                this.props.onView(this.props.entry.id);
             }
         }
     }

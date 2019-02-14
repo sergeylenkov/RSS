@@ -11,6 +11,10 @@ export class MenuEdit extends React.Component {
             className += ` ${styles.disabled}`;
         }
 
+        if (this.props.isScrolled) {
+            className += ` ${styles.scrolled}`;
+        }
+
         return (
             <div className={className}>
                 <button className={styles.button} onClick={() => this.onAdd()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>

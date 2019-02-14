@@ -6,6 +6,7 @@
 	flex-direction: column;	
 	top: 40px;
 	left: 30px;
+	transition: top 0.2s ease-in-out;
 }
 
 .feeds {
@@ -13,4 +14,8 @@
     display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
+}
+
+.container.scrolled {
+	top: -20px;
 }

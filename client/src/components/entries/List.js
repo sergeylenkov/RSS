@@ -1,19 +1,38 @@
 import React from 'react';
 import { Entry } from './Entry.js';
+import { debounce } from '../../Utils.js';
 
 import styles from './List.module.css';
 
 export class EntriesList extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this._viewedIds = [];
+
+        this._updateViewed = debounce(() => {            
+            console.log('update viewd', this._viewedIds);
+            this.props.onUpdateViewed(this._viewedIds);
+            this._viewedIds = [];
+        }, 1000, false);
+    }
+
     render() {        
         return (
             <div className={styles.container}>
                 {
                     this.props.entries.map((entry) => {
                         const isRead = parseInt(entry.read);
-                        return <Entry key={entry.id} entry={entry} isRead={isRead} />
+                        return <Entry key={entry.id} entry={entry} isRead={isRead} onView={(id) => this.onView(id) } />
                     })
                 }
             </div>
         );
+    }
+
+    onView(id) {
+        console.log('onView ' + id);
+        this._viewedIds.push(id);
+        this._updateViewed();
     }
 }

@@ -30,3 +30,8 @@
     opacity: 0.6;
     pointer-events: none;
 }
+
+.container.scrolled {
+	opacity: 0;
+	pointer-events: none;
+}
