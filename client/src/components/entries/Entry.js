@@ -12,7 +12,7 @@ export class Entry extends React.Component {
         }
 
         this.itemRef = element => {
-            this.elementRef = element;  
+            this.elementRef = element;
         };
 
         this.titleRef = element => {
@@ -25,10 +25,14 @@ export class Entry extends React.Component {
         }
         
         this.handleScroll = this.handleScroll.bind(this);
+        this.handleMove = this.handleMove.bind(this);
     }
 
     componentDidMount() {
-        window.addEventListener('scroll', this.handleScroll);
+        if (!this.state.isViewed) {
+            window.addEventListener('scroll', this.handleScroll);
+            window.addEventListener('mousemove', this.handleMove);
+        }
     }
     
     componentWillUnmount() {
@@ -104,6 +108,23 @@ export class Entry extends React.Component {
 
                 this.props.onView(this.props.entry.id);
             }
+        }
+    }
+
+    handleMove() {
+        if (!this.state.isViewed) {
+            const rect = this.elementRef.getBoundingClientRect();
+            
+            if (rect.top < window.innerHeight) { 
+                this.setState({
+                    isViewed: true
+                });
+
+                this.props.onView(this.props.entry.id);
+                console.log('handleMove', rect, window.innerHeight);        
+            }        
+
+            window.removeEventListener('mousemove', this.handleMove);
         }
     }
 }
