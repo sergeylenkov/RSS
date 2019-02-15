@@ -39,7 +39,7 @@ export default class App extends React.Component {
         return (            
             <div className="application">
                 <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} />
-                <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} />
+                <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
             </div>
         );
     }
@@ -81,6 +81,10 @@ export default class App extends React.Component {
 
     onUpdateViewed(ids) {        
         this.updateFeedsCount(true);
-        this.dataHelper.markAsViewed(ids);
+        //this.dataHelper.markAsViewed(ids);
+    }
+
+    onUpdateReaded(id) {
+        this.dataHelper.markAsRead(id);
     }
 }

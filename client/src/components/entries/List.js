@@ -23,7 +23,7 @@ export class EntriesList extends React.Component {
                 {
                     this.props.entries.map((entry) => {
                         const isRead = parseInt(entry.read);
-                        return <Entry key={entry.id} entry={entry} isRead={isRead} onView={(id) => this.onView(id) } />
+                        return <Entry key={entry.id} entry={entry} isRead={isRead} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} />
                     })
                 }
             </div>
@@ -31,8 +31,11 @@ export class EntriesList extends React.Component {
     }
 
     onView(id) {
-        console.log('onView ' + id);
         this._viewedIds.push(id);
         this._updateViewed();
+    }
+
+    onRead(id) {
+        this.props.onUpdateReaded(id);
     }
 }

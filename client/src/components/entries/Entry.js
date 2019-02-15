@@ -7,13 +7,23 @@ export class Entry extends React.Component {
         super(props);
 
         this.state = {
-            isViewed: false
+            isViewed: false,
+            isRead: props.isRead
         }
 
         this.itemRef = element => {
             this.elementRef = element;  
         };
 
+        this.titleRef = element => {
+            element.addEventListener('mouseup', () => {               
+                this.props.onRead(this.props.entry.id);
+                this.setState({
+                    isRead: true
+                });
+            });
+        }
+        
         this.handleScroll = this.handleScroll.bind(this);
     }
 
@@ -27,24 +37,24 @@ export class Entry extends React.Component {
 
     render() {
         const entry = this.props.entry;
-        const description = this.clearSelfLinks(entry.description, entry.link);
+        const description = this.removeSelfLinks(entry.description, entry.link);
         
         let className = styles.container;
 
-        if (this.props.isRead) {
+        if (this.state.isRead) {
             className += ` ${styles.read}`;
         }
 
         return (
             <div className={className} ref={this.itemRef}>
-                <div className={styles.title}><a href={entry.link}>{entry.title}</a></div>
+                <div className={styles.title} ref={this.titleRef}><a href={entry.link}>{entry.title}</a></div>
                 <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feed.icon})` }}></div><div className={styles.feedTitle}>{entry.feed.title}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
             </div>
         );
     }
 
-    clearSelfLinks(description, link) {
+    removeSelfLinks(description, link) {
         let el = document.createElement('div');       
         el.innerHTML = description;
         
@@ -71,8 +81,21 @@ export class Entry extends React.Component {
         if (!this.state.isViewed) {
             const rect = this.elementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
-           
-            if (rect.top < height) {
+            
+            let viewed = false;
+            let scrollEnd = false;
+
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                scrollEnd = true;
+            }
+
+            if (scrollEnd && rect.top > 0) {
+                viewed = true;
+            } else if (rect.top < height) {
+                viewed = true;                
+            }
+
+            if (viewed) {
                 this.props.entry.viewed = true;
 
                 this.setState({
