@@ -21,10 +21,6 @@ export default class App extends React.Component {
             console.log(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
-                entries.forEach(entry => {
-                    entry.feed = this.dataHelper.getFeedById(entry.feed_id);
-                });
-
                 this.setState({
                     feeds: feeds,
                     entries: entries
@@ -49,7 +45,8 @@ export default class App extends React.Component {
             isUpdating: true
         });
 
-        this.dataHelper.update().then(entries => {                     
+        this.dataHelper.update().then(entries => {
+            console.log(entries);
             this.setState({
                 entries: entries,
                 isUpdating: false
@@ -81,7 +78,7 @@ export default class App extends React.Component {
 
     onUpdateViewed(ids) {        
         this.updateFeedsCount(true);
-        //this.dataHelper.markAsViewed(ids);
+        this.dataHelper.markAsViewed(ids);
     }
 
     onUpdateReaded(id) {

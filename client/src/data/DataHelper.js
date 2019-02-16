@@ -20,6 +20,7 @@ export class DataHelper {
                 fetch(`${this.url}action=update`).then((response) => {
                     return response.json();
                 }).then((data) => {
+                    this.updateFeedsInEntries(data);
                     resolve(data);
                 });
             }
@@ -70,6 +71,7 @@ export class DataHelper {
                 fetch(`${this.url}action=news_all&from=${from}&to=${to}`).then((response) => {
                     return response.json();
                 }).then((data) => {
+                    this.updateFeedsInEntries(data);
                     resolve(data);
                 });
             }
@@ -87,6 +89,7 @@ export class DataHelper {
                 fetch(`${this.url}action=unviewed`).then((response) => {
                     return response.json();
                 }).then((data) => {
+                    this.updateFeedsInEntries(data);
                     resolve(data);
                 });
             }
@@ -161,6 +164,12 @@ export class DataHelper {
 
     getFeedById(id) {
         return this._feedsDict[id];
+    }
+
+    updateFeedsInEntries(entries) {
+        entries.forEach(entry => {
+            entry.feed = this.getFeedById(entry.feed_id);
+        });
     }
 }
 

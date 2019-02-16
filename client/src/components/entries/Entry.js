@@ -117,13 +117,12 @@ export class Entry extends React.Component {
             
             if (rect.top < window.innerHeight) { 
                 this.props.entry.viewed = true;
-                
+
                 this.setState({
                     isViewed: true
                 });
                 
-                this.props.onView(this.props.entry.id);
-                console.log('handleMove', rect, window.innerHeight);        
+                this.props.onView(this.props.entry.id);     
             }        
 
             window.removeEventListener('mousemove', this.handleMove);
