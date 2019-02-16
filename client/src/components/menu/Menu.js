@@ -38,7 +38,9 @@ export class Menu extends React.Component {
                 <div className={styles.feeds}>
                     {
                         this.props.feeds.map((feed, i) => {
-                            return (<MenuButton key={feed.id} feed={feed} onClick={(id) => this.onFeedSelect(id)} />)
+                            const selected = true;
+
+                            return (<MenuButton key={feed.id} feed={feed} isSelected={selected} onClick={(id) => this.props.onFeedSelect(id)} />)
                         })
                     }
                 </div>
@@ -49,10 +51,6 @@ export class Menu extends React.Component {
     }
 
     onEdit() {
-
-    }
-
-    onFeedSelect(id) {
 
     }
 

@@ -10,6 +10,7 @@ export default class App extends React.Component {
         this.state = {
             feeds: [],
             entries: [],
+            selectedFeeds: {},
             isUpdating: false
         }
 
@@ -21,9 +22,16 @@ export default class App extends React.Component {
             console.log(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
+                let selectedFeeds = {};
+
+                feeds.forEach(feed => {
+                    selectedFeeds[feed.id] = false;
+                });
+
                 this.setState({
                     feeds: feeds,
-                    entries: entries
+                    entries: entries,
+                    selectedFeeds: selectedFeeds
                 });
 
                 this.updateFeedsCount(false);
@@ -34,7 +42,7 @@ export default class App extends React.Component {
     render() {
         return (            
             <div className="application">
-                <Menu feeds={this.state.feeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} />
+                <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} />
                 <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
             </div>
         );
@@ -73,15 +81,27 @@ export default class App extends React.Component {
 
         this.setState({
             feeds: feeds
-        })
+        });
     }
 
     onUpdateViewed(ids) {        
         this.updateFeedsCount(true);
-        this.dataHelper.markAsViewed(ids);
+        //this.dataHelper.markAsViewed(ids);
     }
 
     onUpdateReaded(id) {
         this.dataHelper.markAsRead(id);
+    }
+
+    onFeedSelect(id) {
+        let feeds = this.state.selectedFeeds;
+        feeds[id] = !feeds[id];
+
+        this.setState({
+            selectedFeeds: feeds
+        });
+
+        console.log('onFeedSelect', id);
+        console.log(feeds);
     }
 }
