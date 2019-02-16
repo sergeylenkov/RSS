@@ -26,6 +26,25 @@
 	height: 100%;
 }
 
+.form {
+	display: flex;
+}
+
+.form.disabled {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.linkField {
+	width: 300px;
+    margin: auto 20px auto 0;
+    font-size: 14px;
+}
+
+.linkField.error {
+	color: #ce1616;
+}
+
 .container.disabled {
     opacity: 0.6;
     pointer-events: none;
