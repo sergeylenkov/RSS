@@ -5,7 +5,10 @@
 }
 
 .empty {
-	opacity: 0.4;
+	opacity: 0.4;	
+}
+
+.disabled {
 	pointer-events: none;
 }
 
