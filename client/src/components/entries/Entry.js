@@ -11,24 +11,33 @@ export class Entry extends React.Component {
             isRead: props.isRead
         }
 
+        this.itemElementRef = null;
+        this.titleElementRef = null;
+
         this.itemRef = element => {
-            this.elementRef = element;
+            if (element) {
+                this.itemElementRef = element;
+            }
         };
 
         this.titleRef = element => {
-            element.addEventListener('mouseup', () => {               
-                this.props.onRead(this.props.entry.id);
-                this.setState({
-                    isRead: true
+            if (element) {
+                this.titleElementRef = element;
+
+                this.titleElementRef.addEventListener('mouseup', () => {               
+                    this.props.onRead(this.props.entry.id);
+                    this.setState({
+                        isRead: true
+                    });
                 });
-            });
+            }            
         }
         
         this.handleScroll = this.handleScroll.bind(this);
         this.handleMove = this.handleMove.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         if (!this.state.isViewed) {
             window.addEventListener('scroll', this.handleScroll);
             window.addEventListener('mousemove', this.handleMove);
@@ -37,6 +46,7 @@ export class Entry extends React.Component {
     
     componentWillUnmount() {
         window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('mousemove', this.handleMove);
     }
 
     render() {
@@ -83,7 +93,7 @@ export class Entry extends React.Component {
 
     handleScroll() {
         if (!this.state.isViewed) {
-            const rect = this.elementRef.getBoundingClientRect();
+            const rect = this.itemElementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
             
             let viewed = false;
@@ -113,7 +123,7 @@ export class Entry extends React.Component {
 
     handleMove() {
         if (!this.state.isViewed) {
-            const rect = this.elementRef.getBoundingClientRect();
+            const rect = this.itemElementRef.getBoundingClientRect();
             
             if (rect.top < window.innerHeight) { 
                 this.props.entry.viewed = true;

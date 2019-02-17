@@ -7,6 +7,8 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
 
+        this.entries = [];
+
         this.state = {
             feeds: [],
             entries: [],
@@ -22,6 +24,8 @@ export default class App extends React.Component {
             console.log(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
+                this.entries = entries;
+
                 let selectedFeeds = {};
 
                 feeds.forEach(feed => {
@@ -55,6 +59,8 @@ export default class App extends React.Component {
 
         this.dataHelper.update().then(entries => {
             console.log(entries);
+            this.entries = entries;
+
             this.setState({
                 entries: entries,
                 isUpdating: false
@@ -86,7 +92,7 @@ export default class App extends React.Component {
 
     onUpdateViewed(ids) {        
         this.updateFeedsCount(true);
-        //this.dataHelper.markAsViewed(ids);
+        this.dataHelper.markAsViewed(ids);
     }
 
     onUpdateReaded(id) {
@@ -97,11 +103,28 @@ export default class App extends React.Component {
         let feeds = this.state.selectedFeeds;
         feeds[id] = !feeds[id];
 
-        this.setState({
-            selectedFeeds: feeds
-        });
+        let filtered = false;
 
-        console.log('onFeedSelect', id);
-        console.log(feeds);
+        Object.keys(feeds).forEach(key => {
+            if (feeds[key]) {
+                filtered = true;
+            }
+        });
+        
+        if (filtered) {
+            const entries = this.entries.filter(entry => {
+                return feeds[entry.feed_id];
+            });
+         
+            this.setState({
+                entries: entries,
+                selectedFeeds: feeds
+            });
+        } else {
+            this.setState({
+                entries: this.entries,
+                selectedFeeds: feeds
+            });
+        }
     }
 }
