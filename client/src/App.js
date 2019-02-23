@@ -131,7 +131,7 @@ export default class App extends React.Component {
 
     onFeedDelete(id) {
         console.log('onFeedDelete', id);
-        this.dataHelper.deleteFeed().then(() => {
+        this.dataHelper.deleteFeed(id).then(() => {
             const feeds = [...this.state.feeds];
 
             let index = -1;
