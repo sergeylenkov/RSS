@@ -36,6 +36,22 @@
     padding: 2px 4px;
 }
 
+.deleteButton {
+	margin: auto 0 auto 10px;
+	width: 16px;
+	height: 16px;
+	stroke: #000000;
+	fill: none;
+	stroke-width: 1px;
+	pointer-events: auto;
+	cursor: pointer;
+}
+
 .selected .label {
 	font-weight: bold;
+}
+
+.edited {
+	opacity: 1.0;
+	pointer-events: none;
 }

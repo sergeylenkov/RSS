@@ -26,6 +26,10 @@
 	height: 100%;
 }
 
+.icon.edited {
+	stroke: #2f74f1;
+}
+
 .form {
 	display: flex;
 }

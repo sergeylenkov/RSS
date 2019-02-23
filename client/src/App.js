@@ -46,7 +46,8 @@ export default class App extends React.Component {
     render() {
         return (            
             <div className="application">
-                <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} />
+                <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} 
+                    onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} onFeedDelete={(id) => this.onFeedDelete(id)} onAddFeed={(feed) => this.onAddFeed(feed)} />
                 <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
             </div>
         );
@@ -126,5 +127,49 @@ export default class App extends React.Component {
                 selectedFeeds: feeds
             });
         }
+    }
+
+    onFeedDelete(id) {
+        console.log('onFeedDelete', id);
+        this.dataHelper.deleteFeed().then(() => {
+            const feeds = [...this.state.feeds];
+
+            let index = -1;
+
+            feeds.forEach((feed, i) => {
+                if (feed.id == id) {
+                    index = i;
+                }
+            });
+
+            if (index >= 0) {
+                delete feeds[index];
+
+                this.setState({
+                    feeds: feeds,
+                });
+            }
+        });
+    }
+
+    onAddFeed(feed) {
+        this.setState({
+            isUpdating: true
+        });
+
+        this.dataHelper.addNewFeed(feed).then((response) => {
+            const feed = response.channel;
+            console.log(response);
+            const feeds = [...this.state.feeds];
+            feeds.push(feed);
+
+            this.setState({
+                feeds: feeds,
+                entries: response.items,
+                isUpdating: false
+            });
+            
+            this.updateFeedsCount(false);
+        });
     }
 }

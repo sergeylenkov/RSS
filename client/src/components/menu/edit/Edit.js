@@ -10,6 +10,8 @@ export class MenuEdit extends React.Component {
         this.state = {
             isFormVisible: false
         }
+
+        this.linkFieldRef = React.createRef();
     }
 
     render() {
@@ -34,17 +36,28 @@ export class MenuEdit extends React.Component {
                 </div>
             );
         } else {
+            let iconClassName = styles.icon;
+
+            if (this.props.isEdited) {
+                iconClassName += ` ${styles.edited}`;
+            }
+
             return (
                 <div className={className}>
                     <button className={styles.button} onClick={() => this.onShowForm()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
-                    <button className={styles.button} onClick={() => this.props.onEdit()}><div className={styles.icon}><Icon svg={Icons.edit}/></div></button>
+                    <button className={styles.button} onClick={() => this.props.onEdit()}><div className={iconClassName}><Icon svg={Icons.edit}/></div></button>
                 </div>
             );
         }
     }
 
     onAdd() {
+        console.log(this.linkFieldRef.current.value);
+        const value = this.linkFieldRef.current.value;
 
+        if (value.length > 0) {
+            this.props.onAddFedd(value);
+        }
     }
 
     onShowForm() {

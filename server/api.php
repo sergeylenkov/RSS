@@ -99,7 +99,7 @@ function addFeed($link) {
 			$channel["id"] = $db->lastInsertId();
 			$items = parseItems($xml);
 
-			foreach($items as $item) {
+			foreach ($items as &$item) {
 				addEntry($channel["id"], $item);
 			}
 

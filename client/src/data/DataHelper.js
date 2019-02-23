@@ -147,6 +147,9 @@ export class DataHelper {
             fetch(`${this.url}action=feed_add&link=${link}`).then((response) => {				 
                 return response.json();
             }).then((data) => {
+                if (data.items) {
+                    this.updateFeedsInEntries(data.items);
+                }
                 resolve(data);
             });
         });

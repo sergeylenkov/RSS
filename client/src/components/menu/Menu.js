@@ -10,7 +10,8 @@ export class Menu extends React.Component {
         super(props);
 
         this.state = {
-            isScrolled: false
+            isScrolled: false,
+            isEdited: false
         }
 
         this.handleScroll = this.handleScroll.bind(this);
@@ -40,18 +41,22 @@ export class Menu extends React.Component {
                         this.props.feeds.map((feed, i) => {
                             const selected = this.props.selectedFeeds[feed.id];
 
-                            return (<MenuButton key={feed.id} feed={feed} isSelected={selected} onClick={(id) => this.props.onFeedSelect(id)} />)
+                            return (<MenuButton key={feed.id} feed={feed} isSelected={selected} isEdited={this.state.isEdited} onClick={(id) => this.props.onFeedSelect(id)} onDelete={(id) => this.props.onFeedDelete(id)} />)
                         })
                     }
                 </div>
 
-                <MenuEdit isDisabled={this.props.isUpdating} isScrolled={this.state.isScrolled} onEdit={() => this.onEdit()}/>
+                <MenuEdit isDisabled={this.props.isUpdating} isScrolled={this.state.isScrolled} isEdited={this.state.isEdited} onEdit={() => this.onEdit()} onAddFedd={(feed) => this.props.onAddFeed(feed)}/>
             </div>
         );
     }
 
     onEdit() {
+        const edited = !this.state.isEdited;
 
+        this.setState({
+            isEdited: edited
+        });
     }
 
     handleScroll() {
