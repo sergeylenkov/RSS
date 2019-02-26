@@ -75,7 +75,7 @@ export default class App extends React.Component {
         const feeds = [...this.state.feeds];
 
         feeds.forEach(feed => {
-            const count = this.state.entries.filter(entry => {
+            const count = this.entries.filter(entry => {
                 if (unviewed) {
                     return entry.feed_id === feed.id && entry.viewed !== true
                 }

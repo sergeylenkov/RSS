@@ -123,9 +123,10 @@ export class Entry extends React.Component {
 
     handleMove() {
         if (!this.state.isViewed) {
-            const rect = this.itemElementRef.getBoundingClientRect();
+            const rect = this.itemElementRef.getBoundingClientRect();            
+            const height = rect.top + rect.height;
             
-            if (rect.top < window.innerHeight) { 
+            if (height < window.innerHeight) { 
                 this.props.entry.viewed = true;
 
                 this.setState({
