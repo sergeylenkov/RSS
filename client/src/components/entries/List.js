@@ -17,13 +17,15 @@ export class EntriesList extends React.Component {
         }, 1000, false);
     }
 
-    render() {        
+    render() {
+        const isCollapseLong = JSON.parse(localStorage.getItem('collpaseLong'));
+
         return (
             <div className={styles.container}>
                 {
                     this.props.entries.map((entry) => {
                         const isRead = parseInt(entry.read);
-                        return <Entry key={entry.id} entry={entry} isRead={isRead} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} />
+                        return <Entry key={entry.id} entry={entry} isRead={isRead} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} />
                     })
                 }
             </div>

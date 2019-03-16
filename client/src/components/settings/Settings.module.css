@@ -1,0 +1,31 @@
+.container {
+    position: fixed;
+    left: 20px;
+    bottom: 50px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    width: 100%;
+    height: 40px;
+    display: flex;
+}
+
+.label {
+    margin: auto 0;
+    font-size: 14px;
+}
+
+.checkbox {
+    margin: auto 10px auto 0;
+}
+
+.days {
+    width: 30px;
+    margin: 0 5px;
+    text-align: right;
+}

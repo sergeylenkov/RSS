@@ -1,0 +1,12 @@
+.container {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    fill: #000000;
+    stroke: none;
+}

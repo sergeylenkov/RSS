@@ -8,7 +8,8 @@ export class Entry extends React.Component {
 
         this.state = {
             isViewed: false,
-            isRead: props.isRead
+            isRead: props.isRead,
+            isExpanded: false
         }
 
         this.itemElementRef = null;
@@ -59,11 +60,19 @@ export class Entry extends React.Component {
             className += ` ${styles.read}`;
         }
 
+        let expandButton = null;
+
+        if (this.props.isCollapseLong && !this.state.isExpanded && this.isLong(description)) {
+            className += ` ${styles.collapsed}`;
+            expandButton = <button className={styles.expandButton} onClick={() => this.expand()}></button>
+        }
+
         return (
             <div className={className} ref={this.itemRef}>
                 <div className={styles.title} ref={this.titleRef}><a href={entry.link}>{entry.title}</a></div>
                 <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feed.icon})` }}></div><div className={styles.feedTitle}>{entry.feed.title}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
+                {expandButton}
             </div>
         );
     }
@@ -89,6 +98,21 @@ export class Entry extends React.Component {
         }
     
         return el.innerHTML;
+    }
+
+    isLong(description) {        
+        let el = document.createElement('div');       
+        el.innerHTML = description;
+        
+        if (el.getElementsByTagName('img').length > 3) {
+            return true;
+        }
+        
+        if (el.innerText.length > 1500) {
+            return true;
+        }
+
+        return false;
     }
 
     handleScroll() {
@@ -138,5 +162,11 @@ export class Entry extends React.Component {
 
             window.removeEventListener('mousemove', this.handleMove);
         }
+    }
+
+    expand() {
+        this.setState({
+            isExpanded: true
+        });
     }
 }

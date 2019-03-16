@@ -2,6 +2,8 @@ import React from 'react';
 import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
+import { SettingsButton } from './components/settings/Button.js';
+import { Settings } from './components/settings/Settings.js';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -13,10 +15,19 @@ export default class App extends React.Component {
             feeds: [],
             entries: [],
             selectedFeeds: {},
-            isUpdating: false
+            isUpdating: false,
+            isSettingsVisible: false
         }
 
         this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
+
+        if (localStorage.getItem('collpaseLong') === null) {
+            localStorage.setItem('collpaseLong', false);
+        }
+
+        if (localStorage.getItem('keepDays') === null) {
+            localStorage.setItem('keepDays', 30);
+        }
     }
 
     componentDidMount() {
@@ -41,6 +52,12 @@ export default class App extends React.Component {
                 this.updateFeedsCount(false);
             });            
         });
+
+        //window.addEventListener('mouseup', this.handleMouseUp);
+    }
+    
+    componentWillUnmount() {
+        //window.removeEventListener('mouseup', this.handleMouseUp);     
     }
 
     render() {
@@ -49,6 +66,8 @@ export default class App extends React.Component {
                 <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} 
                     onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} onFeedDelete={(id) => this.onFeedDelete(id)} onAddFeed={(feed) => this.onAddFeed(feed)} />
                 <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
+                <SettingsButton onClick={() => this.onToggleSettings()}/>
+                <Settings isVisible={this.state.isSettingsVisible} />
             </div>
         );
     }
@@ -137,7 +156,7 @@ export default class App extends React.Component {
             let index = -1;
 
             feeds.forEach((feed, i) => {
-                if (feed.id == id) {
+                if (feed.id === id) {
                     index = i;
                 }
             });
@@ -170,6 +189,20 @@ export default class App extends React.Component {
             });
             
             this.updateFeedsCount(false);
+        });
+    }
+
+    onToggleSettings() {        
+        const visible = !this.state.isSettingsVisible;
+        
+        this.setState({
+            isSettingsVisible: visible
+        });
+    }
+
+    handleMouseUp() {
+        this.setState({
+            isSettingsVisible: false
         });
     }
 }
