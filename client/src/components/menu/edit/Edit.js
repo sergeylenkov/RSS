@@ -51,8 +51,7 @@ export class MenuEdit extends React.Component {
         }
     }
 
-    onAdd() {
-        console.log(this.linkFieldRef.current.value);
+    onAdd() {        
         const value = this.linkFieldRef.current.value;
 
         if (value.length > 0) {
