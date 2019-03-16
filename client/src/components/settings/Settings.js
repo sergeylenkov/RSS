@@ -5,9 +5,9 @@ import styles from './Settings.module.css';
 export class Settings extends React.Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
-            collapse: localStorage.getItem('collpaseLong'),
+            collapse: JSON.parse(localStorage.getItem('collpaseLong')),
             days: localStorage.getItem('keepDays')
         }
 
@@ -29,12 +29,12 @@ export class Settings extends React.Component {
         if (this.state.collapse) {
             collapse = "checked";
         }
-
+        console.log(this.state);
         return (
             <div className={styles.container}>
                 <div className={styles.item}>
                     <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={collapse} onChange={this.onToggleCollapse} />                    
-                    <label className={styles.label} htmlFor={this.collapseId}>Обрезать длинные посты</label>
+                    <label className={styles.label} htmlFor={this.collapseId}>Сворачивать длинные посты</label>
                 </div>
 
                 <div className={styles.item}>
@@ -55,7 +55,6 @@ export class Settings extends React.Component {
     }
 
     onChangeDays() {
-        console.log(this.daysFieldRef.current.value);
         const days = this.daysFieldRef.current.value;
 
         localStorage.setItem('keepDays', days);

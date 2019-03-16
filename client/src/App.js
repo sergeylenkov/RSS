@@ -20,6 +20,14 @@ export default class App extends React.Component {
         }
 
         this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
+
+        if (localStorage.getItem('collpaseLong') === null) {
+            localStorage.setItem('collpaseLong', false);
+        }
+
+        if (localStorage.getItem('keepDays') === null) {
+            localStorage.setItem('keepDays', 30);
+        }
     }
 
     componentDidMount() {
@@ -148,7 +156,7 @@ export default class App extends React.Component {
             let index = -1;
 
             feeds.forEach((feed, i) => {
-                if (feed.id == id) {
+                if (feed.id === id) {
                     index = i;
                 }
             });
