@@ -10,8 +10,7 @@ export class EntriesList extends React.Component {
 
         this._viewedIds = [];
 
-        this._updateViewed = debounce(() => {            
-            console.log('update viewd', this._viewedIds);
+        this._updateViewed = debounce(() => {
             this.props.onUpdateViewed(this._viewedIds);
             this._viewedIds = [];
         }, 1000, false);
@@ -21,7 +20,7 @@ export class EntriesList extends React.Component {
         const isCollapseLong = JSON.parse(localStorage.getItem('collpaseLong'));
 
         return (
-            <div className={styles.container}>
+            <div className={styles.container}>                
                 {
                     this.props.entries.map((entry) => {
                         const isRead = parseInt(entry.read);

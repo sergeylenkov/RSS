@@ -4,12 +4,16 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { SettingsButton } from './components/settings/Button.js';
 import { Settings } from './components/settings/Settings.js';
+import { EmptyList } from './components/entries/Empty.js';
+
+import styles from './App.module.css';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.entries = [];
+        this.entriesPerPage = 30;
 
         this.state = {
             feeds: [],
@@ -52,20 +56,24 @@ export default class App extends React.Component {
                 this.updateFeedsCount(false);
             });            
         });
-
-        //window.addEventListener('mouseup', this.handleMouseUp);
-    }
-    
-    componentWillUnmount() {
-        //window.removeEventListener('mouseup', this.handleMouseUp);     
     }
 
     render() {
+        let empty = null;
+        let list = null;
+
+        if (this.state.entries.length > 0) {
+            list = <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
+        } else {
+            empty = <EmptyList onShowLast={() => this.onShowLast()} />
+        }
+
         return (            
-            <div className="application">
+            <div className={styles.container}>
                 <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} 
                     onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} onFeedDelete={(id) => this.onFeedDelete(id)} onAddFeed={(feed) => this.onAddFeed(feed)} />
-                <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
+                {empty}
+                {list}
                 <SettingsButton onClick={() => this.onToggleSettings()}/>
                 <Settings isVisible={this.state.isSettingsVisible} />
             </div>
@@ -200,9 +208,20 @@ export default class App extends React.Component {
         });
     }
 
-    handleMouseUp() {
+    onShowLast() {
         this.setState({
-            isSettingsVisible: false
+            isUpdating: true
+        });
+
+        this.dataHelper.getAllNews(0, this.entriesPerPage).then((entries) => {
+            this.entries = entries;
+
+            this.setState({
+                entries: entries,
+                isUpdating: false
+            });
+
+            this.updateFeedsCount(false);
         });
     }
 }
