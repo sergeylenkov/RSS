@@ -14,7 +14,8 @@ export class ReloadButton extends React.Component {
         return (
             <button className={className} onClick={() => this.props.onClick()}>
                 <div className={styles.icon}><Icon svg={Icons.reload}/></div>
-                <div className={styles.label}>Обновить</div>
+                <div className={styles.label}>Свежее</div>
+                <div className={styles.counter}>{this.props.count}</div>
             </button>
         );        
     }

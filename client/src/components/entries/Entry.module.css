@@ -1,9 +1,11 @@
 .container {
-    width: 100%;
-	margin: 20px 0 40px 0;
-	flex-shrink: 0;
-	border-bottom: 1px solid #ececec;
 	position: relative;
+	width: 100%;
+    margin: 0 0 20px 0;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;    
+    background: #ffffff;
 }
 
 .container.read {
@@ -19,7 +21,6 @@
 
 .title a {
 	color: #000000;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 	text-decoration: none;
 }
 
@@ -28,7 +29,7 @@
 	font-size: 14px;
 	line-height: 18px;
 	overflow: hidden;
-	margin: 20px 0 40px 0;
+	margin: 20px 0 0 0;
 }
 
 .description img {
@@ -100,9 +101,9 @@
 	position: absolute;	
 	left: 0;
 	right: 0;
-	bottom: 40px;
-	height: 50px;
+	bottom: 20px;
+	height: 60px;
 	width: 100%;
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.8));
 	cursor: pointer;
 }

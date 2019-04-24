@@ -24,10 +24,10 @@ export class Settings extends React.Component {
             return null;
         }
 
-        let collapse = "";
+        let collapse = '';
 
         if (this.state.collapse) {
-            collapse = "checked";
+            collapse = 'checked';
         }
         console.log(this.state);
         return (

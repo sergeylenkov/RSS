@@ -27,6 +27,15 @@
 	margin: auto 0 auto 10px;
 }
 
+.counter {
+	margin: auto 0 auto 10px;
+	padding: 2px 5px;
+	font-size: 11px;
+	border-radius: 2px;
+	color: #ffffff;
+    background-color: #4da0da;
+}
+
 .container.active {
 	opacity: 0.6;
 	pointer-events: none;	

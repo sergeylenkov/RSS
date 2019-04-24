@@ -2,9 +2,7 @@ import React from 'react';
 import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
-import { SettingsButton } from './components/settings/Button.js';
-import { Settings } from './components/settings/Settings.js';
-import { EmptyList } from './components/entries/Empty.js';
+import { FeedsList } from './components/feeds/Feeds.js';
 
 import styles from './App.module.css';
 
@@ -59,23 +57,17 @@ export default class App extends React.Component {
     }
 
     render() {
-        let empty = null;
-        let list = null;
+        const count = this.state.feeds.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.count;
+        }, 0);
 
-        if (this.state.entries.length > 0) {
-            list = <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
-        } else {
-            empty = <EmptyList onShowLast={() => this.onShowLast()} />
-        }
-
-        return (            
+        return (
             <div className={styles.container}>
-                <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} 
-                    onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} onFeedDelete={(id) => this.onFeedDelete(id)} onAddFeed={(feed) => this.onAddFeed(feed)} />
-                {empty}
-                {list}
-                <SettingsButton onClick={() => this.onToggleSettings()}/>
-                <Settings isVisible={this.state.isSettingsVisible} />
+                <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} onReload={() => this.reload()} count={count} /></div>
+                <div className={styles.content}>
+                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} /></div>
+                    <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
+                </div>
             </div>
         );
     }
@@ -120,7 +112,7 @@ export default class App extends React.Component {
 
     onUpdateViewed(ids) {        
         this.updateFeedsCount(true);
-        this.dataHelper.markAsViewed(ids);
+        //this.dataHelper.markAsViewed(ids);
     }
 
     onUpdateReaded(id) {
