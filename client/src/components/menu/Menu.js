@@ -8,8 +8,7 @@ export class Menu extends React.Component {
         super(props);
 
         this.state = {
-            isScrolled: false,
-            isEdited: false
+            isScrolled: false
         }
     }
 

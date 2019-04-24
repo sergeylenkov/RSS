@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon, Icons } from '../../Icon.js';
+import { Icon, Icons } from '../Icon.js';
 
 import styles from './Edit.module.css';
 
-export class MenuEdit extends React.Component {
+export class FeedEdit extends React.Component {
     constructor(props) {
         super(props);
 
@@ -30,8 +30,8 @@ export class MenuEdit extends React.Component {
                 <div className={className}>
                     <div className={styles.form}>
                         <input className={styles.linkField} placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
-                        <button className={styles.button} onClick={() => this.onAdd()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
-                        <button className={styles.button} onClick={() => this.onCloseForn()}><div className={styles.icon}><Icon svg={Icons.close}/></div></button>
+                        <button className={styles.formButton} onClick={() => this.onAdd()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
+                        <button className={styles.formButton} onClick={() => this.onCloseForn()}><div className={styles.icon}><Icon svg={Icons.close}/></div></button>
                     </div>
                 </div>
             );
