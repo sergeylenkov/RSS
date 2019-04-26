@@ -122,11 +122,11 @@ export class Entry extends React.Component {
             
             let viewed = false;
             let scrollEnd = false;
-
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            
+            if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                 scrollEnd = true;
             }
-
+            
             if (scrollEnd && rect.top > 0) {
                 viewed = true;
             } else if (rect.top < height) {

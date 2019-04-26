@@ -36,6 +36,17 @@ if ($_GET["action"] == "news_all") {
 	echo json_encode($items);
 }
 
+if ($_GET["action"] == "news_read") {
+	$items = array();
+	$limit = $_GET["to"] - $_GET["from"];
+
+	foreach ($db->query("SELECT * FROM entries WHERE read = 1 ORDER BY date DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
+	}
+
+	echo json_encode($items);
+}
+
 if ($_GET["action"] == "unviewed") {
 	$items = getUnviewed();
 	echo json_encode($items);

@@ -45,6 +45,10 @@
 	animation: spin 2s linear infinite;
 }
 
+.container.selected .label {
+	font-weight: bold;
+}
+
 @keyframes spin { 
 	100% { 
 		transform: rotate(360deg);

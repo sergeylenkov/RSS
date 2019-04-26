@@ -78,6 +78,24 @@ export class DataHelper {
         });
     }
 
+    getReadNews(from, to) {
+        return new Promise((resolve) => {
+            if (this.native) {
+                bridge.call('getReadNews', { from: from, to: to }).then((result) => {
+                    let data = JSON.parse(result);
+                    resolve(data);
+                });
+            } else {
+                fetch(`${this.url}action=news_read&from=${from}&to=${to}`).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    this.updateFeedsInEntries(data);
+                    resolve(data);
+                });
+            }
+        });
+    }
+
     getUnviewed() {
         return new Promise((resolve) => {
             if (this.native) {

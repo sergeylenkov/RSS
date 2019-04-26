@@ -1,61 +1,17 @@
 .container {
-    height: 30px;
-	margin: 0;
-	display: flex;
-}
-
-.empty {
-	opacity: 0.4;	
-}
-
-.disabled {
-	pointer-events: none;
-}
-
-.icon {
-	margin: auto 10px auto 0;
-	width: 16px;
-	height: 16px;
-	background-image: "";
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: #ebebeb;
+	height: 100%;
+	margin: 0 0 0 20px;
 }
 
 .label {
-	font-size: 14px;
 	margin: auto 0;
-	cursor: pointer;
+	font-size: 14px;
 }
 
-.counter {
-	font-size: 11px;
-	font-weight: bold;
-	margin: auto 0 auto 10px;
-	background: #fffada;
-    padding: 2px 4px;
-}
-
-.deleteButton {
-	margin: auto 0 auto 10px;
-	width: 16px;
-	height: 16px;
-	stroke: #000000;
-	fill: none;
-	stroke-width: 1px;
-	pointer-events: auto;
-	cursor: pointer;
-}
-
-.selected .label {
+.container.selected .label {
 	font-weight: bold;
 }
 
-.selected.empty {
-	opacity: 1;	
-}
-
-.edited {
-	opacity: 1.0;
+.disabled {
 	pointer-events: none;
 }
