@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon, Icons } from '../Icon.js';
 
 import styles from './Entry.module.css';
 
@@ -9,11 +10,17 @@ export class Entry extends React.Component {
         this.state = {
             isViewed: false,
             isRead: props.isRead,
-            isExpanded: false
+            isExpanded: false,
+            isBookmark: props.isBookmark
         }
 
         this.itemElementRef = null;
         this.titleElementRef = null;
+        
+        this.handleScroll = this.handleScroll.bind(this);
+        this.handleMove = this.handleMove.bind(this);
+        this.onRead = this.onRead.bind(this);
+        this.onBookmark = this.onBookmark.bind(this);
 
         this.itemRef = element => {
             if (element) {
@@ -25,17 +32,9 @@ export class Entry extends React.Component {
             if (element) {
                 this.titleElementRef = element;
 
-                this.titleElementRef.addEventListener('mouseup', () => {               
-                    this.props.onRead(this.props.entry.id);
-                    this.setState({
-                        isRead: true
-                    });
-                });
+                this.titleElementRef.addEventListener('mouseup', this.onRead);
             }            
         }
-        
-        this.handleScroll = this.handleScroll.bind(this);
-        this.handleMove = this.handleMove.bind(this);
     }
 
     componentDidMount() {        
@@ -73,6 +72,10 @@ export class Entry extends React.Component {
                 <div className={styles.feed}><div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feed.icon})` }}></div><div className={styles.feedTitle}>{entry.feed.title}</div></div>
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
+                <div className={styles.info}>
+                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onBookmark}><Icon svg={this.state.isBookmark ? Icons.bookmarkSelected : Icons.bookmark }/></div><div className={styles.infoCounter}>{1}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{entry.read}</div></div>
+                </div>
             </div>
         );
     }
@@ -167,6 +170,22 @@ export class Entry extends React.Component {
     expand() {
         this.setState({
             isExpanded: true
+        });
+    }
+
+    onRead() {
+        this.props.onRead(this.props.entry.id);
+
+        this.setState({
+            isRead: true
+        });
+    }
+
+    onBookmark() {
+        this.props.onBookmark(this.props.entry.id);
+
+        this.setState({
+            isBookmark: true
         });
     }
 }

@@ -11,7 +11,7 @@ export class Menu extends React.Component {
                 <ReloadButton isActive={this.props.isUpdating} isSelected={this.props.type === 0} count={this.props.count} onClick={() => this.props.onReload()}/>
                 <MenuButton title={'Все'} isSelected={this.props.type === 1} onClick={this.props.onShowAll} />
                 <MenuButton title={'Прочитанное'} isSelected={this.props.type === 2} onClick={this.props.onShowRead} />
-                <MenuButton title={'Избранное'} isSelected={this.props.type === 3} onClick={this.props.onShowFavorite}/>
+                <MenuButton title={'Избранное'} isSelected={this.props.type === 3} onClick={this.props.onShowBookmark}/>
             </div>
         );
     }

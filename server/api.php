@@ -40,7 +40,18 @@ if ($_GET["action"] == "news_read") {
 	$items = array();
 	$limit = $_GET["to"] - $_GET["from"];
 
-	foreach ($db->query("SELECT * FROM entries WHERE read = 1 ORDER BY date DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
+	foreach ($db->query("SELECT * FROM entries WHERE read > 0 ORDER BY date DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
+		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
+	}
+
+	echo json_encode($items);
+}
+
+if ($_GET["action"] == "news_bookmark") {
+	$items = array();
+	$limit = $_GET["to"] - $_GET["from"];
+
+	foreach ($db->query("SELECT * FROM entries WHERE favorite = 1 ORDER BY date DESC LIMIT " . $limit . " OFFSET " . $_GET["from"]) as $row) {
 		$items[] = array("id" => $row["id"], "feed_id" => $row["feed_id"], "guid" => $row["guid"], "link" => $row["link"], "title" => $row["title"], "description" => $row["description"], "read" => $row["read"], "viewed" => $row["viewed"], "date" => $row["date"]);
 	}
 
@@ -53,8 +64,8 @@ if ($_GET["action"] == "unviewed") {
 }
 
 if ($_GET["action"] == "mark_as_read") {
-	$statement = $db->prepare("UPDATE entries SET read = ? WHERE id = ?");
-	$statement->execute(array(true, $_GET["id"]));
+	$statement = $db->prepare("UPDATE entries SET read = read + 1 WHERE id = ?");
+	$statement->execute(array($_GET["id"]));
 
 	echo json_encode(array("id" => $_GET["id"], "read" => true));
 }
@@ -65,6 +76,14 @@ if ($_GET["action"] == "mark_as_viewed") {
 
 	echo json_encode(array("ids" => $_GET["ids"], "viewed" => true));
 }
+
+if ($_GET["action"] == "bookmark") {
+	$statement = $db->prepare("UPDATE entries SET favorite = 1 WHERE id = ?");
+	$statement->execute(array($_GET["id"]));
+
+	echo json_encode(array("id" => $_GET["id"], "favorite" => true));
+}
+
 
 if ($_GET["action"] == "feed_add") {
 	$link = $_GET["link"];
@@ -157,7 +176,7 @@ function addEntry($feed, &$entry) {
 
 	if (empty($result)) {
 		$statement = $db->prepare("INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		$statement->execute(array($feed, $entry["guid"], $entry["link"], $entry["title"], $entry["description"], (int)false, (int)false, (int)false, $entry["date"]));
+		$statement->execute(array($feed, $entry["guid"], $entry["link"], $entry["title"], $entry["description"], 0, (int)false, (int)false, $entry["date"]));
 
 		$entry["id"] = $db->lastInsertId();
 

@@ -96,6 +96,24 @@ export class DataHelper {
         });
     }
 
+    getBookmarkNews(from, to) {
+        return new Promise((resolve) => {
+            if (this.native) {
+                bridge.call('getBookmarkNews', { from: from, to: to }).then((result) => {
+                    let data = JSON.parse(result);
+                    resolve(data);
+                });
+            } else {
+                fetch(`${this.url}action=news_bookmark&from=${from}&to=${to}`).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    this.updateFeedsInEntries(data);
+                    resolve(data);
+                });
+            }
+        });
+    }
+
     getUnviewed() {
         return new Promise((resolve) => {
             if (this.native) {
@@ -141,6 +159,16 @@ export class DataHelper {
                 resolve(data);
             });
         });
+    }
+
+    bookmark(id) {
+        return new Promise((resolve) => {
+            fetch(`${this.url}action=bookmark&id=${id}`).then((response) => {				 
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });    
     }
 
     totalCount() {

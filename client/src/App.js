@@ -34,6 +34,7 @@ export default class App extends React.Component {
         this.onReload = this.onReload.bind(this);
         this.onShowAll = this.onShowAll.bind(this);
         this.onShowRead = this.onShowRead.bind(this);
+        this.onShowBookmark = this.onShowBookmark.bind(this);
     }
 
     componentDidMount() {
@@ -72,9 +73,9 @@ export default class App extends React.Component {
 
         return (
             <div className={styles.container}>
-                <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} type={this.state.type} count={count} onReload={this.onReload} onShowAll={this.onShowAll} onShowRead={this.onShowRead} /></div>
+                <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} type={this.state.type} count={count} onReload={this.onReload} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
-                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} /></div>
+                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onBookmark={(id) => this.onBookmark(id)} /></div>
                     <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
                 </div>
             </div>
@@ -126,6 +127,19 @@ export default class App extends React.Component {
         });
     }
 
+    onShowBookmark() {
+        this.dataHelper.getBookmarkNews(0, this.entriesPerPage).then((entries) => {
+            this.entries = entries;
+
+            this.setState({
+                entries: entries,
+                type: 3
+            });
+
+            this.updateFeedsCount(false);
+        });
+    }
+
     updateFeedsCount(unviewed) {
         const feeds = [...this.state.feeds];
 
@@ -147,15 +161,18 @@ export default class App extends React.Component {
     }
 
     onUpdateViewed(ids) {
-        console.log(ids);
         if (this.state.type === 0) {    
             this.updateFeedsCount(true);
-            //this.dataHelper.markAsViewed(ids);
+            this.dataHelper.markAsViewed(ids);
         }
     }
 
     onUpdateReaded(id) {
         this.dataHelper.markAsRead(id);
+    }
+
+    onBookmark(id) {
+        this.dataHelper.bookmark(id);
     }
 
     onFeedSelect(id) {

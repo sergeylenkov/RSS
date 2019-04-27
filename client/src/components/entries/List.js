@@ -24,7 +24,7 @@ export class EntriesList extends React.Component {
                 {
                     this.props.entries.map((entry) => {
                         const isRead = parseInt(entry.read);
-                        return <Entry key={entry.id} entry={entry} isRead={isRead} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} />
+                        return <Entry key={entry.id} entry={entry} isRead={isRead} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onBookmark={(id) => this.onBookmark(id)} />
                     })
                 }
             </div>
@@ -38,5 +38,9 @@ export class EntriesList extends React.Component {
 
     onRead(id) {
         this.props.onUpdateReaded(id);
+    }
+
+    onBookmark(id) {
+        this.props.onBookmark(id);
     }
 }
