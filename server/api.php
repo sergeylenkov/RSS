@@ -146,7 +146,7 @@ function updateFeeds() {
 	$channels = getFeeds();
 	
 	foreach ($channels as &$channel) {	
-		$xml = simplexml_load_file($channel["rss"]);
+		$xml = simplexml_load_string(utf8_for_xml(file_get_contents($channel["rss"])));
 		$channelItems = parseItems($xml);
 
 		foreach ($channelItems as &$item) {
@@ -269,6 +269,11 @@ function parseItems($xml) {
 	}
 
 	return $entries;
+}
+
+function utf8_for_xml($string)
+{
+    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
 ?>
