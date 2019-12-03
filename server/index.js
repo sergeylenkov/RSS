@@ -15,7 +15,7 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
-app.use('/update', update);
+app.use('/feeds/update', update);
 
 app.get('*', (req, res) =>{
     res.sendFile(path.join(__dirname, '../client/build/index.html'));

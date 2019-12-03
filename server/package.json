@@ -15,8 +15,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "nodemon": "^1.18.8",
-    "sqlite3": "^4.0.6",
-    "xml2js": "^0.4.22"
+    "rss-parser": "^3.7.3",
+    "sqlite3": "^4.0.6"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
