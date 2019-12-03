@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "API_TEST=true mocha test/api.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.8",
+    "sqlite3": "^4.0.6",
+    "xml2js": "^0.4.22"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.0.0"
+  }
+}
