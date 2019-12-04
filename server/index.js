@@ -2,7 +2,8 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const update = require('./routes/update');
+const feeds = require('./routes/feeds');
+const entries = require('./routes/entries');
 
 const app = express();
 
@@ -15,7 +16,8 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
-app.use('/feeds/update', update);
+app.use('/feeds', feeds);
+app.use('/entries', entries);
 
 app.get('*', (req, res) =>{
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
