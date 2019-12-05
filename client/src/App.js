@@ -21,7 +21,7 @@ export default class App extends React.Component {
             type: 0
         }
 
-        this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
+        this.dataHelper = new DataHelper('http://localhost:5000/', false);
 
         if (localStorage.getItem('collpaseLong') === null) {
             localStorage.setItem('collpaseLong', false);
@@ -146,7 +146,7 @@ export default class App extends React.Component {
         feeds.forEach(feed => {
             const count = this.entries.filter(entry => {
                 if (unviewed) {
-                    return entry.feed_id === feed.id && entry.viewed !== true
+                    return entry.feedId === feed.id && entry.isViewed !== true
                 }
 
                 return entry.feed_id === feed.id;

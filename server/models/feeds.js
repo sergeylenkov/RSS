@@ -43,8 +43,8 @@ module.exports.update = function() {
 }
 
 function _getFeeds() {
-    return new Promise((resolve, reject) => {
-        db.all('SELECT f.id, f.rss, f.link, f.title, f.description, f.image, f.active, f.status, f.last_update, f.deleted FROM feeds f', [], (error, rows) => {
+    return new Promise((resolve, reject) => {        
+        db.all('SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id WHERE f.deleted = 0 GROUP BY f.id', [], (error, rows) => {
             if (error) {
                 reject(error);
             } else {
@@ -61,7 +61,9 @@ function _getFeeds() {
                         active: Boolean(row.active),
                         status: row.status,
                         lastUpdate: row.last_update,
-                        deleted: Boolean(row.deleted)
+                        deleted: Boolean(row.deleted),
+                        total: row.total,
+                        count: 0
                     };
 
                     items.push(item);

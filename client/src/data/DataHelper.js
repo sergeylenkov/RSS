@@ -17,7 +17,7 @@ export class DataHelper {
                     resolve(data);
                 });
             } else {
-                fetch(`${this.url}action=update`).then((response) => {
+                fetch(`${this.url}feeds/update`).then((response) => {
                     return response.json();
                 }).then((data) => {
                     this.updateFeedsInEntries(data);
@@ -35,7 +35,7 @@ export class DataHelper {
                     resolve(data);
                 });
             } else {
-                fetch(`${this.url}action=feeds`).then((response) => {
+                fetch(`${this.url}feeds`).then((response) => {
                     return response.json();
                 }).then((data) => {
                     this._feeds = data;
@@ -122,7 +122,7 @@ export class DataHelper {
                     resolve(data);
                 });
             } else {
-                fetch(`${this.url}action=unviewed`).then((response) => {
+                fetch(`${this.url}entries/unviewed`).then((response) => {
                     return response.json();
                 }).then((data) => {
                     this.updateFeedsInEntries(data);
@@ -217,7 +217,7 @@ export class DataHelper {
 
     updateFeedsInEntries(entries) {
         entries.forEach(entry => {
-            entry.feed = this.getFeedById(entry.feed_id);
+            entry.feed = this.getFeedById(entry.feedId);
         });
     }
 }

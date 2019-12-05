@@ -5,7 +5,7 @@ let router = express.Router();
 
 router.get('/', (req, res) => {
     data.all().then((items) => {
-        return res.json({ items: items });
+        return res.json(items);
     }).catch((error) => {
         res.status(500).send({ error: error });
     });
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 router.get('/unviewed', (req, res) => {
     data.unviewed().then((items) => {
-        return res.json({ items: items });
+        return res.json(items);
     }).catch((error) => {
         res.status(500).send({ error: error });
     });
