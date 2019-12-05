@@ -22,8 +22,8 @@ module.exports.update = function() {
 
             let promises = [];
 
-            rss.forEach(element => {                
-                const promise = _updateFeed(element.rss).then((entries) => {                    
+            rss.forEach((feed) => {                
+                const promise = _updateFeed(feed).then((entries) => {                   
                     items = items.concat(entries);
                 }).catch((error) => {
                     console.log(error);
@@ -73,15 +73,69 @@ function _getFeeds() {
     });
 }
 
-function _updateFeed(link) {
+function _updateFeed(feed) {
     return new Promise((resolve, reject) => {
         const parser = new Parser();
-        parser.parseURL(link, (error, feed) => {            
+        parser.parseURL(feed.rss, (error, rss) => {            
             if (error) {
                 reject(error);
             } else {
-                resolve(feed.items);
+                let items = [];
+                let promises = [];
+
+                rss.items.forEach((entry) => {
+                    const newEntry = _prepareEntry(feed, entry);
+                    const promise = _addEntry(newEntry).then((entry) => {
+                        items.push(entry);
+                    });
+
+                    promises.push(promise);
+                });
+
+                Promise.all(promises).then(() => {
+                    resolve(items);
+                })
             }
         });
     });
+}
+
+function _prepareEntry(feed, entry) {    
+    let newEntry = {
+        id: -1,
+        feedId: feed.id,
+        guid: entry.guid ? entry.guid : entry.link,
+        link: entry.link,
+        title: entry.title,
+        description: entry.content,
+        date: entry.isoDate,
+        isRead: false,
+        isViewed: false,
+        isFavorite: false
+    }
+
+    return newEntry;
+}
+
+function _addEntry(entry) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT id, read, viewed, favorite FROM entries WHERE feed_id = ? AND guid = ?', [entry.feedId, entry.guid], function(error, row) {
+            if (row) {
+                entry.isRead = row.read;
+                entry.isViewed = row.viewed;
+                entry.isFavorite = row.favorite;
+
+                resolve(entry);
+            } else { 
+                db.run('INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [entry.feedId, entry.guid, entry.link, entry.title, entry.description, false, false, false, entry.date], function(error) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        entry.id = this.lastID;
+                        resolve(entry);
+                    }
+                });
+            }
+        });
+    });    
 }
