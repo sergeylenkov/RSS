@@ -75,7 +75,7 @@ export default class App extends React.Component {
             <div className={styles.container}>
                 <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} type={this.state.type} count={count} onReload={this.onReload} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
-                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onBookmark={(id) => this.onBookmark(id)} /></div>
+                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
                     <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
                 </div>
             </div>
@@ -171,8 +171,8 @@ export default class App extends React.Component {
         this.dataHelper.markAsRead(id);
     }
 
-    onBookmark(id) {
-        this.dataHelper.bookmark(id);
+    onSetFavorite(id) {
+        this.dataHelper.setFavorite(id);
     }
 
     onFeedSelect(id) {

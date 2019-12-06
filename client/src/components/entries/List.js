@@ -22,9 +22,8 @@ export class EntriesList extends React.Component {
         return (
             <div className={styles.container}>                
                 {
-                    this.props.entries.map((entry) => {
-                        const isRead = parseInt(entry.read);
-                        return <Entry key={entry.id} entry={entry} isRead={isRead} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onBookmark={(id) => this.onBookmark(id)} />
+                    this.props.entries.map((entry) => {                        
+                        return <Entry key={entry.id} entry={entry} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onSetFavorite={(id) => this.onSetFavorite(id)} />
                     })
                 }
             </div>
@@ -40,7 +39,7 @@ export class EntriesList extends React.Component {
         this.props.onUpdateReaded(id);
     }
 
-    onBookmark(id) {
-        this.props.onBookmark(id);
+    onSetFavorite(id) {
+        this.props.onSetFavorite(id);
     }
 }

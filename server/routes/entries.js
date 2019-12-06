@@ -3,7 +3,7 @@ const data = require('../models/entries');
 
 let router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', function(req, res) {
     data.all().then((items) => {
         return res.json(items);
     }).catch((error) => {
@@ -11,8 +11,18 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/unviewed', (req, res) => {
+router.get('/unviewed', function(req, res) {
     data.unviewed().then((items) => {
+        return res.json(items);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
+router.post('/viewed', function(req, res) {
+    const ids = req.body.ids;
+
+    data.setViewed(ids).then((items) => {
         return res.json(items);
     }).catch((error) => {
         res.status(500).send({ error: error });
