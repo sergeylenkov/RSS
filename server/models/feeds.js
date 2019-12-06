@@ -123,6 +123,7 @@ function _addEntry(entry) {
     return new Promise((resolve, reject) => {
         db.get('SELECT id, read, viewed, favorite FROM entries WHERE feed_id = ? AND guid = ?', [entry.feedId, entry.guid], function(error, row) {
             if (row) {
+                entry.id = row.id;
                 entry.isRead = row.read;
                 entry.isViewed = row.viewed;
                 entry.isFavorite = row.favorite;

@@ -87,12 +87,13 @@ export default class App extends React.Component {
             isUpdating: true
         });
 
-        this.dataHelper.update().then(entries => {
-            console.log(entries);
-            this.entries = entries;
-
+        this.dataHelper.update().then(entries => {            
+            this.entries = entries.filter((element) => {
+                return element.isViewed === false;
+            });
+            console.log(this.entries);
             this.setState({
-                entries: entries,
+                entries: this.entries,
                 isUpdating: false,
                 type: 0
             });

@@ -64,7 +64,8 @@ module.exports.setViewed = function(ids) {
     return new Promise((resolve, reject) => {
         const idsQuery = ids.join(',');
 
-        db.run(`UPDATE entries SET viewed = ? WHERE id IN(${idsQuery})`, [true], function(error) {
+        db.run(`UPDATE entries SET viewed = ? WHERE id IN(${idsQuery})`, [true], (error) => {
+            console.log(error);
             if (error) {
                 reject(error);
             } else {        
@@ -78,7 +79,7 @@ module.exports.setRead = function(ids) {
     return new Promise((resolve, reject) => {
         const idsQuery = ids.join(',');
 
-        db.run(`UPDATE entries SET read = ? WHERE id IN(${idsQuery})`, [true], function(error) {
+        db.run(`UPDATE entries SET read = ? WHERE id IN(${idsQuery})`, [true], (error) => {
             if (error) {
                 reject(error);
             } else {        
