@@ -73,3 +73,17 @@ module.exports.setViewed = function(ids) {
         });
     });   
 }
+
+module.exports.setRead = function(ids) {
+    return new Promise((resolve, reject) => {
+        const idsQuery = ids.join(',');
+
+        db.run(`UPDATE entries SET read = ? WHERE id IN(${idsQuery})`, [true], function(error) {
+            if (error) {
+                reject(error);
+            } else {        
+                resolve({ ids: ids, read: true });
+            }
+        });
+    });   
+}

@@ -168,7 +168,7 @@ export default class App extends React.Component {
     }
 
     onUpdateReaded(id) {
-        this.dataHelper.markAsRead(id);
+        this.dataHelper.markAsRead([id]);
     }
 
     onSetFavorite(id) {

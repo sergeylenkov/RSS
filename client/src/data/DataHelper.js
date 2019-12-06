@@ -89,7 +89,7 @@ export class DataHelper {
     
     markAsViewed(ids) {
         return new Promise((resolve) => {
-            fetch(`${this.url}viewed`, {
+            fetch(`${this.url}view`, {
                 method: 'POST',
                 body: JSON.stringify(ids),
                 headers: {
@@ -103,9 +103,15 @@ export class DataHelper {
         });
     }
     
-    markAsRead(id) {
+    markAsRead(ids) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=mark_as_read&id=${id}`).then((response) => {				 
+            fetch(`${this.url}read`, {
+                method: 'POST',
+                body: JSON.stringify(ids),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {				 
                 return response.json();
             }).then((data) => {
                 resolve(data);

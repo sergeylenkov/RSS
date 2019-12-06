@@ -19,10 +19,20 @@ router.get('/unviewed', function(req, res) {
     });
 });
 
-router.post('/viewed', function(req, res) {
+router.post('/view', function(req, res) {
     const ids = req.body.ids;
 
     data.setViewed(ids).then((items) => {
+        return res.json(items);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
+router.post('/read', function(req, res) {
+    const ids = req.body.ids;
+
+    data.setRead(ids).then((items) => {
         return res.json(items);
     }).catch((error) => {
         res.status(500).send({ error: error });
