@@ -95,8 +95,7 @@ export class DataHelper {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then((response) => {
-                console.log(response);
+            }).then((response) => {                
                 return response.json();
             }).then((data) => {
                 resolve(data);

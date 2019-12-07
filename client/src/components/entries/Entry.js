@@ -123,7 +123,7 @@ export class Entry extends React.Component {
             const rect = this.itemElementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
             
-            let viewed = false;
+            let isViewed = false;
             let scrollEnd = false;
             
             if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
@@ -131,13 +131,13 @@ export class Entry extends React.Component {
             }
             
             if (scrollEnd && rect.top > 0) {
-                viewed = true;
+                isViewed = true;
             } else if (rect.top < height) {
-                viewed = true;                
+                isViewed = true;                
             }
 
-            if (viewed) {
-                this.props.entry.viewed = true;
+            if (isViewed) {
+                this.props.entry.isViewed = true;
 
                 this.setState({
                     isViewed: true
@@ -154,7 +154,7 @@ export class Entry extends React.Component {
             const height = rect.top + rect.height;
             
             if (height < window.innerHeight) { 
-                this.props.entry.viewed = true;
+                this.props.entry.isViewed = true;
 
                 this.setState({
                     isViewed: true

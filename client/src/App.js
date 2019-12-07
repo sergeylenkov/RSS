@@ -150,7 +150,7 @@ export default class App extends React.Component {
                     return entry.feedId === feed.id && entry.isViewed !== true
                 }
 
-                return entry.feed_id === feed.id;
+                return entry.feedId === feed.id;
             }).length;
 
             feed.count = count;
@@ -164,7 +164,9 @@ export default class App extends React.Component {
     onUpdateViewed(ids) {
         if (this.state.type === 0) {    
             this.updateFeedsCount(true);
-            this.dataHelper.markAsViewed(ids);
+            this.dataHelper.markAsViewed(ids).then((data) => {
+                console.log(data);
+            });
         }
     }
 
@@ -190,7 +192,7 @@ export default class App extends React.Component {
         
         if (filtered) {
             const entries = this.entries.filter(entry => {
-                return feeds[entry.feed_id];
+                return feeds[entry.feedId];
             });
          
             this.setState({
