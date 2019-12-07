@@ -9,9 +9,9 @@ export class Entry extends React.Component {
 
         this.state = {
             isViewed: false,
-            isRead: props.isRead,
+            isRead: props.entry.isRead,
             isExpanded: false,
-            isBookmark: props.isBookmark
+            isFavorite: props.entry.isFavorite
         }
 
         this.itemElementRef = null;
@@ -20,7 +20,7 @@ export class Entry extends React.Component {
         this.handleScroll = this.handleScroll.bind(this);
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
-        this.onBookmark = this.onBookmark.bind(this);
+        this.onSetFavorite = this.onSetFavorite.bind(this);
 
         this.itemRef = element => {
             if (element) {
@@ -73,8 +73,8 @@ export class Entry extends React.Component {
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
                 <div className={styles.info}>
-                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onBookmark}><Icon svg={this.state.isBookmark ? Icons.bookmarkSelected : Icons.bookmark }/></div><div className={styles.infoCounter}>{1}</div></div>
-                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{entry.read}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.state.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div><div className={styles.infoCounter}>{1}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{this.state.isRead}</div></div>
                 </div>
             </div>
         );
@@ -123,7 +123,7 @@ export class Entry extends React.Component {
             const rect = this.itemElementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
             
-            let viewed = false;
+            let isViewed = false;
             let scrollEnd = false;
             
             if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
@@ -131,13 +131,13 @@ export class Entry extends React.Component {
             }
             
             if (scrollEnd && rect.top > 0) {
-                viewed = true;
+                isViewed = true;
             } else if (rect.top < height) {
-                viewed = true;                
+                isViewed = true;                
             }
 
-            if (viewed) {
-                this.props.entry.viewed = true;
+            if (isViewed) {
+                this.props.entry.isViewed = true;
 
                 this.setState({
                     isViewed: true
@@ -154,7 +154,7 @@ export class Entry extends React.Component {
             const height = rect.top + rect.height;
             
             if (height < window.innerHeight) { 
-                this.props.entry.viewed = true;
+                this.props.entry.isViewed = true;
 
                 this.setState({
                     isViewed: true
@@ -181,11 +181,11 @@ export class Entry extends React.Component {
         });
     }
 
-    onBookmark() {
-        this.props.onBookmark(this.props.entry.id);
+    onSetFavorite() {
+        this.props.onSetFavorite(this.props.entry.id);
 
         this.setState({
-            isBookmark: true
+            isFavorite: true
         });
     }
 }

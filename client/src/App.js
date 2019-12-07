@@ -21,7 +21,7 @@ export default class App extends React.Component {
             type: 0
         }
 
-        this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
+        this.dataHelper = new DataHelper('http://localhost:5000/', false);
 
         if (localStorage.getItem('collpaseLong') === null) {
             localStorage.setItem('collpaseLong', false);
@@ -75,7 +75,7 @@ export default class App extends React.Component {
             <div className={styles.container}>
                 <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} type={this.state.type} count={count} onReload={this.onReload} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
-                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onBookmark={(id) => this.onBookmark(id)} /></div>
+                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
                     <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
                 </div>
             </div>
@@ -87,12 +87,13 @@ export default class App extends React.Component {
             isUpdating: true
         });
 
-        this.dataHelper.update().then(entries => {
-            console.log(entries);
-            this.entries = entries;
-
+        this.dataHelper.update().then(entries => {            
+            this.entries = entries.filter((element) => {
+                return element.isViewed === false;
+            });
+            console.log(this.entries);
             this.setState({
-                entries: entries,
+                entries: this.entries,
                 isUpdating: false,
                 type: 0
             });
@@ -146,10 +147,10 @@ export default class App extends React.Component {
         feeds.forEach(feed => {
             const count = this.entries.filter(entry => {
                 if (unviewed) {
-                    return entry.feed_id === feed.id && entry.viewed !== true
+                    return entry.feedId === feed.id && entry.isViewed !== true
                 }
 
-                return entry.feed_id === feed.id;
+                return entry.feedId === feed.id;
             }).length;
 
             feed.count = count;
@@ -163,16 +164,18 @@ export default class App extends React.Component {
     onUpdateViewed(ids) {
         if (this.state.type === 0) {    
             this.updateFeedsCount(true);
-            this.dataHelper.markAsViewed(ids);
+            this.dataHelper.markAsViewed(ids).then((data) => {
+                console.log(data);
+            });
         }
     }
 
     onUpdateReaded(id) {
-        this.dataHelper.markAsRead(id);
+        this.dataHelper.markAsRead([id]);
     }
 
-    onBookmark(id) {
-        this.dataHelper.bookmark(id);
+    onSetFavorite(id) {
+        this.dataHelper.setFavorite(id);
     }
 
     onFeedSelect(id) {
@@ -189,7 +192,7 @@ export default class App extends React.Component {
         
         if (filtered) {
             const entries = this.entries.filter(entry => {
-                return feeds[entry.feed_id];
+                return feeds[entry.feedId];
             });
          
             this.setState({

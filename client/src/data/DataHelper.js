@@ -1,9 +1,6 @@
-const bridge = null;
-
 export class DataHelper {
-    constructor(url, native) {
-        this.url = url;
-        this.native = native;
+    constructor(url) {
+        this.url = url;        
 
         this._feeds = [];
         this._feedsDict = {};
@@ -11,149 +8,110 @@ export class DataHelper {
 
     update() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('updateFeeds').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=update`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}feeds/update`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
     getFeeds() {   
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getFeeds').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
+            fetch(`${this.url}feeds`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this._feeds = data;
+
+                this._feeds.forEach(feed => {
+                    const a = document.createElement('a');
+                    a.href = feed.link;
+
+                    if (feed.image && feed.image.length > 0) {
+                        feed.icon = feed.image;
+                    } else {
+                        const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+                        feed.icon = icon;
+                    }
+
+                    this._feedsDict[feed.id] = feed;
                 });
-            } else {
-                fetch(`${this.url}action=feeds`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this._feeds = data;
 
-                    this._feeds.forEach(feed => {
-                        const a = document.createElement('a');
-                        a.href = feed.link;
-
-                        if (feed.image && feed.image.length > 0) {
-                            feed.icon = feed.image;
-                        } else {
-                            const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-                            feed.icon = icon;
-                        }
-
-                        this._feedsDict[feed.id] = feed;
-                    });
-
-                    resolve(data);
-                });
-            }
+                resolve(data);
+            });
         });
     }
 
     getAllNews(from, to) {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getAllNews', { from: from, to: to }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=news_all&from=${from}&to=${to}`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}action=news_all&from=${from}&to=${to}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
     getReadNews(from, to) {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getReadNews', { from: from, to: to }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=news_read&from=${from}&to=${to}`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}action=news_read&from=${from}&to=${to}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
     getBookmarkNews(from, to) {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getBookmarkNews', { from: from, to: to }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=news_bookmark&from=${from}&to=${to}`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}action=news_bookmark&from=${from}&to=${to}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
     getUnviewed() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getUnviewed').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=unviewed`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}entries/unviewed`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
     
     markAsViewed(ids) {
         return new Promise((resolve) => {
-            let idsParam = ids.join(',');
-    
-            if (this.native) {
-                bridge.call('markAsViewed', { ids: idsParam }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=mark_as_viewed&ids=${idsParam}`).then((response) => {				 
-                    return response.json();
-                }).then((data) => {
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}entries/view`, {
+                method: 'POST',
+                body: JSON.stringify({ ids: ids }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {                
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
         });
     }
     
-    markAsRead(id) {
+    markAsRead(ids) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=mark_as_read&id=${id}`).then((response) => {				 
+            fetch(`${this.url}entries/read`, {
+                method: 'POST',
+                body: JSON.stringify({ ids: ids }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {				 
                 return response.json();
             }).then((data) => {
                 resolve(data);
@@ -161,7 +119,7 @@ export class DataHelper {
         });
     }
 
-    bookmark(id) {
+    setFavorite(id) {
         return new Promise((resolve) => {
             fetch(`${this.url}action=bookmark&id=${id}`).then((response) => {				 
                 return response.json();
@@ -173,18 +131,11 @@ export class DataHelper {
 
     totalCount() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getTotalCount').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=total`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}action=total`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
         });
     }
 
@@ -217,7 +168,7 @@ export class DataHelper {
 
     updateFeedsInEntries(entries) {
         entries.forEach(entry => {
-            entry.feed = this.getFeedById(entry.feed_id);
+            entry.feed = this.getFeedById(entry.feedId);
         });
     }
 }
