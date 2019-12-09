@@ -4,7 +4,7 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
-import { feedsUpdated } from './store/actions/index';
+import { entriesUpdated, feedsUpdated, updateEntriesCount } from './store/actions/index';
 
 import styles from './App.module.css';
 
@@ -12,14 +12,10 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.entries = [];
         this.entriesPerPage = 30;
 
-        this.state = {
-            feeds: [],
-            entries: [],
+        this.state = {            
             selectedFeeds: {},
-            isUpdating: false,
             type: 0
         }
 
@@ -42,10 +38,9 @@ class App extends React.Component {
     componentDidMount() {
         this.dataHelper.getFeeds().then(feeds => {
             console.log(feeds);
+            this.props.feedsUpdated(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
-                this.entries = entries;
-
                 let selectedFeeds = {};
 
                 feeds.forEach(feed => {
@@ -53,13 +48,11 @@ class App extends React.Component {
                 });
 
                 this.setState({
-                    feeds: feeds,
-                    entries: entries,
                     selectedFeeds: selectedFeeds,
                     type: 0
                 });
 
-                this.props.feedsUpdated(entries);
+                this.props.entriesUpdated(entries);
                 this.updateFeedsCount(true);
             });            
         });
@@ -69,7 +62,7 @@ class App extends React.Component {
         let count = 0;
 
         if (this.state.type === 0) {
-            count = this.state.feeds.reduce((accumulator, currentValue) => {         
+            count = this.props.feeds.reduce((accumulator, currentValue) => {         
                 return accumulator + currentValue.count;
             }, 0);
         }
@@ -79,75 +72,65 @@ class App extends React.Component {
                 <div className={styles.menu}><Menu type={this.state.type} count={count} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
                     <div className={styles.list}><EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
-                    <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
+                    <div className={styles.feeds}><FeedsList /></div>
                 </div>
             </div>
         );
     }
 
     onUpdate() {
-        /*this.setState({
-            isUpdating: true
-        });*/
-
         this.dataHelper.update().then(entries => {            
             this.entries = entries.filter((element) => {
                 return element.isViewed === false;
             });
             console.log(this.entries);
             this.setState({
-                entries: this.entries,               
                 type: 0
             });
-            this.props.feedsUpdated(entries);
+            this.props.entriesUpdated(entries);
             this.updateFeedsCount(true);
         });
     }
 
     onShowAll() {
         this.dataHelper.getAllNews(0, this.entriesPerPage).then((entries) => {
-            this.entries = entries;
-
             this.setState({
-                entries: entries,
                 type: 1
             });
 
+            this.props.entriesUpdated(entries);
             this.updateFeedsCount(false);
         });
     }
 
     onShowRead() {
         this.dataHelper.getReadNews(0, this.entriesPerPage).then((entries) => {
-            this.entries = entries;
-
             this.setState({
-                entries: entries,
                 type: 2
             });
 
+            this.props.entriesUpdated(entries);
             this.updateFeedsCount(false);
         });
     }
 
     onShowBookmark() {
         this.dataHelper.getBookmarkNews(0, this.entriesPerPage).then((entries) => {
-            this.entries = entries;
-
             this.setState({
-                entries: entries,
                 type: 3
             });
 
+            this.props.entriesUpdated(entries);
             this.updateFeedsCount(false);
         });
     }
 
     updateFeedsCount(unviewed) {
-        const feeds = [...this.state.feeds];
+        this.props.updateEntriesCount()
+        /*const feeds = [...this.state.feeds];
 
         feeds.forEach(feed => {
-            const count = this.entries.filter(entry => {
+            const count = this.props.entries.filter(entry => {
                 if (unviewed) {
                     return entry.feedId === feed.id && entry.isViewed !== true
                 }
@@ -160,7 +143,7 @@ class App extends React.Component {
 
         this.setState({
             feeds: feeds
-        });
+        });*/
     }
 
     onUpdateViewed(ids) {
@@ -242,12 +225,6 @@ class App extends React.Component {
             console.log(response);
             const feeds = [...this.state.feeds];
             feeds.push(feed);
-
-            this.setState({
-                feeds: feeds,
-                entries: response.items,
-                isUpdating: false
-            });
             
             this.updateFeedsCount(false);
         });
@@ -265,12 +242,17 @@ class App extends React.Component {
 /* Redux */
 
 const mapStateToProps = state => {
-    return { entries: state.entries };
+    return {
+        entries: state.entries,
+        feeds: state.feeds
+    };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        feedsUpdated: (entries) => dispatch(feedsUpdated(entries))
+        feedsUpdated: (feeds) => dispatch(feedsUpdated(feeds)),
+        entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
+        updateEntriesCount: () => dispatch(updateEntriesCount())
     };
 };
 

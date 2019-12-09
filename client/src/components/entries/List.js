@@ -48,7 +48,9 @@ class ConnectedEntriesList extends React.Component {
 /* Redux */
 
 const mapStateToProps = state => {
-    return { entries: state.entries };
+    return {
+        entries: state.entries
+    };
 };
 
 export const EntriesList = connect(mapStateToProps)(ConnectedEntriesList);

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Feed } from './Feed.js';
 import { FeedEdit } from './Edit.js';
+import { connect } from 'react-redux';
 
 import styles from './Feeds.module.css';
 
-export class FeedsList extends React.Component {
+class ConnectedFeedsList extends React.Component {
     render() {
         return (
             <div className={styles.container}>                
@@ -18,3 +19,13 @@ export class FeedsList extends React.Component {
         );
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        feeds: state.feeds
+    };
+};
+
+export const FeedsList = connect(mapStateToProps)(ConnectedFeedsList);

@@ -2,7 +2,6 @@ import React from 'react';
 import { ReloadButton } from './ReloadButton.js';
 import { MenuButton } from './MenuButton.js';
 import { connect } from 'react-redux';
-import { updateFeeds } from '../../store/actions/index';
 
 import styles from './Menu.module.css';
 
@@ -33,13 +32,9 @@ class ConnectedMenu extends React.Component {
 /* Redux */
 
 const mapStateToProps = state => {
-    return { isUpdating: state.isUpdating };
-};
-
-const mapDispatchToProps = dispatch => {
     return {
-        updateFeeds: () => dispatch(updateFeeds())
+        isUpdating: state.isUpdating
     };
 };
 
-export const Menu = connect(mapStateToProps, mapDispatchToProps)(ConnectedMenu);
+export const Menu = connect(mapStateToProps)(ConnectedMenu);
