@@ -1,10 +1,11 @@
 import React from 'react';
 import { Entry } from './Entry.js';
 import { debounce } from '../../Utils.js';
+import { connect } from 'react-redux';
 
 import styles from './List.module.css';
 
-export class EntriesList extends React.Component {
+class ConnectedEntriesList extends React.Component {
     constructor(props) {
         super(props);
 
@@ -43,3 +44,11 @@ export class EntriesList extends React.Component {
         this.props.onSetFavorite(id);
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return { entries: state.entries };
+};
+
+export const EntriesList = connect(mapStateToProps)(ConnectedEntriesList);

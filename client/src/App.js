@@ -3,10 +3,12 @@ import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
+import { connect } from 'react-redux';
+import { feedsUpdated } from './store/actions/index';
 
 import styles from './App.module.css';
 
-export default class App extends React.Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
 
@@ -31,7 +33,7 @@ export default class App extends React.Component {
             localStorage.setItem('keepDays', 30);
         }
 
-        this.onReload = this.onReload.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
         this.onShowAll = this.onShowAll.bind(this);
         this.onShowRead = this.onShowRead.bind(this);
         this.onShowBookmark = this.onShowBookmark.bind(this);
@@ -57,6 +59,7 @@ export default class App extends React.Component {
                     type: 0
                 });
 
+                this.props.feedsUpdated(entries);
                 this.updateFeedsCount(true);
             });            
         });
@@ -73,19 +76,19 @@ export default class App extends React.Component {
 
         return (
             <div className={styles.container}>
-                <div className={styles.menu}><Menu isUpdating={this.state.isUpdating} type={this.state.type} count={count} onReload={this.onReload} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
+                <div className={styles.menu}><Menu type={this.state.type} count={count} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
-                    <div className={styles.list}><EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
+                    <div className={styles.list}><EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
                     <div className={styles.feeds}><FeedsList feeds={this.state.feeds} /></div>
                 </div>
             </div>
         );
     }
 
-    onReload() {
-        this.setState({
+    onUpdate() {
+        /*this.setState({
             isUpdating: true
-        });
+        });*/
 
         this.dataHelper.update().then(entries => {            
             this.entries = entries.filter((element) => {
@@ -93,11 +96,10 @@ export default class App extends React.Component {
             });
             console.log(this.entries);
             this.setState({
-                entries: this.entries,
-                isUpdating: false,
+                entries: this.entries,               
                 type: 0
             });
-
+            this.props.feedsUpdated(entries);
             this.updateFeedsCount(true);
         });
     }
@@ -164,9 +166,9 @@ export default class App extends React.Component {
     onUpdateViewed(ids) {
         if (this.state.type === 0) {    
             this.updateFeedsCount(true);
-            this.dataHelper.markAsViewed(ids).then((data) => {
+            /*this.dataHelper.markAsViewed(ids).then((data) => {
                 console.log(data);
-            });
+            });*/
         }
     }
 
@@ -259,3 +261,18 @@ export default class App extends React.Component {
         });
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return { entries: state.entries };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        feedsUpdated: (entries) => dispatch(feedsUpdated(entries))
+    };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
