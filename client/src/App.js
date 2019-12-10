@@ -4,7 +4,7 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
-import { entriesUpdated, feedsUpdated, updateEntriesCount } from './store/actions/index';
+import { entriesUpdating, entriesUpdated, feedsUpdated, updateUnviewedCount, updateViewed } from './store/actions/index';
 
 import styles from './App.module.css';
 
@@ -53,7 +53,7 @@ class App extends React.Component {
                 });
 
                 this.props.entriesUpdated(entries);
-                this.updateFeedsCount(true);
+                this.props.updateUnviewedCount();
             });            
         });
     }
@@ -79,16 +79,19 @@ class App extends React.Component {
     }
 
     onUpdate() {
-        this.dataHelper.update().then(entries => {            
-            this.entries = entries.filter((element) => {
-                return element.isViewed === false;
+        this.props.entriesUpdating();
+
+        this.dataHelper.update().then(entries => {
+            const unviewed = entries.filter((entry) => {
+                return !entry.isViewed;
             });
-            console.log(this.entries);
+            
             this.setState({
                 type: 0
             });
-            this.props.entriesUpdated(entries);
-            this.updateFeedsCount(true);
+
+            this.props.entriesUpdated(unviewed);
+            this.props.updateUnviewedCount();
         });
     }
 
@@ -98,8 +101,7 @@ class App extends React.Component {
                 type: 1
             });
 
-            this.props.entriesUpdated(entries);
-            this.updateFeedsCount(false);
+            this.props.entriesUpdated(entries);            
         });
     }
 
@@ -109,8 +111,7 @@ class App extends React.Component {
                 type: 2
             });
 
-            this.props.entriesUpdated(entries);
-            this.updateFeedsCount(false);
+            this.props.entriesUpdated(entries);            
         });
     }
 
@@ -120,38 +121,18 @@ class App extends React.Component {
                 type: 3
             });
 
-            this.props.entriesUpdated(entries);
-            this.updateFeedsCount(false);
+            this.props.entriesUpdated(entries);            
         });
-    }
-
-    updateFeedsCount(unviewed) {
-        this.props.updateEntriesCount()
-        /*const feeds = [...this.state.feeds];
-
-        feeds.forEach(feed => {
-            const count = this.props.entries.filter(entry => {
-                if (unviewed) {
-                    return entry.feedId === feed.id && entry.isViewed !== true
-                }
-
-                return entry.feedId === feed.id;
-            }).length;
-
-            feed.count = count;
-        });
-
-        this.setState({
-            feeds: feeds
-        });*/
     }
 
     onUpdateViewed(ids) {
-        if (this.state.type === 0) {    
-            this.updateFeedsCount(true);
-            /*this.dataHelper.markAsViewed(ids).then((data) => {
+        if (this.state.type === 0) {
+            this.props.updateViewed(ids);
+            this.props.updateUnviewedCount();
+            
+            this.dataHelper.markAsViewed(ids).then((data) => {
                 console.log(data);
-            });*/
+            });
         }
     }
 
@@ -226,7 +207,7 @@ class App extends React.Component {
             const feeds = [...this.state.feeds];
             feeds.push(feed);
             
-            this.updateFeedsCount(false);
+            //this.updateFeedsCount(false);
         });
     }
 
@@ -251,8 +232,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         feedsUpdated: (feeds) => dispatch(feedsUpdated(feeds)),
+        entriesUpdating: () => dispatch(entriesUpdating()),
         entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
-        updateEntriesCount: () => dispatch(updateEntriesCount())
+        updateUnviewedCount: () => dispatch(updateUnviewedCount()),
+        updateViewed: (ids) => dispatch(updateViewed(ids))
     };
 };
 

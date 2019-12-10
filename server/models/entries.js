@@ -16,8 +16,8 @@ module.exports.all = function() {
                         link: row.link,
                         title: row.title,
                         description: row.description,
-                        isRead: row.read,
-                        isViewed: row.viewed,
+                        isRead: Boolean(row.read),
+                        isViewed: Boolean(row.viewed),
                         date: row.date
                     };
 
@@ -46,8 +46,8 @@ module.exports.unviewed = function() {
                         link: row.link,
                         title: row.title,
                         description: row.description,
-                        isRead: row.read,
-                        isViewed: row.viewed,
+                        isRead: Boolean(row.read),
+                        isViewed: Boolean(row.viewed),
                         date: row.date
                     };
 

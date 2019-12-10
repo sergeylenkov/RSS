@@ -23,8 +23,7 @@ class ConnectedMenu extends React.Component {
         );
     }
 
-    onUpdate() {        
-        this.props.updateFeeds();
+    onUpdate() {
         this.props.onUpdate();
     }
 }

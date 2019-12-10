@@ -35,7 +35,6 @@ module.exports.update = function() {
             Promise.all(promises).then(() => {
                 resolve(items);
             }).catch((error) => {
-                console.log(error);
                 reject(error);
             });
         });
@@ -111,9 +110,9 @@ function _prepareEntry(feed, entry) {
         title: entry.title,
         description: entry.content,
         date: entry.isoDate,
-        isRead: false,
-        isViewed: false,
-        isFavorite: false
+        isRead: Boolean(false),
+        isViewed: Boolean(false),
+        isFavorite: Boolean(false)
     }
 
     return newEntry;
@@ -124,8 +123,8 @@ function _addEntry(entry) {
         db.get('SELECT id, read, viewed, favorite FROM entries WHERE feed_id = ? AND guid = ?', [entry.feedId, entry.guid], function(error, row) {
             if (row) {
                 entry.id = row.id;
-                entry.isRead = row.read;
-                entry.isViewed = row.viewed;
+                entry.isRead = Boolean(row.read);
+                entry.isViewed = Boolean(row.viewed);
                 entry.isFavorite = row.favorite;
 
                 resolve(entry);

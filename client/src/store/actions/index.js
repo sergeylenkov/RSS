@@ -1,4 +1,4 @@
-import { FEEDS_UPDATING, FEEDS_UPDATED, ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_ENTRIES_COUNT } from '../constants/index';
+import { FEEDS_UPDATING, FEEDS_UPDATED, ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED } from '../constants/index';
 
 export function feedsUpdating() {
     return { type: FEEDS_UPDATING }
@@ -16,6 +16,10 @@ export function entriesUpdated(entries) {
     return { type: ENTRIES_UPDATED, entries }
 }
 
-export function updateEntriesCount() {
-    return { type: UPDATE_ENTRIES_COUNT }
+export function updateUnviewedCount() {
+    return { type: UPDATE_UNVIEWED_COUNT }
+}
+
+export function updateViewed(ids) {
+    return { type: UPDATE_VIEWED, ids }
 }

@@ -1,4 +1,4 @@
-import { FEEDS_UPDATING, FEEDS_UPDATED, ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_ENTRIES_COUNT } from '../constants/index';
+import { FEEDS_UPDATING, FEEDS_UPDATED, ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED } from '../constants/index';
 
 const initialState = {
     isUpdating: false,
@@ -33,7 +33,7 @@ function rootReducer(state = initialState, action) {
         });
     }
 
-    if (action.type === UPDATE_ENTRIES_COUNT) {
+    if (action.type === UPDATE_UNVIEWED_COUNT) {
         const feeds = [...state.feeds];
 
         feeds.forEach(feed => {
@@ -46,6 +46,20 @@ function rootReducer(state = initialState, action) {
         
         return Object.assign({}, state, {           
             feeds: feeds
+        });
+    }
+
+    if (action.type === UPDATE_VIEWED) {
+        const entries = [...state.entries];
+
+        state.entries.forEach(entry => {
+            if (action.ids.indexOf(entry.id) !== -1) {
+                entry.isViewed = true;
+            }
+        });
+
+        return Object.assign({}, state, {           
+            entries: entries
         });
     }
 

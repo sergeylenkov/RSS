@@ -8,7 +8,7 @@ export class Entry extends React.Component {
         super(props);
 
         this.state = {
-            isViewed: false,
+            isViewed: props.entry.isViewed,
             isRead: props.entry.isRead,
             isExpanded: false,
             isFavorite: props.entry.isFavorite
@@ -137,8 +137,6 @@ export class Entry extends React.Component {
             }
 
             if (isViewed) {
-                this.props.entry.isViewed = true;
-
                 this.setState({
                     isViewed: true
                 });
@@ -153,9 +151,7 @@ export class Entry extends React.Component {
             const rect = this.itemElementRef.getBoundingClientRect();            
             const height = rect.top + rect.height;
             
-            if (height < window.innerHeight) { 
-                this.props.entry.isViewed = true;
-
+            if (height < window.innerHeight) {
                 this.setState({
                     isViewed: true
                 });
