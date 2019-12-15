@@ -19,4 +19,14 @@ router.get('/update', function(req, res) {
     });
 });
 
+router.post('/', function(req, res) {
+    const link = req.body.link;
+
+    feeds.add(link).then((feed) => {
+        return res.json(feed);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 module.exports = router;

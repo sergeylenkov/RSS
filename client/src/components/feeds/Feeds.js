@@ -14,9 +14,13 @@ class ConnectedFeedsList extends React.Component {
                     return <Feed key={feed.id} feed={feed} />
                 })
             }
-            <FeedEdit />
+            <FeedEdit onAdd={(link) => this.onAddFeed(link)}/>
             </div>
         );
+    }
+
+    onAddFeed(link) {
+        this.props.onAddFeed(link);
     }
 }
 

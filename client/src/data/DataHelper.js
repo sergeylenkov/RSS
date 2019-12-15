@@ -139,14 +139,17 @@ export class DataHelper {
         });
     }
 
-    addNewFeed(link) {
+    addFeed(link) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=feed_add&link=${link}`).then((response) => {				 
-                return response.json();
-            }).then((data) => {
-                if (data.items) {
-                    this.updateFeedsInEntries(data.items);
+            fetch(`${this.url}feeds`, {
+                method: 'POST',
+                body: JSON.stringify({ link: link }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            }).then((response) => {				 
+                return response.json();
+            }).then((data) => {                
                 resolve(data);
             });
         });
@@ -154,7 +157,7 @@ export class DataHelper {
     
     deleteFeed(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=feed_delete&id=${id}`).then((response) => {				 
+            fetch(`${this.url}feeds/${id}/delete`).then((response) => {				 
                 return response.json();
             }).then((data) => {
                 resolve(data);

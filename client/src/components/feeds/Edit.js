@@ -31,7 +31,7 @@ export class FeedEdit extends React.Component {
                     <div className={styles.form}>
                         <input className={styles.linkField} placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
                         <button className={styles.formButton} onClick={() => this.onAdd()}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
-                        <button className={styles.formButton} onClick={() => this.onCloseForn()}><div className={styles.icon}><Icon svg={Icons.close}/></div></button>
+                        <button className={styles.formButton} onClick={() => this.onCloseForm()}><div className={styles.icon}><Icon svg={Icons.close}/></div></button>
                     </div>
                 </div>
             );
@@ -55,7 +55,7 @@ export class FeedEdit extends React.Component {
         const value = this.linkFieldRef.current.value;
 
         if (value.length > 0) {
-            this.props.onAddFedd(value);
+            this.props.onAdd(value);
         }
     }
 

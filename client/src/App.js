@@ -72,7 +72,7 @@ class App extends React.Component {
                 <div className={styles.menu}><Menu type={this.state.type} count={count} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
                     <div className={styles.list}><EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
-                    <div className={styles.feeds}><FeedsList /></div>
+                    <div className={styles.feeds}><FeedsList onAddFeed={(link) => this.onAddFeed(link)} /></div>
                 </div>
             </div>
         );
@@ -197,16 +197,15 @@ class App extends React.Component {
     }
 
     onAddFeed(feed) {
-        this.setState({
+        /*this.setState({
             isUpdating: true
-        });
+        });*/
 
-        this.dataHelper.addNewFeed(feed).then((response) => {
-            const feed = response.channel;
+        this.dataHelper.addFeed(feed).then((response) => {
+            //const feed = response.channel;
             console.log(response);
-            const feeds = [...this.state.feeds];
-            feeds.push(feed);
-            
+            //const feeds = [...this.state.feeds];
+            //feeds.push(feed);            
             //this.updateFeedsCount(false);
         });
     }

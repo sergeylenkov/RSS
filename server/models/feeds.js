@@ -41,6 +41,10 @@ module.exports.update = function() {
     });
 }
 
+module.exports.add = function(feed) {
+    return _addFeed(feed);
+}
+
 function _getFeeds() {
     return new Promise((resolve, reject) => {        
         db.all('SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id WHERE f.deleted = 0 GROUP BY f.id', [], (error, rows) => {
@@ -71,6 +75,43 @@ function _getFeeds() {
                 resolve(items);
             }
         });
+    });
+}
+
+function _addFeed(link) {    
+    return new Promise((resolve, reject) => {
+        db.get('SELECT id FROM feeds WHERE rss = ?', [link], function(error, row) {
+            if (row) {
+                reject({ message: 'Feed already exists' });
+            } else {
+                const parser = new Parser();
+                parser.parseURL(link, (error, rss) => {            
+                    if (error) {
+                        reject(error);
+                    } else {
+                        let feed = {
+                            id: -1,
+                            rss: link,
+                            title: rss.title,
+                            description: rss.description,
+                            link: rss.link,
+                            image: rss.image.url,
+                            lastUpdate: Date()
+                        }
+                        
+                        db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [feed.rss, feed.link, feed.title, feed.description, feed.image, true, 'ok', feed.lastUpdate, false], function(error) {
+                            if (error) {
+                                reject(error);
+                            } else {
+                                feed.id = this.lastID;
+                                resolve(feed);
+                            }
+                        });
+                    }
+                });    
+            }
+        });
+            
     });
 }
 
