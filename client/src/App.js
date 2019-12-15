@@ -4,7 +4,7 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
-import { entriesUpdating, entriesUpdated, feedsUpdated, updateUnviewedCount, updateViewed } from './store/actions/index';
+import { entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete, updateUnviewedCount, updateViewed } from './store/actions/index';
 
 import styles from './App.module.css';
 
@@ -174,39 +174,15 @@ class App extends React.Component {
     }
 
     onFeedDelete(id) {
-        console.log('onFeedDelete', id);
         this.dataHelper.deleteFeed(id).then(() => {
-            const feeds = [...this.state.feeds];
-
-            let index = -1;
-
-            feeds.forEach((feed, i) => {
-                if (feed.id === id) {
-                    index = i;
-                }
-            });
-
-            if (index >= 0) {
-                delete feeds[index];
-
-                this.setState({
-                    feeds: feeds,
-                });
-            }
+            this.props.feedsDelete(id);
         });
     }
 
-    onAddFeed(feed) {
-        /*this.setState({
-            isUpdating: true
-        });*/
-
-        this.dataHelper.addFeed(feed).then((response) => {
-            //const feed = response.channel;
-            console.log(response);
-            //const feeds = [...this.state.feeds];
-            //feeds.push(feed);            
-            //this.updateFeedsCount(false);
+    onAddFeed(link) {
+        this.dataHelper.addFeed(link).then((feed) => {
+            console.log(feed);
+            this.props.feedsAdd(feed);
         });
     }
 
@@ -234,7 +210,9 @@ const mapDispatchToProps = dispatch => {
         entriesUpdating: () => dispatch(entriesUpdating()),
         entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
         updateUnviewedCount: () => dispatch(updateUnviewedCount()),
-        updateViewed: (ids) => dispatch(updateViewed(ids))
+        updateViewed: (ids) => dispatch(updateViewed(ids)),
+        feedsAdd: (feed) => dispatch(feedsAdd(feed)),
+        feedsDelete: (id) => dispatch(feedsDelete(id))
     };
 };
 

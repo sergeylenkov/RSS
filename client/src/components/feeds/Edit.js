@@ -65,7 +65,7 @@ export class FeedEdit extends React.Component {
         });
     }
 
-    onCloseForn() {
+    onCloseForm() {
         this.setState({
             isFormVisible: false
         });

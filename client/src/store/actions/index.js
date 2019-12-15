@@ -1,4 +1,7 @@
-import { FEEDS_UPDATING, FEEDS_UPDATED, ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED } from '../constants/index';
+import {
+    FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
+    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED
+} from '../constants/index';
 
 export function feedsUpdating() {
     return { type: FEEDS_UPDATING }
@@ -6,6 +9,14 @@ export function feedsUpdating() {
 
 export function feedsUpdated(feeds) {
     return { type: FEEDS_UPDATED, feeds }
+}
+
+export function feedsAdd(feed) {
+    return { type: FEEDS_ADD, feed }
+}
+
+export function feedsDelete(id) {
+    return { type: FEEDS_DELETE, id }
 }
 
 export function entriesUpdating() {
