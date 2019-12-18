@@ -87,7 +87,7 @@ export class DataHelper {
         });
     }
     
-    markAsViewed(ids) {
+    setViewed(ids) {
         return new Promise((resolve) => {
             fetch(`${this.url}entries/view`, {
                 method: 'POST',
@@ -103,14 +103,10 @@ export class DataHelper {
         });
     }
     
-    markAsRead(ids) {
+    setRead(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}entries/read`, {
-                method: 'POST',
-                body: JSON.stringify({ ids: ids }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            fetch(`${this.url}entries/${id}/read`, {
+                method: 'PUT'
             }).then((response) => {				 
                 return response.json();
             }).then((data) => {
@@ -124,10 +120,7 @@ export class DataHelper {
             let method = isFavorite ? 'PUT' : 'DELETE';
             
             fetch(`${this.url}entries/${id}/favorite`, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                method: method
             }).then((response) => {				 
                 return response.json();
             }).then((data) => {

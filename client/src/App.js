@@ -4,21 +4,16 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
-import { entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete, updateUnviewedCount, updateViewed, updateFavorite } from './store/actions/index';
+import {
+    entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
+    updateUnviewedCount, updateViewed, updateFavorite, updateRead
+} from './store/actions/index';
 
 import styles from './App.module.css';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-
-        this.entriesPerPage = 30;
-
-        this.state = {            
-            selectedFeeds: {},
-            type: 0
-        }
-
         this.dataHelper = new DataHelper('http://localhost:5000/', false);
 
         if (localStorage.getItem('collpaseLong') === null) {
@@ -41,17 +36,6 @@ class App extends React.Component {
             this.props.feedsUpdated(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
-                let selectedFeeds = {};
-
-                feeds.forEach(feed => {
-                    selectedFeeds[feed.id] = false;
-                });
-
-                this.setState({
-                    selectedFeeds: selectedFeeds,
-                    type: 0
-                });
-
                 this.props.entriesUpdated(entries);
                 this.props.updateUnviewedCount();
             });            
@@ -59,17 +43,9 @@ class App extends React.Component {
     }
 
     render() {
-        let count = 0;
-
-        if (this.state.type === 0) {
-            count = this.props.feeds.reduce((accumulator, currentValue) => {         
-                return accumulator + currentValue.count;
-            }, 0);
-        }
-
         return (
             <div className={styles.container}>
-                <div className={styles.menu}><Menu type={this.state.type} count={count} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
+                <div className={styles.menu}><Menu type={0} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
                     <div className={styles.list}>
                         <EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
@@ -89,10 +65,6 @@ class App extends React.Component {
             const unviewed = entries.filter((entry) => {
                 return !entry.isViewed;
             });
-            
-            this.setState({
-                type: 0
-            });
 
             this.props.entriesUpdated(unviewed);
             this.props.updateUnviewedCount();
@@ -101,80 +73,42 @@ class App extends React.Component {
 
     onShowAll() {
         this.dataHelper.getAllNews(0, this.entriesPerPage).then((entries) => {
-            this.setState({
-                type: 1
-            });
-
             this.props.entriesUpdated(entries);            
         });
     }
 
     onShowRead() {
         this.dataHelper.getReadNews(0, this.entriesPerPage).then((entries) => {
-            this.setState({
-                type: 2
-            });
-
             this.props.entriesUpdated(entries);            
         });
     }
 
     onShowBookmark() {
-        this.dataHelper.getBookmarkNews(0, this.entriesPerPage).then((entries) => {
-            this.setState({
-                type: 3
-            });
-
+        this.dataHelper.getBookmarkNews(0, this.entriesPerPage).then((entries) => {           
             this.props.entriesUpdated(entries);            
         });
     }
 
     onUpdateViewed(ids) {
-        if (this.state.type === 0) {
+        this.dataHelper.setViewed(ids).then((data) => {
             this.props.updateViewed(ids);
             this.props.updateUnviewedCount();
-            
-            this.dataHelper.markAsViewed(ids);
-        }
+        });
     }
 
-    onUpdateReaded(id) {
-        this.dataHelper.markAsRead([id]);
+    onUpdateReaded(id) {        
+        this.dataHelper.setRead(id).then((data) => {
+            this.props.updateRead(id);
+        });
     }
 
     onSetFavorite(id, isFavorite) {        
-        this.dataHelper.setFavorite(id, isFavorite).then((data) => {            
+        this.dataHelper.setFavorite(id, isFavorite).then((data) => {
             this.props.updateFavorite(id, isFavorite);
         });
     }
 
-    onFeedSelect(id) {
-        /*let feeds = this.state.selectedFeeds;
-        feeds[id] = !feeds[id];
-
-        let filtered = false;
-
-        Object.keys(feeds).forEach(key => {
-            if (feeds[key]) {
-                filtered = true;
-            }
-        });
-        
-        if (filtered) {
-            const entries = this.entries.filter(entry => {
-                return feeds[entry.feedId];
-            });
-         
-            this.setState({
-                entries: entries,
-                selectedFeeds: feeds
-            });
-        } else {
-            this.setState({
-                entries: this.entries,
-                selectedFeeds: feeds
-            });
-        }*/
+    onFeedSelect(id) {        
     }
 
     onFeedDelete(id) {
@@ -201,13 +135,6 @@ class App extends React.Component {
 
 /* Redux */
 
-const mapStateToProps = state => {
-    return {
-        entries: state.entries,
-        feeds: state.feeds
-    };
-};
-
 const mapDispatchToProps = dispatch => {
     return {
         feedsUpdated: (feeds) => dispatch(feedsUpdated(feeds)),
@@ -215,11 +142,12 @@ const mapDispatchToProps = dispatch => {
         entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
         updateUnviewedCount: () => dispatch(updateUnviewedCount()),
         updateViewed: (ids) => dispatch(updateViewed(ids)),
-        updateFavorite: (id) => dispatch(updateFavorite(id)),
+        updateFavorite: (id, isFavorite) => dispatch(updateFavorite(id, isFavorite)),
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
-        feedsDelete: (id) => dispatch(feedsDelete(id))        
+        feedsDelete: (id) => dispatch(feedsDelete(id)),
+        updateRead: (id) => dispatch(updateRead(id))        
     };
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(null, mapDispatchToProps)(App)

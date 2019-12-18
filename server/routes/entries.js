@@ -29,11 +29,11 @@ router.post('/view', function(req, res) {
     });
 });
 
-router.post('/read', function(req, res) {
-    const ids = req.body.ids;
+router.put('/:entryId/read', function(req, res) {
+    const id = req.params.entryId;
 
-    data.setRead(ids).then((items) => {
-        return res.json(items);
+    data.setRead(id).then((item) => {
+        return res.json(item);
     }).catch((error) => {
         res.status(500).send({ error: error });
     });

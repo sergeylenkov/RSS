@@ -1,27 +1,30 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
-    UPDATE_FAVORITE
+    UPDATE_FAVORITE, UPDATE_READ
 } from '../constants/index';
 
 const initialState = {
     isUpdating: false,
+    unviewedCount: 0,
     feeds: [],
     entries: []
 };
 
 function rootReducer(state = initialState, action) {
     if (action.type === FEEDS_UPDATING) {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             isUpdating: true
-        });
+        }
     }
 
     if (action.type === FEEDS_UPDATED) {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             isUpdating: false,
             feeds: [...action.feeds]
-        });
+        }
     }
 
     if (action.type === FEEDS_ADD) {
@@ -29,9 +32,10 @@ function rootReducer(state = initialState, action) {
 
         feeds.push(action.feed);
 
-        return Object.assign({}, state, {
+        return {
+            ...state,
             feeds: feeds
-        });
+        }
     }
 
     if (action.type === FEEDS_DELETE) {
@@ -39,26 +43,30 @@ function rootReducer(state = initialState, action) {
             return feed.id !== action.id
         });        
 
-        return Object.assign({}, state, {
+        return {
+            ...state,
             feeds: feeds
-        });
+        }
     }
 
     if (action.type === ENTRIES_UPDATING) {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             isUpdating: true
-        });
+        }
     }
 
     if (action.type === ENTRIES_UPDATED) {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             isUpdating: false,
             entries: [...action.entries]
-        });
+        }
     }
 
     if (action.type === UPDATE_UNVIEWED_COUNT) {
         const feeds = [...state.feeds];
+        let totalCount = 0;
 
         feeds.forEach(feed => {
             const count = state.entries.filter(entry => {
@@ -66,39 +74,51 @@ function rootReducer(state = initialState, action) {
             }).length;
 
             feed.count = count;
+            totalCount = totalCount + count;
         });
         
-        return Object.assign({}, state, {           
-            feeds: feeds
-        });
+        return {
+            ...state,
+            feeds: feeds,
+            unviewedCount: totalCount
+        }
     }
 
     if (action.type === UPDATE_VIEWED) {
-        const entries = [...state.entries];
-
-        state.entries.forEach(entry => {
-            if (action.ids.indexOf(entry.id) !== -1) {
-                entry.isViewed = true;
+        const entries = state.entries.map(entry => {
+            if (action.ids.indexOf(entry.id) !== -1) {                
+                return { ...entry, isViewed: true }
             }
+
+            return entry;
         });
 
-        return Object.assign({}, state, {           
+        return {
+            ...state,
             entries: entries
-        });
+        }
     }
 
     if (action.type === UPDATE_FAVORITE) {
-        const entries = [...state.entries];
-
-        const entry = entries.find(entry => {
-            return entry.id === action.id
+        const entries = state.entries.map(entry => {
+            return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
         });
 
-        entry.isFavorite = action.isFavorite;
-        
-        return Object.assign({}, state, {           
+        return {
+            ...state,
             entries: entries
+        }
+    }
+
+    if (action.type === UPDATE_READ) {
+        const entries = state.entries.map(entry => {
+            return entry.id === action.id ? { ...entry, isRead: true } : entry
         });
+
+        return {
+            ...state,
+            entries: entries
+        }
     }
 
     return state;

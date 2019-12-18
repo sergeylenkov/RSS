@@ -15,7 +15,7 @@ class ConnectedMenu extends React.Component {
     render() {
         return (
             <div className={styles.container}>
-                <ReloadButton isActive={this.props.isUpdating} isSelected={this.props.type === 0} count={this.props.count} onClick={this.onUpdate}/>
+                <ReloadButton isActive={this.props.isUpdating} isSelected={this.props.type === 0} count={this.props.unviewedCount} onClick={this.onUpdate}/>
                 <MenuButton title={'Все'} isSelected={this.props.type === 1} onClick={this.props.onShowAll} />
                 <MenuButton title={'Прочитанное'} isSelected={this.props.type === 2} onClick={this.props.onShowRead} />
                 <MenuButton title={'Избранное'} isSelected={this.props.type === 3} onClick={this.props.onShowBookmark}/>
@@ -32,7 +32,8 @@ class ConnectedMenu extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isUpdating: state.isUpdating
+        isUpdating: state.isUpdating,
+        unviewedCount: state.unviewedCount
     };
 };
 

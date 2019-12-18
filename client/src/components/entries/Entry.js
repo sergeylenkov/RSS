@@ -8,10 +8,7 @@ export class Entry extends React.Component {
         super(props);
 
         this.state = {
-            isViewed: props.entry.isViewed,
-            isRead: props.entry.isRead,
-            isExpanded: false,
-            isFavorite: props.entry.isFavorite
+            isExpanded: false
         }
 
         this.itemElementRef = null;
@@ -38,7 +35,7 @@ export class Entry extends React.Component {
     }
 
     componentDidMount() {        
-        if (!this.state.isViewed) {
+        if (!this.props.entry.isViewed) {
             window.addEventListener('scroll', this.handleScroll);
             window.addEventListener('mousemove', this.handleMove);
         }
@@ -52,10 +49,10 @@ export class Entry extends React.Component {
     render() {
         const entry = this.props.entry;
         const description = this.removeSelfLinks(entry.description, entry.link);
-        
+
         let className = styles.container;
 
-        if (this.state.isRead) {
+        if (this.props.entry.isRead) {
             className += ` ${styles.read}`;
         }
 
@@ -73,8 +70,8 @@ export class Entry extends React.Component {
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
                 <div className={styles.info}>
-                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.state.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div><div className={styles.infoCounter}>{1}</div></div>
-                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{this.state.isRead}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.props.entry.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div><div className={styles.infoCounter}>{1}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{this.props.entry.isRead}</div></div>
                 </div>
             </div>
         );
@@ -119,7 +116,7 @@ export class Entry extends React.Component {
     }
 
     handleScroll() {
-        if (!this.state.isViewed) {
+        if (!this.props.entry.isViewed) {
             const rect = this.itemElementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
             
@@ -137,25 +134,17 @@ export class Entry extends React.Component {
             }
 
             if (isViewed) {
-                this.setState({
-                    isViewed: true
-                });
-
                 this.props.onView(this.props.entry.id);
             }
         }
     }
 
     handleMove() {
-        if (!this.state.isViewed) {
+        if (!this.props.entry.isViewed) {
             const rect = this.itemElementRef.getBoundingClientRect();            
             const height = rect.top + rect.height;
             
-            if (height < window.innerHeight) {
-                this.setState({
-                    isViewed: true
-                });
-                
+            if (height < window.innerHeight) {                
                 this.props.onView(this.props.entry.id);     
             }        
 
@@ -171,19 +160,11 @@ export class Entry extends React.Component {
 
     onRead() {
         this.props.onRead(this.props.entry.id);
-
-        this.setState({
-            isRead: true
-        });
     }
 
     onSetFavorite() {
-        const isFavorite = !this.state.isFavorite;
+        const isFavorite = !this.props.entry.isFavorite;
         
         this.props.onSetFavorite(this.props.entry.id, isFavorite);
-
-        this.setState({
-            isFavorite: isFavorite
-        });
     }
 }

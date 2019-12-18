@@ -52,15 +52,13 @@ module.exports.setViewed = function(ids) {
     });   
 }
 
-module.exports.setRead = function(ids) {
+module.exports.setRead = function(id) {
     return new Promise((resolve, reject) => {
-        const idsQuery = ids.join(',');
-
-        db.run(`UPDATE entries SET read = ? WHERE id IN(${idsQuery})`, [true], (error) => {
+        db.run(`UPDATE entries SET read = ? WHERE id = ?`, [true, id], (error) => {
             if (error) {
                 reject(error);
             } else {        
-                resolve({ ids: ids, isRead: true });
+                resolve({ id: id, isRead: true });
             }
         });
     });   
