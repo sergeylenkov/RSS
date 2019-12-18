@@ -1,6 +1,7 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
-    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED
+    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
+    UPDATE_FAVORITE
 } from '../constants/index';
 
 const initialState = {
@@ -81,6 +82,20 @@ function rootReducer(state = initialState, action) {
             }
         });
 
+        return Object.assign({}, state, {           
+            entries: entries
+        });
+    }
+
+    if (action.type === UPDATE_FAVORITE) {
+        const entries = [...state.entries];
+
+        const entry = entries.find(entry => {
+            return entry.id === action.id
+        });
+
+        entry.isFavorite = action.isFavorite;
+        
         return Object.assign({}, state, {           
             entries: entries
         });

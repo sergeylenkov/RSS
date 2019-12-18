@@ -119,9 +119,16 @@ export class DataHelper {
         });
     }
 
-    setFavorite(id) {
+    setFavorite(id, isFavorite) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=bookmark&id=${id}`).then((response) => {				 
+            let method = isFavorite ? 'PUT' : 'DELETE';
+            
+            fetch(`${this.url}entries/${id}/favorite`, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {				 
                 return response.json();
             }).then((data) => {
                 resolve(data);

@@ -4,7 +4,7 @@ import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
-import { entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete, updateUnviewedCount, updateViewed } from './store/actions/index';
+import { entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete, updateUnviewedCount, updateViewed, updateFavorite } from './store/actions/index';
 
 import styles from './App.module.css';
 
@@ -71,8 +71,12 @@ class App extends React.Component {
             <div className={styles.container}>
                 <div className={styles.menu}><Menu type={this.state.type} count={count} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
                 <div className={styles.content}>
-                    <div className={styles.list}><EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id) => this.onSetFavorite(id)} /></div>
-                    <div className={styles.feeds}><FeedsList onAddFeed={(link) => this.onAddFeed(link)} /></div>
+                    <div className={styles.list}>
+                        <EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
+                    </div>
+                    <div className={styles.feeds}>
+                        <FeedsList onAddFeed={(link) => this.onAddFeed(link)} />
+                    </div>
                 </div>
             </div>
         );
@@ -130,9 +134,7 @@ class App extends React.Component {
             this.props.updateViewed(ids);
             this.props.updateUnviewedCount();
             
-            this.dataHelper.markAsViewed(ids).then((data) => {
-                console.log(data);
-            });
+            this.dataHelper.markAsViewed(ids);
         }
     }
 
@@ -140,12 +142,14 @@ class App extends React.Component {
         this.dataHelper.markAsRead([id]);
     }
 
-    onSetFavorite(id) {
-        this.dataHelper.setFavorite(id);
+    onSetFavorite(id, isFavorite) {        
+        this.dataHelper.setFavorite(id, isFavorite).then((data) => {            
+            this.props.updateFavorite(id, isFavorite);
+        });
     }
 
     onFeedSelect(id) {
-        let feeds = this.state.selectedFeeds;
+        /*let feeds = this.state.selectedFeeds;
         feeds[id] = !feeds[id];
 
         let filtered = false;
@@ -170,7 +174,7 @@ class App extends React.Component {
                 entries: this.entries,
                 selectedFeeds: feeds
             });
-        }
+        }*/
     }
 
     onFeedDelete(id) {
@@ -211,8 +215,9 @@ const mapDispatchToProps = dispatch => {
         entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
         updateUnviewedCount: () => dispatch(updateUnviewedCount()),
         updateViewed: (ids) => dispatch(updateViewed(ids)),
+        updateFavorite: (id) => dispatch(updateFavorite(id)),
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
-        feedsDelete: (id) => dispatch(feedsDelete(id))
+        feedsDelete: (id) => dispatch(feedsDelete(id))        
     };
 };
 

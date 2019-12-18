@@ -178,10 +178,12 @@ export class Entry extends React.Component {
     }
 
     onSetFavorite() {
-        this.props.onSetFavorite(this.props.entry.id);
+        const isFavorite = !this.state.isFavorite;
+        
+        this.props.onSetFavorite(this.props.entry.id, isFavorite);
 
         this.setState({
-            isFavorite: true
+            isFavorite: isFavorite
         });
     }
 }

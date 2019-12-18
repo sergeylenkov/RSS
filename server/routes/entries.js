@@ -39,4 +39,24 @@ router.post('/read', function(req, res) {
     });
 });
 
+router.put('/:entryId/favorite', function(req, res) {
+    const id = req.params.entryId;
+
+    data.setFavorite(id, true).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
+router.delete('/:entryId/favorite', function(req, res) {
+    const id = req.params.entryId;
+
+    data.setFavorite(id, false).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 module.exports = router;

@@ -24,7 +24,7 @@ class ConnectedEntriesList extends React.Component {
             <div className={styles.container}>                
                 {
                     this.props.entries.map((entry) => {                        
-                        return <Entry key={entry.id} entry={entry} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onSetFavorite={(id) => this.onSetFavorite(id)} />
+                        return <Entry key={entry.id} entry={entry} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
                     })
                 }
             </div>
@@ -40,8 +40,8 @@ class ConnectedEntriesList extends React.Component {
         this.props.onUpdateReaded(id);
     }
 
-    onSetFavorite(id) {
-        this.props.onSetFavorite(id);
+    onSetFavorite(id, isFavorite) {
+        this.props.onSetFavorite(id, isFavorite);
     }
 }
 

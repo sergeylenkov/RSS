@@ -7,6 +7,7 @@ describe('GET /feeds', function() {
     	request(app).get('/feeds')
         .expect(200)
         .end((err, res) => {
+            console.log(err);
         	assert( res.body.items.length > 0, 'must be more then 0');
           	done();
         });
@@ -43,6 +44,17 @@ describe('GET /feeds/update', function() {
         .expect(200)
         .end((err, res) => {
         	assert( res.body.items.length > 0, 'must be more then 0');
+          	done();
+        });
+    });
+});
+
+describe('GET /entries/1/favorite', function() {
+    it('should set entru as favroite', (done) => {
+    	request(app).put('/entries/1/favorite')
+        .expect(200)
+        .end((err, res) => {
+        	assert( res.body.item.isFavorite === true, 'must be true');
           	done();
         });
     });

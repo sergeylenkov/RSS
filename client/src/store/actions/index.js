@@ -1,6 +1,7 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
-    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED
+    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
+    UPDATE_FAVORITE
 } from '../constants/index';
 
 export function feedsUpdating() {
@@ -33,4 +34,8 @@ export function updateUnviewedCount() {
 
 export function updateViewed(ids) {
     return { type: UPDATE_VIEWED, ids }
+}
+
+export function updateFavorite(id, isFavorite) {
+    return { type: UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
 }
