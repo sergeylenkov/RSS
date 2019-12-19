@@ -43,9 +43,9 @@ export class DataHelper {
         });
     }
 
-    getAllNews(from, to) {
+    getAllNews() {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=news_all&from=${from}&to=${to}`).then((response) => {
+            fetch(`${this.url}entries`).then((response) => {
                 return response.json();
             }).then((data) => {
                 this.updateFeedsInEntries(data);
@@ -54,9 +54,9 @@ export class DataHelper {
         });
     }
 
-    getReadNews(from, to) {
+    getReadNews() {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=news_read&from=${from}&to=${to}`).then((response) => {
+            fetch(`${this.url}entries/read`).then((response) => {
                 return response.json();
             }).then((data) => {
                 this.updateFeedsInEntries(data);
@@ -65,9 +65,9 @@ export class DataHelper {
         });
     }
 
-    getBookmarkNews(from, to) {
+    getFavorites() {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=news_bookmark&from=${from}&to=${to}`).then((response) => {
+            fetch(`${this.url}entries/favorites`).then((response) => {
                 return response.json();
             }).then((data) => {
                 this.updateFeedsInEntries(data);

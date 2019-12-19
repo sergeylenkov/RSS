@@ -19,6 +19,22 @@ router.get('/unviewed', function(req, res) {
     });
 });
 
+router.get('/favorites', function(req, res) {
+    data.favorites().then((items) => {
+        return res.json(items);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
+router.get('/read', function(req, res) {
+    data.read().then((items) => {
+        return res.json(items);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 router.post('/view', function(req, res) {
     const ids = req.body.ids;
 

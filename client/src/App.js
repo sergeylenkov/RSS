@@ -6,7 +6,8 @@ import { FeedsList } from './components/feeds/Feeds.js';
 import { connect } from 'react-redux';
 import {
     entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
-    updateUnviewedCount, updateViewed, updateFavorite, updateRead
+    updateUnviewedCount, updateViewed, updateFavorite, updateRead,
+    changeViewMode
 } from './store/actions/index';
 
 import styles from './App.module.css';
@@ -25,9 +26,10 @@ class App extends React.Component {
         }
 
         this.onUpdate = this.onUpdate.bind(this);
+        this.onShowUnviewed = this.onShowUnviewed.bind(this);
         this.onShowAll = this.onShowAll.bind(this);
         this.onShowRead = this.onShowRead.bind(this);
-        this.onShowBookmark = this.onShowBookmark.bind(this);
+        this.onShowFavorites = this.onShowFavorites.bind(this);
     }
 
     componentDidMount() {
@@ -45,7 +47,9 @@ class App extends React.Component {
     render() {
         return (
             <div className={styles.container}>
-                <div className={styles.menu}><Menu type={0} onUpdate={this.onUpdate} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowBookmark={this.onShowBookmark} /></div>
+                <div className={styles.menu}>
+                    <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
+                </div>
                 <div className={styles.content}>
                     <div className={styles.list}>
                         <EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
@@ -60,6 +64,7 @@ class App extends React.Component {
 
     onUpdate() {
         this.props.entriesUpdating();
+        this.props.changeViewMode(0);
 
         this.dataHelper.update().then(entries => {
             const unviewed = entries.filter((entry) => {
@@ -71,20 +76,35 @@ class App extends React.Component {
         });
     }
 
+    onShowUnviewed() {
+        this.props.changeViewMode(0);
+
+        this.dataHelper.getUnviewed().then(entries => {
+            this.props.entriesUpdated(entries);
+            this.props.updateUnviewedCount();
+        });
+    }
+
     onShowAll() {
-        this.dataHelper.getAllNews(0, this.entriesPerPage).then((entries) => {
+        this.props.changeViewMode(1);
+
+        this.dataHelper.getAllNews().then((entries) => {
             this.props.entriesUpdated(entries);            
         });
     }
 
     onShowRead() {
+        this.props.changeViewMode(2);
+
         this.dataHelper.getReadNews(0, this.entriesPerPage).then((entries) => {
             this.props.entriesUpdated(entries);            
         });
     }
 
-    onShowBookmark() {
-        this.dataHelper.getBookmarkNews(0, this.entriesPerPage).then((entries) => {           
+    onShowFavorites() {
+        this.props.changeViewMode(3);
+
+        this.dataHelper.getFavorites().then((entries) => {           
             this.props.entriesUpdated(entries);            
         });
     }
@@ -145,7 +165,8 @@ const mapDispatchToProps = dispatch => {
         updateFavorite: (id, isFavorite) => dispatch(updateFavorite(id, isFavorite)),
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
         feedsDelete: (id) => dispatch(feedsDelete(id)),
-        updateRead: (id) => dispatch(updateRead(id))        
+        updateRead: (id) => dispatch(updateRead(id)),
+        changeViewMode: (mode) => dispatch(changeViewMode(mode))        
     };
 };
 

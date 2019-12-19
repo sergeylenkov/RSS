@@ -72,6 +72,10 @@
 	color: #4076cc;
 }
 
+.description pre {
+	white-space: pre-wrap;
+}
+
 .feed {	
 	margin: 10px 0;	
 	display: flex;

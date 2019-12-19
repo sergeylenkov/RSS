@@ -38,6 +38,45 @@ module.exports.unviewed = function() {
     });
 }
 
+module.exports.favorites = function() {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM entries WHERE favorite = ? ORDER BY date DESC', [true], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                let items = [];
+    
+                rows.forEach((row) => {
+                    const item = _convertRowEntry(row);
+                    items.push(item);
+                });
+    
+                resolve(items);
+            }
+        });
+    });
+}
+
+module.exports.read = function() {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM entries WHERE read = ? ORDER BY date DESC', [true], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                let items = [];
+    
+                rows.forEach((row) => {
+                    const item = _convertRowEntry(row);
+                    items.push(item);
+                });
+    
+                resolve(items);
+            }
+        });
+    });
+}
+
+
 module.exports.setViewed = function(ids) {
     return new Promise((resolve, reject) => {
         const idsQuery = ids.join(',');
