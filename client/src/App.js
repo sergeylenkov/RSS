@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {
     entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
     updateUnviewedCount, updateViewed, updateFavorite, updateRead,
-    changeViewMode
+    changeViewMode, updateEntriesCount
 } from './store/actions/index';
 
 import styles from './App.module.css';
@@ -40,7 +40,7 @@ class App extends React.Component {
                 console.log(entries);
                 this.props.entriesUpdated(entries);
                 this.props.updateUnviewedCount();
-            });            
+            });
         });
     }
 
@@ -88,24 +88,26 @@ class App extends React.Component {
     onShowAll() {
         this.props.changeViewMode(1);
 
-        this.dataHelper.getAllNews().then((entries) => {
-            this.props.entriesUpdated(entries);            
+        this.dataHelper.allEntries().then((entries) => {
+            this.props.entriesUpdated(entries);
         });
     }
 
     onShowRead() {
         this.props.changeViewMode(2);
 
-        this.dataHelper.getReadNews(0, this.entriesPerPage).then((entries) => {
-            this.props.entriesUpdated(entries);            
+        this.dataHelper.readEntries().then((entries) => {
+            this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
         });
     }
 
     onShowFavorites() {
         this.props.changeViewMode(3);
 
-        this.dataHelper.getFavorites().then((entries) => {           
-            this.props.entriesUpdated(entries);            
+        this.dataHelper.getFavorites().then((entries) => {
+            this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
         });
     }
 
@@ -116,19 +118,19 @@ class App extends React.Component {
         });
     }
 
-    onUpdateReaded(id) {        
+    onUpdateReaded(id) {
         this.dataHelper.setRead(id).then((data) => {
             this.props.updateRead(id);
         });
     }
 
-    onSetFavorite(id, isFavorite) {        
+    onSetFavorite(id, isFavorite) {
         this.dataHelper.setFavorite(id, isFavorite).then((data) => {
             this.props.updateFavorite(id, isFavorite);
         });
     }
 
-    onFeedSelect(id) {        
+    onFeedSelect(id) {
     }
 
     onFeedDelete(id) {
@@ -144,9 +146,9 @@ class App extends React.Component {
         });
     }
 
-    onToggleSettings() {        
+    onToggleSettings() {
         const visible = !this.state.isSettingsVisible;
-        
+
         this.setState({
             isSettingsVisible: visible
         });
@@ -161,12 +163,13 @@ const mapDispatchToProps = dispatch => {
         entriesUpdating: () => dispatch(entriesUpdating()),
         entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
         updateUnviewedCount: () => dispatch(updateUnviewedCount()),
+        updateEntriesCount: () => dispatch(updateEntriesCount()),
         updateViewed: (ids) => dispatch(updateViewed(ids)),
         updateFavorite: (id, isFavorite) => dispatch(updateFavorite(id, isFavorite)),
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
         feedsDelete: (id) => dispatch(feedsDelete(id)),
         updateRead: (id) => dispatch(updateRead(id)),
-        changeViewMode: (mode) => dispatch(changeViewMode(mode))        
+        changeViewMode: (mode) => dispatch(changeViewMode(mode))
     };
 };
 

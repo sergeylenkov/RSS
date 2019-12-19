@@ -1,6 +1,6 @@
 export class DataHelper {
     constructor(url) {
-        this.url = url;        
+        this.url = url;
 
         this._feeds = [];
         this._feedsDict = {};
@@ -17,7 +17,7 @@ export class DataHelper {
         });
     }
 
-    getFeeds() {   
+    getFeeds() {
         return new Promise((resolve) => {
             fetch(`${this.url}feeds`).then((response) => {
                 return response.json();
@@ -43,7 +43,7 @@ export class DataHelper {
         });
     }
 
-    getAllNews() {
+    allEntries() {
         return new Promise((resolve) => {
             fetch(`${this.url}entries`).then((response) => {
                 return response.json();
@@ -54,7 +54,7 @@ export class DataHelper {
         });
     }
 
-    getReadNews() {
+    readEntries() {
         return new Promise((resolve) => {
             fetch(`${this.url}entries/read`).then((response) => {
                 return response.json();
@@ -86,7 +86,7 @@ export class DataHelper {
             });
         });
     }
-    
+
     setViewed(ids) {
         return new Promise((resolve) => {
             fetch(`${this.url}entries/view`, {
@@ -95,19 +95,19 @@ export class DataHelper {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then((response) => {                
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
             });
         });
     }
-    
+
     setRead(id) {
         return new Promise((resolve) => {
             fetch(`${this.url}entries/${id}/read`, {
                 method: 'PUT'
-            }).then((response) => {				 
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
@@ -118,15 +118,15 @@ export class DataHelper {
     setFavorite(id, isFavorite) {
         return new Promise((resolve) => {
             let method = isFavorite ? 'PUT' : 'DELETE';
-            
+
             fetch(`${this.url}entries/${id}/favorite`, {
                 method: method
-            }).then((response) => {				 
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
             });
-        });    
+        });
     }
 
     totalCount() {
@@ -147,17 +147,17 @@ export class DataHelper {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then((response) => {				 
+            }).then((response) => {
                 return response.json();
-            }).then((data) => {                
+            }).then((data) => {
                 resolve(data);
             });
         });
     }
-    
+
     deleteFeed(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}feeds/${id}/delete`).then((response) => {				 
+            fetch(`${this.url}feeds/${id}/delete`).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
@@ -175,6 +175,3 @@ export class DataHelper {
         });
     }
 }
-
-
-

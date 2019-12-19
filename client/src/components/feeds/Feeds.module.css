@@ -1,8 +1,9 @@
 .container {
     position: sticky;
     top: 70px;
+    max-width: 300px;
     padding: 20px;
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
     background: #ffffff;
 }

@@ -13,7 +13,7 @@ export class Entry extends React.Component {
 
         this.itemElementRef = null;
         this.titleElementRef = null;
-        
+
         this.handleScroll = this.handleScroll.bind(this);
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
@@ -30,17 +30,17 @@ export class Entry extends React.Component {
                 this.titleElementRef = element;
 
                 this.titleElementRef.addEventListener('mouseup', this.onRead);
-            }            
+            }
         }
     }
 
-    componentDidMount() {        
+    componentDidMount() {
         if (!this.props.entry.isViewed) {
             window.addEventListener('scroll', this.handleScroll);
             window.addEventListener('mousemove', this.handleMove);
         }
     }
-    
+
     componentWillUnmount() {
         window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('mousemove', this.handleMove);
@@ -52,7 +52,7 @@ export class Entry extends React.Component {
 
         let className = styles.container;
 
-        if (this.props.entry.isRead) {
+        if (this.props.entry.isRead && this.props.viewMode !== 2) {
             className += ` ${styles.read}`;
         }
 
@@ -78,36 +78,36 @@ export class Entry extends React.Component {
     }
 
     removeSelfLinks(description, link) {
-        let el = document.createElement('div');       
+        let el = document.createElement('div');
         el.innerHTML = description;
-        
+
         let items = Array.from(el.getElementsByTagName('a'));
 
         let links = items.filter((item) => {
             let href = item.getAttribute('href');
-    
+
             if (href && href.indexOf(link) !== -1) {
                 return true;
             }
-    
+
             return false;
         });
-    
+
         for (let i = 0; i < links.length; i++) {
             links[i].remove();
         }
-    
+
         return el.innerHTML;
     }
 
-    isLong(description) {        
-        let el = document.createElement('div');       
+    isLong(description) {
+        let el = document.createElement('div');
         el.innerHTML = description;
-        
+
         if (el.getElementsByTagName('img').length > 3) {
             return true;
         }
-        
+
         if (el.innerText.length > 1500) {
             return true;
         }
@@ -119,18 +119,18 @@ export class Entry extends React.Component {
         if (!this.props.entry.isViewed) {
             const rect = this.itemElementRef.getBoundingClientRect();
             const height = window.innerHeight / 2;
-            
+
             let isViewed = false;
             let scrollEnd = false;
-            
+
             if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
                 scrollEnd = true;
             }
-            
+
             if (scrollEnd && rect.top > 0) {
                 isViewed = true;
             } else if (rect.top < height) {
-                isViewed = true;                
+                isViewed = true;
             }
 
             if (isViewed) {
@@ -141,12 +141,12 @@ export class Entry extends React.Component {
 
     handleMove() {
         if (!this.props.entry.isViewed) {
-            const rect = this.itemElementRef.getBoundingClientRect();            
+            const rect = this.itemElementRef.getBoundingClientRect();
             const height = rect.top + rect.height;
-            
-            if (height < window.innerHeight) {                
-                this.props.onView(this.props.entry.id);     
-            }        
+
+            if (height < window.innerHeight) {
+                this.props.onView(this.props.entry.id);
+            }
 
             window.removeEventListener('mousemove', this.handleMove);
         }
@@ -159,12 +159,12 @@ export class Entry extends React.Component {
     }
 
     onRead() {
-        this.props.onRead(this.props.entry.id);
+        if (!this.props.entry.isRead) {
+            this.props.onRead(this.props.entry.id);
+        }
     }
 
     onSetFavorite() {
-        const isFavorite = !this.props.entry.isFavorite;
-        
-        this.props.onSetFavorite(this.props.entry.id, isFavorite);
+        this.props.onSetFavorite(this.props.entry.id, !this.props.entry.isFavorite);
     }
 }

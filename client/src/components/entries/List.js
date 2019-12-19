@@ -15,16 +15,20 @@ class ConnectedEntriesList extends React.Component {
             this.props.onUpdateViewed(this._viewedIds);
             this._viewedIds = [];
         }, 1000, false);
+
+        this.onSetFavorite = this.onSetFavorite.bind(this);
+        this.onRead = this.onRead.bind(this);
+        this.onView = this.onView.bind(this);
     }
 
     render() {
         const isCollapseLong = JSON.parse(localStorage.getItem('collpaseLong'));
 
         return (
-            <div className={styles.container}>                
+            <div className={styles.container}>
                 {
-                    this.props.entries.map((entry) => {                        
-                        return <Entry key={entry.id} entry={entry} isCollapseLong={isCollapseLong} onView={(id) => this.onView(id)} onRead={(id) => this.onRead(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
+                    this.props.entries.map((entry) => {
+                        return <Entry key={entry.id} entry={entry} isCollapseLong={isCollapseLong} viewMode={this.props.viewMode} onView={this.onView} onRead={this.onRead} onSetFavorite={this.onSetFavorite} />
                     })
                 }
             </div>
@@ -49,7 +53,8 @@ class ConnectedEntriesList extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        entries: state.entries
+        entries: state.entries,
+        viewMode: state.viewMode
     };
 };
 

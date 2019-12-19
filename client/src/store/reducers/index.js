@@ -1,7 +1,7 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
-    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE
+    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT
 } from '../constants/index';
 
 const initialState = {
@@ -43,7 +43,7 @@ function rootReducer(state = initialState, action) {
     if (action.type === FEEDS_DELETE) {
         const feeds = state.feeds.filter(feed => {
             return feed.id !== action.id
-        });        
+        });
 
         return {
             ...state,
@@ -79,7 +79,7 @@ function rootReducer(state = initialState, action) {
             feed.count = count;
             totalCount = totalCount + count;
         });
-        
+
         return {
             ...state,
             feeds: feeds,
@@ -89,7 +89,7 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === UPDATE_VIEWED) {
         const entries = state.entries.map(entry => {
-            if (action.ids.indexOf(entry.id) !== -1) {                
+            if (action.ids.indexOf(entry.id) !== -1) {
                 return { ...entry, isViewed: true }
             }
 
@@ -128,6 +128,23 @@ function rootReducer(state = initialState, action) {
         return {
             ...state,
             viewMode: action.mode
+        }
+    }
+
+    if (action.type === UPDATE_ENTRIES_COUNT) {
+        const feeds = [...state.feeds];
+
+        feeds.forEach(feed => {
+            const count = state.entries.filter(entry => {
+                return entry.feedId === feed.id
+            }).length;
+
+            feed.count = count;
+        });
+
+        return {
+            ...state,
+            feeds: feeds
         }
     }
 

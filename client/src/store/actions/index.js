@@ -1,7 +1,7 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
-    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE
+    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT
 } from '../constants/index';
 
 export function feedsUpdating() {
@@ -46,4 +46,8 @@ export function updateRead(id) {
 
 export function changeViewMode(mode) {
     return { type: CHANGE_VIEW_MODE, mode: mode }
+}
+
+export function updateEntriesCount() {
+    return { type: UPDATE_ENTRIES_COUNT }
 }
