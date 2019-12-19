@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon, Icons } from '../Icon.js';
+import { MenuButton } from './MenuButton.js';
 
 import styles from './ReloadButton.module.css';
 
@@ -12,17 +13,10 @@ export class ReloadButton extends React.Component {
     }
 
     render() {
-        let counter;
-
-        if (this.props.isSelected) {
-            counter = <div className={styles.counter}>{this.props.count}</div>                  
-        }
-
         return (
-            <div className={`${styles.container} ${this.props.isActive ? styles.active : ''} ${this.props.isSelected ? styles.selected : ''}`}>
+            <div className={`${styles.container} ${this.props.isActive ? styles.active : ''}`}>
                 <button className={styles.icon}  onClick={this.onUpdate}><Icon svg={Icons.reload}/></button>
-                <button className={styles.label} onClick={this.onClick}>Свежее</button>                
-                {counter}
+                <MenuButton title={'Свежее'} isSelected={this.props.isSelected} count={this.props.count} onClick={this.onClick} />
             </div>
         );        
     }

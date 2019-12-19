@@ -10,7 +10,7 @@
 .icon {
     width: 16px;
 	height: 16px;
-	margin: auto 0;
+	margin: auto 10px auto 0;
 	stroke: #000000;
 	stroke-width: 2px;
 	fill: none;
