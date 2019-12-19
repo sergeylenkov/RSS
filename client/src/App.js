@@ -30,6 +30,9 @@ class App extends React.Component {
         this.onShowAll = this.onShowAll.bind(this);
         this.onShowRead = this.onShowRead.bind(this);
         this.onShowFavorites = this.onShowFavorites.bind(this);
+        this.onUpdateViewed = this.onUpdateViewed.bind(this);
+        this.onUpdateReaded = this.onUpdateReaded.bind(this);
+        this.onSetFavorite = this.onSetFavorite.bind(this);
     }
 
     componentDidMount() {
@@ -52,7 +55,7 @@ class App extends React.Component {
                 </div>
                 <div className={styles.content}>
                     <div className={styles.list}>
-                        <EntriesList onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} onSetFavorite={(id, isFavorite) => this.onSetFavorite(id, isFavorite)} />
+                        <EntriesList onUpdateViewed={this.onUpdateViewed} onUpdateReaded={this.onUpdateReaded} onSetFavorite={this.onSetFavorite} />
                     </div>
                     <div className={styles.feeds}>
                         <FeedsList onAddFeed={(link) => this.onAddFeed(link)} />
