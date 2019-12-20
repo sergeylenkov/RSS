@@ -29,4 +29,15 @@ router.post('/', function(req, res) {
     });
 });
 
+router.patch('/:feedId', function(req, res) {
+    const id = req.params.feedId;
+    const data = req.body;
+
+    feeds.patch(id, data).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 module.exports = router;

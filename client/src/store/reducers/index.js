@@ -1,5 +1,5 @@
 import {
-    FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE,
+    FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT
 } from '../constants/index';
@@ -33,6 +33,17 @@ function rootReducer(state = initialState, action) {
         const feeds = [...state.feeds];
 
         feeds.push(action.feed);
+
+        return {
+            ...state,
+            feeds: feeds
+        }
+    }
+
+    if (action.type === FEEDS_UPDATE) {
+        const feeds = state.feeds.map(feed => {
+            return feed.id === action.id ? { ...feed, ...action.data } : feed
+        });
 
         return {
             ...state,

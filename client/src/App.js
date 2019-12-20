@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {
     entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
     updateUnviewedCount, updateViewed, updateFavorite, updateRead,
-    changeViewMode, updateEntriesCount
+    changeViewMode, updateEntriesCount, feedsUpdate
 } from './store/actions/index';
 
 import styles from './App.module.css';
@@ -33,6 +33,8 @@ class App extends React.Component {
         this.onUpdateViewed = this.onUpdateViewed.bind(this);
         this.onUpdateReaded = this.onUpdateReaded.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
+        this.onAddFeed = this.onAddFeed.bind(this);
+        this.onChangeFeed = this.onChangeFeed.bind(this);
     }
 
     componentDidMount() {
@@ -58,7 +60,7 @@ class App extends React.Component {
                         <EntriesList onUpdateViewed={this.onUpdateViewed} onUpdateReaded={this.onUpdateReaded} onSetFavorite={this.onSetFavorite} />
                     </div>
                     <div className={styles.feeds}>
-                        <FeedsList onAddFeed={(link) => this.onAddFeed(link)} />
+                        <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} />
                     </div>
                 </div>
             </div>
@@ -149,6 +151,13 @@ class App extends React.Component {
         });
     }
 
+    onChangeFeed(id, data) {
+        this.dataHelper.updateFeed(id, data).then((data) => {
+            console.log(data);
+            this.props.feedsUpdate(id, data.data);
+        });
+    }
+
     onToggleSettings() {
         const visible = !this.state.isSettingsVisible;
 
@@ -172,7 +181,8 @@ const mapDispatchToProps = dispatch => {
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
         feedsDelete: (id) => dispatch(feedsDelete(id)),
         updateRead: (id) => dispatch(updateRead(id)),
-        changeViewMode: (mode) => dispatch(changeViewMode(mode))
+        changeViewMode: (mode) => dispatch(changeViewMode(mode)),
+        feedsUpdate: (id, data) => dispatch(feedsUpdate(id, data))
     };
 };
 

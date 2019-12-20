@@ -155,6 +155,22 @@ export class DataHelper {
         });
     }
 
+    updateFeed(id, data) {
+        return new Promise((resolve) => {
+            fetch(`${this.url}feeds/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });
+    }
+
     deleteFeed(id) {
         return new Promise((resolve) => {
             fetch(`${this.url}feeds/${id}/delete`).then((response) => {
