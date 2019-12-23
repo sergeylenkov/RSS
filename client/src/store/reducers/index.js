@@ -2,7 +2,7 @@ import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
-    FEEDS_EDITING
+    FEEDS_EDITING, FEEDS_SELECT
 } from '../constants/index.js';
 
 const initialState = {
@@ -12,7 +12,9 @@ const initialState = {
     unviewedCount: 0,
     viewMode: 0,
     feeds: [],
-    entries: []
+    allEntries: [],
+    entries: [],
+    selectedFeeds: []
 };
 
 function rootReducer(state = initialState, action) {
@@ -79,11 +81,15 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === ENTRIES_UPDATED) {
+        console.log(action.entries);
+        const entries = filterEntries(state.selectedFeeds, action.entries);
+
         return {
             ...state,
             isUpdating: false,
             entriesCount: action.entries.length,
-            entries: [...action.entries]
+            entries: [...entries],
+            allEntries: [...action.entries]
         }
     }
 
@@ -108,13 +114,15 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === UPDATE_VIEWED) {
-        const entries = state.entries.map(entry => {
+        let entries = state.entries.map(entry => {
             if (action.ids.indexOf(entry.id) !== -1) {
                 return { ...entry, isViewed: true }
             }
 
             return entry;
         });
+
+        entries = filterEntries(state.selectedFeeds, entries);
 
         return {
             ...state,
@@ -123,9 +131,11 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === UPDATE_FAVORITE) {
-        const entries = state.entries.map(entry => {
+        let entries = state.entries.map(entry => {
             return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
         });
+
+        entries = filterEntries(state.selectedFeeds, entries);
 
         return {
             ...state,
@@ -134,9 +144,11 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === UPDATE_READ) {
-        const entries = state.entries.map(entry => {
+        let entries = state.entries.map(entry => {
             return entry.id === action.id ? { ...entry, isRead: true } : entry
         });
+
+        entries = filterEntries(state.selectedFeeds, entries);
 
         return {
             ...state,
@@ -168,7 +180,41 @@ function rootReducer(state = initialState, action) {
         }
     }
 
+    if (action.type === FEEDS_SELECT) {
+        const selectedFeeds = [...state.selectedFeeds];
+
+        const index = selectedFeeds.indexOf(action.id);
+
+        if (index === -1) {
+            selectedFeeds.push(action.id);
+        } else {
+            selectedFeeds.splice(index, 1);
+        }
+        console.log(selectedFeeds);
+        const entries = filterEntries(selectedFeeds, state.allEntries);
+
+        return {
+            ...state,
+            selectedFeeds: selectedFeeds,
+            entries: [...entries]
+        }
+    }
+
     return state;
 };
+
+function filterEntries(selectedFeeds, allEntries) {
+    let entries = [];
+
+    if (selectedFeeds.length > 0) {
+        entries = allEntries.filter(entry => {
+            return selectedFeeds.includes(entry.feedId)
+        });
+    } else {
+        entries = allEntries;
+    }
+
+    return entries;
+}
 
 export default rootReducer;

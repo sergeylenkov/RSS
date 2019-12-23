@@ -9,7 +9,7 @@ export class Feed extends React.Component {
 
         this.titleFieldRef = React.createRef();
 
-        this.onClick = this.onClick.bind(this);
+        this.onSelect = this.onSelect.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onChange = this.onChange.bind(this);
     }
@@ -27,7 +27,7 @@ export class Feed extends React.Component {
     renderViewMode() {
         const feed = this.props.feed;
 
-        return <button className={styles.button} onClick={this.onClick}>
+        return <button className={`${styles.button} ${this.props.isSelected ? styles.selected : ''}`} onClick={this.onSelect}>
             <div className={styles.icon} style={{ backgroundImage: `url(${feed.icon})` }}></div>
             <div className={styles.label}>{feed.title}</div>
             <div className={styles.counter}>{feed.count}</div>
@@ -45,8 +45,8 @@ export class Feed extends React.Component {
         </div>
     }
 
-    onClick() {
-        this.props.onClick(this.props.feed.id);
+    onSelect() {
+        this.props.onSelect(this.props.feed.id);
     }
 
     onDelete() {

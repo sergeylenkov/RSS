@@ -2,7 +2,7 @@ import React from 'react';
 import { Feed } from './Feed.js';
 import { FeedEdit } from './Edit.js';
 import { connect } from 'react-redux';
-import { feedsEditing } from '../../store/actions/index.js';
+import { feedsEditing, feedsSelect } from '../../store/actions/index.js';
 
 import styles from './Feeds.module.css';
 
@@ -18,6 +18,7 @@ class ConnectedFeedsList extends React.Component {
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onSelect = this.onSelect.bind(this);
     }
 
     render() {
@@ -25,7 +26,9 @@ class ConnectedFeedsList extends React.Component {
             <div className={styles.container}>
             {
                 this.props.feeds.map((feed) => {
-                    return <Feed key={feed.id} feed={feed} isEditing={this.props.isFeedsEditing} onDelete={this.onDelete} onChange={this.onChange} />
+                    const isSelected = this.props.selectedFeeds.includes(feed.id);
+
+                    return <Feed key={feed.id} feed={feed} isSelected={isSelected} isEditing={this.props.isFeedsEditing} onDelete={this.onDelete} onChange={this.onChange} onSelect={this.onSelect} />
                 })
             }
             <FeedEdit isEditing={this.props.isFeedsEditing} onAdd={this.onAdd} onEdit={this.onEdit} />
@@ -46,10 +49,12 @@ class ConnectedFeedsList extends React.Component {
         console.log(id);
     }
 
+    onSelect(id) {
+        console.log(id);
+        this.props.feedsSelect(id);
+    }
+
     onEdit() {
-        /*this.setState({
-            isEditing: !this.state.isEditing
-        });*/
         this.props.feedsEditing(!this.props.isFeedsEditing);
     }
 }
@@ -59,13 +64,15 @@ class ConnectedFeedsList extends React.Component {
 const mapStateToProps = state => {
     return {
         isFeedsEditing: state.isFeedsEditing,
-        feeds: state.feeds
+        feeds: state.feeds,
+        selectedFeeds: state.selectedFeeds
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing))
+        feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing)),
+        feedsSelect: (id) => dispatch(feedsSelect(id))
     };
 };
 

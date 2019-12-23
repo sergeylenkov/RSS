@@ -2,17 +2,17 @@ const db = require('../db');
 
 module.exports.all = function() {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM entries ORDER BY date DESC', [], (err, rows) => {
+        db.all('SELECT * FROM entries ORDER BY date DESC LIMIT ?', [30], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
                 let items = [];
-    
+
                 rows.forEach((row) => {
                     const item = _convertRowEntry(row);
                     items.push(item);
                 });
-    
+
                 resolve(items);
             }
         });
@@ -26,12 +26,12 @@ module.exports.unviewed = function() {
                 reject(err);
             } else {
                 let items = [];
-    
+
                 rows.forEach((row) => {
                     const item = _convertRowEntry(row);
                     items.push(item);
                 });
-    
+
                 resolve(items);
             }
         });
@@ -45,12 +45,12 @@ module.exports.favorites = function() {
                 reject(err);
             } else {
                 let items = [];
-    
+
                 rows.forEach((row) => {
                     const item = _convertRowEntry(row);
                     items.push(item);
                 });
-    
+
                 resolve(items);
             }
         });
@@ -64,12 +64,12 @@ module.exports.read = function() {
                 reject(err);
             } else {
                 let items = [];
-    
+
                 rows.forEach((row) => {
                     const item = _convertRowEntry(row);
                     items.push(item);
                 });
-    
+
                 resolve(items);
             }
         });
@@ -84,11 +84,11 @@ module.exports.setViewed = function(ids) {
         db.run(`UPDATE entries SET viewed = ? WHERE id IN(${idsQuery})`, [true], (error) => {
             if (error) {
                 reject(error);
-            } else {        
+            } else {
                 resolve({ ids: ids, isViewed: true });
             }
         });
-    });   
+    });
 }
 
 module.exports.setRead = function(id) {
@@ -96,11 +96,11 @@ module.exports.setRead = function(id) {
         db.run(`UPDATE entries SET read = ? WHERE id = ?`, [true, id], (error) => {
             if (error) {
                 reject(error);
-            } else {        
+            } else {
                 resolve({ id: id, isRead: true });
             }
         });
-    });   
+    });
 }
 
 module.exports.setFavorite = function(id, isFavorite) {
@@ -108,15 +108,15 @@ module.exports.setFavorite = function(id, isFavorite) {
         db.run(`UPDATE entries SET favorite = ? WHERE id = ?`, [isFavorite, id], (error) => {
             if (error) {
                 reject(error);
-            } else {        
+            } else {
                 resolve({ id: id, isFavorite: isFavorite });
             }
         });
-    }); 
+    });
 }
 
 function _convertRowEntry(row) {
-    const item = { 
+    const item = {
         id: row.id,
         feedId: row.feed_id,
         guid: row.guid,

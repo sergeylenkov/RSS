@@ -2,7 +2,7 @@ import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
-    FEEDS_EDITING
+    FEEDS_EDITING, FEEDS_SELECT
 } from '../constants/index.js';
 
 export function feedsUpdating() {
@@ -23,6 +23,10 @@ export function feedsDelete(id) {
 
 export function feedsEditing(isEditing) {
     return { type: FEEDS_EDITING, isEditing }
+}
+
+export function feedsSelect(id) {
+    return { type: FEEDS_SELECT, id }
 }
 
 export function entriesUpdating() {

@@ -95,6 +95,7 @@ class App extends React.Component {
 
         this.dataHelper.allEntries().then((entries) => {
             this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
         });
     }
 
