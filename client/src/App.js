@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import {
     entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
     updateUnviewedCount, updateViewed, updateFavorite, updateRead,
-    changeViewMode, updateEntriesCount, feedsUpdate
-} from './store/actions/index';
+    changeViewMode, updateEntriesCount, feedsUpdate, feedsEditing
+} from './store/actions/index.js';
 
 import styles from './App.module.css';
 
@@ -155,6 +155,7 @@ class App extends React.Component {
         this.dataHelper.updateFeed(id, data).then((data) => {
             console.log(data);
             this.props.feedsUpdate(id, data.data);
+            this.props.feedsEditing(false);
         });
     }
 
@@ -182,7 +183,8 @@ const mapDispatchToProps = dispatch => {
         feedsDelete: (id) => dispatch(feedsDelete(id)),
         updateRead: (id) => dispatch(updateRead(id)),
         changeViewMode: (mode) => dispatch(changeViewMode(mode)),
-        feedsUpdate: (id, data) => dispatch(feedsUpdate(id, data))
+        feedsUpdate: (id, data) => dispatch(feedsUpdate(id, data)),
+        feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing))
     };
 };
 

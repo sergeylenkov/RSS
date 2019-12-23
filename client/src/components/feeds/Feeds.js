@@ -2,6 +2,7 @@ import React from 'react';
 import { Feed } from './Feed.js';
 import { FeedEdit } from './Edit.js';
 import { connect } from 'react-redux';
+import { feedsEditing } from '../../store/actions/index.js';
 
 import styles from './Feeds.module.css';
 
@@ -24,10 +25,10 @@ class ConnectedFeedsList extends React.Component {
             <div className={styles.container}>
             {
                 this.props.feeds.map((feed) => {
-                    return <Feed key={feed.id} feed={feed} isEditing={this.state.isEditing} onDelete={this.onDelete} onChange={this.onChange} />
+                    return <Feed key={feed.id} feed={feed} isEditing={this.props.isFeedsEditing} onDelete={this.onDelete} onChange={this.onChange} />
                 })
             }
-            <FeedEdit isEditing={this.state.isEditing} onAdd={this.onAdd} onEdit={this.onEdit} />
+            <FeedEdit isEditing={this.props.isFeedsEditing} onAdd={this.onAdd} onEdit={this.onEdit} />
             </div>
         );
     }
@@ -46,9 +47,10 @@ class ConnectedFeedsList extends React.Component {
     }
 
     onEdit() {
-        this.setState({
+        /*this.setState({
             isEditing: !this.state.isEditing
-        });
+        });*/
+        this.props.feedsEditing(!this.props.isFeedsEditing);
     }
 }
 
@@ -56,8 +58,15 @@ class ConnectedFeedsList extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        isFeedsEditing: state.isFeedsEditing,
         feeds: state.feeds
     };
 };
 
-export const FeedsList = connect(mapStateToProps)(ConnectedFeedsList);
+const mapDispatchToProps = dispatch => {
+    return {
+        feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing))
+    };
+};
+
+export const FeedsList = connect(mapStateToProps, mapDispatchToProps)(ConnectedFeedsList);

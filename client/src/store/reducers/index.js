@@ -1,11 +1,13 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
     ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
-    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT
-} from '../constants/index';
+    UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
+    FEEDS_EDITING
+} from '../constants/index.js';
 
 const initialState = {
     isUpdating: false,
+    isFeedsEditing: false,
     entriesCount: 0,
     unviewedCount: 0,
     viewMode: 0,
@@ -59,6 +61,13 @@ function rootReducer(state = initialState, action) {
         return {
             ...state,
             feeds: feeds
+        }
+    }
+
+    if (action.type === FEEDS_EDITING) {
+        return {
+            ...state,
+            isFeedsEditing: action.isEditing
         }
     }
 

@@ -42,11 +42,12 @@
 .editPanel {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .editButton {
     padding: 0;
-	margin: auto 10px auto 0;
+	margin: auto 0 auto 10px;
 	display: flex;
 	cursor: pointer;
 }
@@ -65,7 +66,7 @@
 }
 
 .titleField {
-    margin: auto 20px auto 0;
+    margin: auto 10px auto 0;
 	font-size: 13px;
 	flex-grow: 1;
 }
