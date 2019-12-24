@@ -2,8 +2,7 @@
     margin: 0;
     display: flex;
 	flex-direction: row;
-	overflow: hidden;
-	cursor: pointer;
+	overflow: hidden;	
 	opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
@@ -11,10 +10,11 @@
 .icon {
     width: 16px;
 	height: 16px;
-	margin: auto 0;
+	margin: auto 10px auto 0;
 	stroke: #000000;
 	stroke-width: 2px;
 	fill: none;
+	cursor: pointer;
 }
 
 .icon > svg {
@@ -25,6 +25,16 @@
 .label {
 	font-size: 14px;
 	margin: auto 0 auto 10px;
+	cursor: pointer;
+}
+
+.counter {
+	margin: auto 0 auto 10px;
+	padding: 2px 5px;
+	font-size: 11px;
+	border-radius: 2px;
+	color: #ffffff;
+    background-color: #4da0da;
 }
 
 .container.active {
@@ -34,6 +44,10 @@
 
 .container.active .icon {
 	animation: spin 2s linear infinite;
+}
+
+.container.selected .label {
+	font-weight: bold;
 }
 
 @keyframes spin { 

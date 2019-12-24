@@ -1,61 +1,29 @@
 .container {
-    height: 30px;
-	margin: 0;
+	height: 100%;
+	margin: 0 20px 0 0;
 	display: flex;
-}
-
-.empty {
-	opacity: 0.4;	
-}
-
-.disabled {
-	pointer-events: none;
-}
-
-.icon {
-	margin: auto 10px auto 0;
-	width: 16px;
-	height: 16px;
-	background-image: "";
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: #ebebeb;
+	flex-direction: row;
+	cursor: pointer;
 }
 
 .label {
-	font-size: 14px;
 	margin: auto 0;
-	cursor: pointer;
+	font-size: 14px;
+}
+
+.container.selected .label {
+	font-weight: bold;
 }
 
 .counter {
+	margin: auto 0 auto 10px;
+	padding: 2px 5px;
 	font-size: 11px;
-	font-weight: bold;
-	margin: auto 0 auto 10px;
-	background: #fffada;
-    padding: 2px 4px;
+	border-radius: 2px;
+	color: #ffffff;
+    background-color: #4da0da;
 }
 
-.deleteButton {
-	margin: auto 0 auto 10px;
-	width: 16px;
-	height: 16px;
-	stroke: #000000;
-	fill: none;
-	stroke-width: 1px;
-	pointer-events: auto;
-	cursor: pointer;
-}
-
-.selected .label {
-	font-weight: bold;
-}
-
-.selected.empty {
-	opacity: 1;	
-}
-
-.edited {
-	opacity: 1.0;
+.disabled {
 	pointer-events: none;
 }

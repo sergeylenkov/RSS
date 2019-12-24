@@ -2,24 +2,20 @@ import React from 'react';
 import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
-import { SettingsButton } from './components/settings/Button.js';
-import { Settings } from './components/settings/Settings.js';
+import { FeedsList } from './components/feeds/Feeds.js';
+import { connect } from 'react-redux';
+import {
+    entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
+    updateUnviewedCount, updateViewed, updateFavorite, updateRead,
+    changeViewMode, updateEntriesCount, feedsUpdate, feedsEditing
+} from './store/actions/index.js';
 
-export default class App extends React.Component {
+import styles from './App.module.css';
+
+class App extends React.Component {
     constructor(props) {
         super(props);
-
-        this.entries = [];
-
-        this.state = {
-            feeds: [],
-            entries: [],
-            selectedFeeds: {},
-            isUpdating: false,
-            isSettingsVisible: false
-        }
-
-        this.dataHelper = new DataHelper('http://rss/server/api.php?', false);
+        this.dataHelper = new DataHelper('http://localhost:5000/', false);
 
         if (localStorage.getItem('collpaseLong') === null) {
             localStorage.setItem('collpaseLong', false);
@@ -28,181 +24,170 @@ export default class App extends React.Component {
         if (localStorage.getItem('keepDays') === null) {
             localStorage.setItem('keepDays', 30);
         }
+
+        this.onUpdate = this.onUpdate.bind(this);
+        this.onShowUnviewed = this.onShowUnviewed.bind(this);
+        this.onShowAll = this.onShowAll.bind(this);
+        this.onShowRead = this.onShowRead.bind(this);
+        this.onShowFavorites = this.onShowFavorites.bind(this);
+        this.onUpdateViewed = this.onUpdateViewed.bind(this);
+        this.onUpdateReaded = this.onUpdateReaded.bind(this);
+        this.onSetFavorite = this.onSetFavorite.bind(this);
+        this.onAddFeed = this.onAddFeed.bind(this);
+        this.onChangeFeed = this.onChangeFeed.bind(this);
+        this.onDeleteFeed = this.onDeleteFeed.bind(this);
     }
 
     componentDidMount() {
         this.dataHelper.getFeeds().then(feeds => {
             console.log(feeds);
+            this.props.feedsUpdated(feeds);
             this.dataHelper.getUnviewed().then((entries) => {
                 console.log(entries);
-                this.entries = entries;
-
-                let selectedFeeds = {};
-
-                feeds.forEach(feed => {
-                    selectedFeeds[feed.id] = false;
-                });
-
-                this.setState({
-                    feeds: feeds,
-                    entries: entries,
-                    selectedFeeds: selectedFeeds
-                });
-
-                this.updateFeedsCount(false);
-            });            
+                this.props.entriesUpdated(entries);
+                this.props.updateUnviewedCount();
+            });
         });
-
-        //window.addEventListener('mouseup', this.handleMouseUp);
-    }
-    
-    componentWillUnmount() {
-        //window.removeEventListener('mouseup', this.handleMouseUp);     
     }
 
     render() {
-        return (            
-            <div className="application">
-                <Menu feeds={this.state.feeds} selectedFeeds={this.state.selectedFeeds} isUpdating={this.state.isUpdating} 
-                    onReload={() => this.reload()} onFeedSelect={(id) => this.onFeedSelect(id)} onFeedDelete={(id) => this.onFeedDelete(id)} onAddFeed={(feed) => this.onAddFeed(feed)} />
-                <EntriesList entries={this.state.entries} onUpdateViewed={(ids) => this.onUpdateViewed(ids)} onUpdateReaded={(id) => this.onUpdateReaded(id)} />
-                <SettingsButton onClick={() => this.onToggleSettings()}/>
-                <Settings isVisible={this.state.isSettingsVisible} />
+        return (
+            <div className={styles.container}>
+                <div className={styles.menu}>
+                    <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
+                </div>
+                <div className={styles.content}>
+                    <div className={styles.list}>
+                        <EntriesList onUpdateViewed={this.onUpdateViewed} onUpdateReaded={this.onUpdateReaded} onSetFavorite={this.onSetFavorite} />
+                    </div>
+                    <div className={styles.feeds}>
+                        <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
+                    </div>
+                </div>
             </div>
         );
     }
 
-    reload() {
-        this.setState({
-            isUpdating: true
-        });
+    onUpdate() {
+        this.props.entriesUpdating();
+        this.props.changeViewMode(0);
 
         this.dataHelper.update().then(entries => {
-            console.log(entries);
-            this.entries = entries;
-
-            this.setState({
-                entries: entries,
-                isUpdating: false
+            const unviewed = entries.filter((entry) => {
+                return !entry.isViewed;
             });
 
-            this.updateFeedsCount(false);
+            this.props.entriesUpdated(unviewed);
+            this.props.updateUnviewedCount();
         });
     }
 
-    updateFeedsCount(unviewed) {
-        const feeds = [...this.state.feeds];
+    onShowUnviewed() {
+        this.props.changeViewMode(0);
 
-        feeds.forEach(feed => {
-            const count = this.entries.filter(entry => {
-                if (unviewed) {
-                    return entry.feed_id === feed.id && entry.viewed !== true
-                }
-
-                return entry.feed_id === feed.id;
-            }).length;
-
-            feed.count = count;
-        });
-
-        this.setState({
-            feeds: feeds
+        this.dataHelper.getUnviewed().then(entries => {
+            this.props.entriesUpdated(entries);
+            this.props.updateUnviewedCount();
         });
     }
 
-    onUpdateViewed(ids) {        
-        this.updateFeedsCount(true);
-        this.dataHelper.markAsViewed(ids);
+    onShowAll() {
+        this.props.changeViewMode(1);
+
+        this.dataHelper.allEntries().then((entries) => {
+            this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
+        });
+    }
+
+    onShowRead() {
+        this.props.changeViewMode(2);
+
+        this.dataHelper.readEntries().then((entries) => {
+            this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
+        });
+    }
+
+    onShowFavorites() {
+        this.props.changeViewMode(3);
+
+        this.dataHelper.getFavorites().then((entries) => {
+            this.props.entriesUpdated(entries);
+            this.props.updateEntriesCount();
+        });
+    }
+
+    onUpdateViewed(ids) {
+        this.dataHelper.setViewed(ids).then((data) => {
+            this.props.updateViewed(ids);
+            this.props.updateUnviewedCount();
+        });
     }
 
     onUpdateReaded(id) {
-        this.dataHelper.markAsRead(id);
-    }
-
-    onFeedSelect(id) {
-        let feeds = this.state.selectedFeeds;
-        feeds[id] = !feeds[id];
-
-        let filtered = false;
-
-        Object.keys(feeds).forEach(key => {
-            if (feeds[key]) {
-                filtered = true;
-            }
-        });
-        
-        if (filtered) {
-            const entries = this.entries.filter(entry => {
-                return feeds[entry.feed_id];
-            });
-         
-            this.setState({
-                entries: entries,
-                selectedFeeds: feeds
-            });
-        } else {
-            this.setState({
-                entries: this.entries,
-                selectedFeeds: feeds
-            });
-        }
-    }
-
-    onFeedDelete(id) {
-        console.log('onFeedDelete', id);
-        this.dataHelper.deleteFeed(id).then(() => {
-            const feeds = [...this.state.feeds];
-
-            let index = -1;
-
-            feeds.forEach((feed, i) => {
-                if (feed.id === id) {
-                    index = i;
-                }
-            });
-
-            if (index >= 0) {
-                delete feeds[index];
-
-                this.setState({
-                    feeds: feeds,
-                });
-            }
+        this.dataHelper.setRead(id).then((data) => {
+            this.props.updateRead(id);
         });
     }
 
-    onAddFeed(feed) {
-        this.setState({
-            isUpdating: true
-        });
-
-        this.dataHelper.addNewFeed(feed).then((response) => {
-            const feed = response.channel;
-            console.log(response);
-            const feeds = [...this.state.feeds];
-            feeds.push(feed);
-
-            this.setState({
-                feeds: feeds,
-                entries: response.items,
-                isUpdating: false
-            });
-            
-            this.updateFeedsCount(false);
+    onSetFavorite(id, isFavorite) {
+        this.dataHelper.setFavorite(id, isFavorite).then((data) => {
+            this.props.updateFavorite(id, isFavorite);
         });
     }
 
-    onToggleSettings() {        
+    onAddFeed(link) {
+        this.dataHelper.addFeed(link).then((feed) => {
+            console.log(feed);
+            this.props.feedsAdd(feed);
+        });
+    }
+
+    onChangeFeed(id, data) {
+        this.dataHelper.updateFeed(id, data).then((data) => {
+            console.log(data);
+            this.props.feedsUpdate(id, data.data);
+            this.props.feedsEditing(false);
+        });
+    }
+
+    onDeleteFeed(id) {
+        this.dataHelper.deleteFeed(id).then((data) => {
+            console.log(data);
+            this.props.feedsDelete(id);
+            this.props.feedsEditing(false);
+        });
+    }
+
+    onToggleSettings() {
         const visible = !this.state.isSettingsVisible;
-        
+
         this.setState({
             isSettingsVisible: visible
         });
     }
-
-    handleMouseUp() {
-        this.setState({
-            isSettingsVisible: false
-        });
-    }
 }
+
+/* Redux */
+
+const mapDispatchToProps = dispatch => {
+    return {
+        feedsUpdated: (feeds) => dispatch(feedsUpdated(feeds)),
+        entriesUpdating: () => dispatch(entriesUpdating()),
+        entriesUpdated: (entries) => dispatch(entriesUpdated(entries)),
+        updateUnviewedCount: () => dispatch(updateUnviewedCount()),
+        updateEntriesCount: () => dispatch(updateEntriesCount()),
+        updateViewed: (ids) => dispatch(updateViewed(ids)),
+        updateFavorite: (id, isFavorite) => dispatch(updateFavorite(id, isFavorite)),
+        feedsAdd: (feed) => dispatch(feedsAdd(feed)),
+        feedsDelete: (id) => dispatch(feedsDelete(id)),
+        updateRead: (id) => dispatch(updateRead(id)),
+        changeViewMode: (mode) => dispatch(changeViewMode(mode)),
+        feedsUpdate: (id, data) => dispatch(feedsUpdate(id, data)),
+        feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing))
+    };
+};
+
+
+export default connect(null, mapDispatchToProps)(App)

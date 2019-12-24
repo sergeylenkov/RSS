@@ -1,73 +1,32 @@
 import React from 'react';
 import { ReloadButton } from './ReloadButton.js';
 import { MenuButton } from './MenuButton.js';
-import { MenuEdit } from './edit/Edit.js';
+import { connect } from 'react-redux';
 
 import styles from './Menu.module.css';
 
-export class Menu extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isScrolled: false,
-            isEdited: false
-        }
-
-        this.handleScroll = this.handleScroll.bind(this);
-    }
-
-    componentDidMount() {
-        window.addEventListener('scroll', this.handleScroll);
-    }
-    
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
-    }
-
+class ConnectedMenu extends React.Component {
     render() {
-        let className = styles.container;
-
-        if (this.state.isScrolled) {
-            className += ` ${styles.scrolled}`;
-        }
-
         return (
-            <div className={className}>
-                <ReloadButton isActive={this.props.isUpdating} onClick={() => this.props.onReload()}/>
-
-                <div className={styles.feeds}>
-                    {
-                        this.props.feeds.map((feed, i) => {
-                            const selected = this.props.selectedFeeds[feed.id];
-
-                            return (<MenuButton key={feed.id} feed={feed} isSelected={selected} isEdited={this.state.isEdited} onClick={(id) => this.props.onFeedSelect(id)} onDelete={(id) => this.props.onFeedDelete(id)} />)
-                        })
-                    }
-                </div>
-
-                <MenuEdit isDisabled={this.props.isUpdating} isScrolled={this.state.isScrolled} isEdited={this.state.isEdited} onEdit={() => this.onEdit()} onAddFedd={(feed) => this.props.onAddFeed(feed)}/>
+            <div className={styles.container}>
+                <ReloadButton isActive={this.props.isUpdating} isSelected={this.props.viewMode === 0} count={this.props.unviewedCount} onUpdate={this.props.onUpdate} onClick={this.props.onShowUnviewed}/>
+                <MenuButton title={'Все'} isSelected={this.props.viewMode === 1} count={this.props.entriesCount} onClick={this.props.onShowAll} />
+                <MenuButton title={'Прочитанное'} isSelected={this.props.viewMode === 2} count={this.props.entriesCount} onClick={this.props.onShowRead} />
+                <MenuButton title={'Избранное'} isSelected={this.props.viewMode === 3} count={this.props.entriesCount} onClick={this.props.onShowFavorites}/>
             </div>
         );
     }
-
-    onEdit() {
-        const edited = !this.state.isEdited;
-
-        this.setState({
-            isEdited: edited
-        });
-    }
-
-    handleScroll() {
-        let scrolled = false;
-
-        if (window.scrollY > 80) {
-			scrolled = true;
-		}
-        
-        this.setState({
-            isScrolled: scrolled
-        });
-    }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isUpdating: state.isUpdating,
+        unviewedCount: state.unviewedCount,
+        entriesCount: state.entriesCount,
+        viewMode: state.viewMode
+    };
+};
+
+export const Menu = connect(mapStateToProps)(ConnectedMenu);

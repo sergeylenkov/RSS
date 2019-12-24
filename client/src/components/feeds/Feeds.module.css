@@ -1,0 +1,9 @@
+.container {
+    position: sticky;
+    top: 70px;
+    width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}

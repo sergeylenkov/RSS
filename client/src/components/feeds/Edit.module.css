@@ -1,6 +1,7 @@
 .container {
-    margin: 20px 0 0 0;
+    margin: 30px 0 0 0;
 	padding: 0;
+	height: 30px;
 	display: flex;
 	opacity: 1;
 	transition: opacity 0.2s ease-in-out;
@@ -8,7 +9,14 @@
 
 .button {
     padding: 0;
-	margin: auto 15px auto 0;
+	margin: auto 10px auto 0;
+	display: flex;
+	cursor: pointer;
+}
+
+.formButton {
+	padding: 0;
+	margin: auto 0 auto 10px;
 	display: flex;
 	cursor: pointer;
 }
@@ -18,7 +26,7 @@
 	height: 16px;
 	stroke: #000000;
 	stroke-width: 2px;
-	fill: none;
+	fill: #000000;
 }
 
 .icon > svg {
@@ -26,11 +34,12 @@
 	height: 100%;
 }
 
-.icon.edited {
+.icon.editing {
 	stroke: #2f74f1;
 }
 
 .form {
+	width: 100%;
 	display: flex;
 }
 
@@ -40,9 +49,9 @@
 }
 
 .linkField {
-	width: 300px;
-    margin: auto 20px auto 0;
-    font-size: 14px;
+    margin: auto 0;
+	font-size: 14px;
+	flex-grow: 1;
 }
 
 .linkField.error {

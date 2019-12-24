@@ -1,9 +1,6 @@
-const bridge = null;
-
 export class DataHelper {
-    constructor(url, native) {
+    constructor(url) {
         this.url = url;
-        this.native = native;
 
         this._feeds = [];
         this._feedsDict = {};
@@ -11,113 +8,120 @@ export class DataHelper {
 
     update() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('updateFeeds').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=update`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}feeds/update`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
-    getFeeds() {   
+    getFeeds() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getFeeds').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
+            fetch(`${this.url}feeds`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this._feeds = data;
+
+                this._feeds.forEach(feed => {
+                    const a = document.createElement('a');
+                    a.href = feed.link;
+
+                    if (feed.image && feed.image.length > 0) {
+                        feed.icon = feed.image;
+                    } else {
+                        const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+                        feed.icon = icon;
+                    }
+
+                    this._feedsDict[feed.id] = feed;
                 });
-            } else {
-                fetch(`${this.url}action=feeds`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this._feeds = data;
 
-                    this._feeds.forEach(feed => {
-                        const a = document.createElement('a');
-                        a.href = feed.link;
-
-                        if (feed.image && feed.image.length > 0) {
-                            feed.icon = feed.image;
-                        } else {
-                            const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-                            feed.icon = icon;
-                        }
-
-                        this._feedsDict[feed.id] = feed;
-                    });
-
-                    resolve(data);
-                });
-            }
+                resolve(data);
+            });
         });
     }
 
-    getAllNews(from, to) {
+    allEntries() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getAllNews', { from: from, to: to }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=news_all&from=${from}&to=${to}`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}entries`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
+        });
+    }
+
+    readEntries() {
+        return new Promise((resolve) => {
+            fetch(`${this.url}entries/read`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
+        });
+    }
+
+    getFavorites() {
+        return new Promise((resolve) => {
+            fetch(`${this.url}entries/favorites`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
 
     getUnviewed() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getUnviewed').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=unviewed`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    this.updateFeedsInEntries(data);
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}entries/unviewed`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.updateFeedsInEntries(data);
+                resolve(data);
+            });
         });
     }
-    
-    markAsViewed(ids) {
+
+    setViewed(ids) {
         return new Promise((resolve) => {
-            let idsParam = ids.join(',');
-    
-            if (this.native) {
-                bridge.call('markAsViewed', { ids: idsParam }).then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=mark_as_viewed&ids=${idsParam}`).then((response) => {				 
-                    return response.json();
-                }).then((data) => {
-                    resolve(data);
-                });
-            }
+            fetch(`${this.url}entries/view`, {
+                method: 'POST',
+                body: JSON.stringify({ ids: ids }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
         });
     }
-    
-    markAsRead(id) {
+
+    setRead(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=mark_as_read&id=${id}`).then((response) => {				 
+            fetch(`${this.url}entries/${id}/read`, {
+                method: 'PUT'
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });
+    }
+
+    setFavorite(id, isFavorite) {
+        return new Promise((resolve) => {
+            let method = isFavorite ? 'PUT' : 'DELETE';
+
+            fetch(`${this.url}entries/${id}/favorite`, {
+                method: method
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
@@ -127,37 +131,51 @@ export class DataHelper {
 
     totalCount() {
         return new Promise((resolve) => {
-            if (this.native) {
-                bridge.call('getTotalCount').then((result) => {
-                    let data = JSON.parse(result);
-                    resolve(data);
-                });
-            } else {
-                fetch(`${this.url}action=total`).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    resolve(data);
-                });
-            }
-        });
-    }
-
-    addNewFeed(link) {
-        return new Promise((resolve) => {
-            fetch(`${this.url}action=feed_add&link=${link}`).then((response) => {				 
+            fetch(`${this.url}action=total`).then((response) => {
                 return response.json();
             }).then((data) => {
-                if (data.items) {
-                    this.updateFeedsInEntries(data.items);
-                }
                 resolve(data);
             });
         });
     }
-    
+
+    addFeed(link) {
+        return new Promise((resolve) => {
+            fetch(`${this.url}feeds`, {
+                method: 'POST',
+                body: JSON.stringify({ link: link }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });
+    }
+
+    updateFeed(id, data) {
+        return new Promise((resolve) => {
+            fetch(`${this.url}feeds/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });
+    }
+
     deleteFeed(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}action=feed_delete&id=${id}`).then((response) => {				 
+            fetch(`${this.url}feeds/${id}`, {
+                method: 'DELETE'
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);
@@ -171,10 +189,7 @@ export class DataHelper {
 
     updateFeedsInEntries(entries) {
         entries.forEach(entry => {
-            entry.feed = this.getFeedById(entry.feed_id);
+            entry.feed = this.getFeedById(entry.feedId);
         });
     }
 }
-
-
-

@@ -1,9 +1,11 @@
 .container {
-    width: 100%;
-	margin: 20px 0 40px 0;
-	flex-shrink: 0;
-	border-bottom: 1px solid #ececec;
 	position: relative;
+	width: 100%;
+    margin: 0 0 20px 0;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;    
+    background: #ffffff;
 }
 
 .container.read {
@@ -19,7 +21,6 @@
 
 .title a {
 	color: #000000;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 	text-decoration: none;
 }
 
@@ -28,7 +29,7 @@
 	font-size: 14px;
 	line-height: 18px;
 	overflow: hidden;
-	margin: 20px 0 40px 0;
+	margin: 20px 0 0 0;
 }
 
 .description img {
@@ -71,6 +72,10 @@
 	color: #4076cc;
 }
 
+.description pre {
+	white-space: pre-wrap;
+}
+
 .feed {	
 	margin: 10px 0;	
 	display: flex;
@@ -100,9 +105,33 @@
 	position: absolute;	
 	left: 0;
 	right: 0;
-	bottom: 40px;
-	height: 50px;
+	bottom: 58px;
+	height: 60px;
 	width: 100%;
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+	background: rgba(255, 255, 255, 0.8);
 	cursor: pointer;
+}
+
+.info {
+	margin: 20px 0 0 0;
+	width: 100%;	
+	display: flex;
+}
+
+.infoItem {
+	margin: auto 15px auto 0;
+	display: flex;
+}
+
+.infoIcon {
+	margin: auto 0;
+	width: 18px;
+	height: 18px;
+	fill: #818181;
+}
+
+.infoCounter {
+	margin: auto 0 auto 5px;
+	font-size: 14px;
+	color: #818181;
 }
