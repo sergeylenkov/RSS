@@ -65,6 +65,24 @@ module.exports.patch = function(id, data) {
     });
 }
 
+module.exports.delete = function(id) {
+    return new Promise((resolve, reject) => {
+        db.run('DELETE FROM feeds WHERE id = ?', [id], function(error) {
+            if (error) {
+                reject(error);
+            } else {
+                db.run('DELETE FROM entries WHERE feed_id = ?', [id], function(error) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve({ id: id, isDeleted: true });
+                    }
+                });
+            }
+        });
+    });
+}
+
 function _getFeeds() {
     return new Promise((resolve, reject) => {
         db.all('SELECT f.*, COUNT(e.id) as total FROM feeds f LEFT JOIN entries e ON e.feed_id = f.id WHERE f.deleted = 0 GROUP BY f.id', [], (error, rows) => {

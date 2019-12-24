@@ -173,7 +173,9 @@ export class DataHelper {
 
     deleteFeed(id) {
         return new Promise((resolve) => {
-            fetch(`${this.url}feeds/${id}/delete`).then((response) => {
+            fetch(`${this.url}feeds/${id}`, {
+                method: 'DELETE'
+            }).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);

@@ -35,6 +35,7 @@ class App extends React.Component {
         this.onSetFavorite = this.onSetFavorite.bind(this);
         this.onAddFeed = this.onAddFeed.bind(this);
         this.onChangeFeed = this.onChangeFeed.bind(this);
+        this.onDeleteFeed = this.onDeleteFeed.bind(this);
     }
 
     componentDidMount() {
@@ -60,7 +61,7 @@ class App extends React.Component {
                         <EntriesList onUpdateViewed={this.onUpdateViewed} onUpdateReaded={this.onUpdateReaded} onSetFavorite={this.onSetFavorite} />
                     </div>
                     <div className={styles.feeds}>
-                        <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} />
+                        <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
                     </div>
                 </div>
             </div>
@@ -136,15 +137,6 @@ class App extends React.Component {
         });
     }
 
-    onFeedSelect(id) {
-    }
-
-    onFeedDelete(id) {
-        this.dataHelper.deleteFeed(id).then(() => {
-            this.props.feedsDelete(id);
-        });
-    }
-
     onAddFeed(link) {
         this.dataHelper.addFeed(link).then((feed) => {
             console.log(feed);
@@ -156,6 +148,14 @@ class App extends React.Component {
         this.dataHelper.updateFeed(id, data).then((data) => {
             console.log(data);
             this.props.feedsUpdate(id, data.data);
+            this.props.feedsEditing(false);
+        });
+    }
+
+    onDeleteFeed(id) {
+        this.dataHelper.deleteFeed(id).then((data) => {
+            console.log(data);
+            this.props.feedsDelete(id);
             this.props.feedsEditing(false);
         });
     }

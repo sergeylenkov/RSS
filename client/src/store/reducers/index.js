@@ -1,6 +1,6 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
-    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
+    ENTRIES_UPDATING, ENTRIES_LOADED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
     FEEDS_EDITING, FEEDS_SELECT
 } from '../constants/index.js';
@@ -80,8 +80,7 @@ function rootReducer(state = initialState, action) {
         }
     }
 
-    if (action.type === ENTRIES_UPDATED) {
-        console.log(action.entries);
+    if (action.type === ENTRIES_LOADED) {
         const entries = filterEntries(state.selectedFeeds, action.entries);
 
         return {
@@ -190,7 +189,7 @@ function rootReducer(state = initialState, action) {
         } else {
             selectedFeeds.splice(index, 1);
         }
-        console.log(selectedFeeds);
+
         const entries = filterEntries(selectedFeeds, state.allEntries);
 
         return {

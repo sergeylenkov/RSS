@@ -1,6 +1,6 @@
 import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
-    ENTRIES_UPDATING, ENTRIES_UPDATED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
+    ENTRIES_UPDATING, ENTRIES_LOADED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
     FEEDS_EDITING, FEEDS_SELECT
 } from '../constants/index.js';
@@ -34,7 +34,7 @@ export function entriesUpdating() {
 }
 
 export function entriesUpdated(entries) {
-    return { type: ENTRIES_UPDATED, entries }
+    return { type: ENTRIES_LOADED, entries }
 }
 
 export function updateUnviewedCount() {

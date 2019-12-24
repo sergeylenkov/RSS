@@ -41,16 +41,15 @@ class ConnectedFeedsList extends React.Component {
     }
 
     onChange(id, title) {
-        console.log(id, title);
         this.props.onChangeFeed(id, { title: title });
     }
 
     onDelete(id) {
         console.log(id);
+        this.props.onDeleteFeed(id);
     }
 
     onSelect(id) {
-        console.log(id);
         this.props.feedsSelect(id);
     }
 

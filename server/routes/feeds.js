@@ -40,4 +40,14 @@ router.patch('/:feedId', function(req, res) {
     });
 });
 
+router.delete('/:feedId', function(req, res) {
+    const id = req.params.feedId;
+
+    feeds.delete(id).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 module.exports = router;
