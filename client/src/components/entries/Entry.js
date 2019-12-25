@@ -50,12 +50,13 @@ export class Entry extends React.Component {
         const entry = this.props.entry;
         const description = this.removeSelfLinks(entry.description, entry.link);
 
-        let className = styles.container;
+        let readIcon = null;
 
-        if (this.props.entry.isRead && this.props.viewMode !== 2) {
-            className += ` ${styles.read}`;
+        if (this.props.entry.isRead) {
+            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div></div>;
         }
 
+        let className = styles.container;
         let expandButton = null;
 
         if (this.props.isCollapseLong && !this.state.isExpanded && this.isLong(description)) {
@@ -70,8 +71,8 @@ export class Entry extends React.Component {
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
                 <div className={styles.info}>
-                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.props.entry.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div><div className={styles.infoCounter}>{1}</div></div>
-                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{this.props.entry.isRead}</div></div>
+                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.props.entry.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div></div>
+                    {readIcon}
                 </div>
             </div>
         );
