@@ -67,7 +67,7 @@ class App extends React.Component {
                 <div className={styles.header}>
                     <div className={styles.headerContent}>
                         <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
-                        <SettingsButton onClick={this.onToggleSettings}/>
+                        <SettingsButton isActive={this.state.isSettingsVisible} onClick={this.onToggleSettings}/>
                         <Settings isVisible={this.state.isSettingsVisible} />
                     </div>
                 </div>

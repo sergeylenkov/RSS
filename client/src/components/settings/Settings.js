@@ -17,6 +17,7 @@ export class Settings extends React.Component {
 
         this.onToggleCollapse = this.onToggleCollapse.bind(this);
         this.onChangeDays = this.onChangeDays.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
 
     render() {
@@ -24,16 +25,10 @@ export class Settings extends React.Component {
             return null;
         }
 
-        let collapse = '';
-
-        if (this.state.collapse) {
-            collapse = 'checked';
-        }
-
         return (
-            <div className={styles.container}>
+            <div className={styles.container} onClick={this.onClick}>
                 <div className={styles.item}>
-                    <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={collapse} onChange={this.onToggleCollapse} />
+                    <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={this.state.collapse ? 'checked' : ''} onChange={this.onToggleCollapse} />
                     <label className={styles.label} htmlFor={this.collapseId}>Сворачивать длинные посты</label>
                 </div>
 
@@ -62,5 +57,10 @@ export class Settings extends React.Component {
         this.setState({
             days: days
         });
+    }
+
+    onClick(e) {
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
     }
 }
