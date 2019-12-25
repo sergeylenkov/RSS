@@ -44,6 +44,7 @@ class App extends React.Component {
         this.onChangeFeed = this.onChangeFeed.bind(this);
         this.onDeleteFeed = this.onDeleteFeed.bind(this);
         this.onToggleSettings = this.onToggleSettings.bind(this);
+        this.hideSettings = this.hideSettings.bind(this);
     }
 
     componentDidMount() {
@@ -177,9 +178,21 @@ class App extends React.Component {
     onToggleSettings() {
         const visible = !this.state.isSettingsVisible;
 
+        if (visible) {
+            document.addEventListener('click', this.hideSettings);
+        } else {
+            document.removeEventListener('click', this.hideSettings);
+        }
+
         this.setState({
             isSettingsVisible: visible
         });
+    }
+
+    hideSettings() {
+        if (this.state.isSettingsVisible) {
+            this.onToggleSettings();
+        }
     }
 }
 
