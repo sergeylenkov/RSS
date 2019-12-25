@@ -136,7 +136,7 @@ function _addFeed(link) {
                             lastUpdate: Date()
                         }
 
-                        db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [feed.rss, feed.link, feed.title, feed.description, feed.image, true, 'ok', feed.lastUpdate, false], function(error) {
+                        db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [feed.rss, feed.link, feed.title, feed.description, feed.image, true, 0, feed.lastUpdate.toISOString(), false], function(error) {
                             if (error) {
                                 reject(error);
                             } else {
@@ -159,6 +159,12 @@ function _updateFeed(feed) {
             if (error) {
                 reject(error);
             } else {
+                const date = new Date();
+
+                db.run(`UPDATE feeds SET last_update = ? WHERE id = ?`, [date.toISOString(), feed.id], (error) => {
+                    console.log(error);
+                });
+
                 let items = [];
                 let promises = [];
 

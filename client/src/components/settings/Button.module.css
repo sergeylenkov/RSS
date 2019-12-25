@@ -1,12 +1,12 @@
 .container {
-    position: fixed;
-    left: 20px;
-    bottom: 20px;
+    margin: auto 0;
+    flex-shrink: 0;
+    cursor: pointer;
 }
 
 .icon {
     width: 20px;
     height: 20px;
-    fill: #000000;
+    fill: #404040;
     stroke: none;
 }

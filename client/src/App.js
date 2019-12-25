@@ -3,6 +3,8 @@ import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
 import { FeedsList } from './components/feeds/Feeds.js';
+import { SettingsButton } from './components/settings/Button.js';
+import { Settings } from './components/settings/Settings.js';
 import { connect } from 'react-redux';
 import {
     entriesUpdating, entriesUpdated, feedsUpdated, feedsAdd, feedsDelete,
@@ -15,7 +17,12 @@ import styles from './App.module.css';
 class App extends React.Component {
     constructor(props) {
         super(props);
+
         this.dataHelper = new DataHelper('http://localhost:5000/', false);
+
+        this.state = {
+            isSettingsVisible: false
+        };
 
         if (localStorage.getItem('collpaseLong') === null) {
             localStorage.setItem('collpaseLong', false);
@@ -36,6 +43,7 @@ class App extends React.Component {
         this.onAddFeed = this.onAddFeed.bind(this);
         this.onChangeFeed = this.onChangeFeed.bind(this);
         this.onDeleteFeed = this.onDeleteFeed.bind(this);
+        this.onToggleSettings = this.onToggleSettings.bind(this);
     }
 
     componentDidMount() {
@@ -48,13 +56,19 @@ class App extends React.Component {
                 this.props.updateUnviewedCount();
             });
         });
+
+        this.dataHelper.clearEntries(localStorage.getItem('keepDays'));
     }
 
     render() {
         return (
             <div className={styles.container}>
-                <div className={styles.menu}>
-                    <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
+                <div className={styles.header}>
+                    <div className={styles.headerContent}>
+                        <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
+                        <SettingsButton onClick={this.onToggleSettings}/>
+                        <Settings isVisible={this.state.isSettingsVisible} />
+                    </div>
                 </div>
                 <div className={styles.content}>
                     <div className={styles.list}>
