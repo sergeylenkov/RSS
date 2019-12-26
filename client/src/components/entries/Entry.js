@@ -18,6 +18,7 @@ export class Entry extends React.Component {
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
+        this.onExpand = this.onExpand.bind(this);
 
         this.itemRef = element => {
             if (element) {
@@ -61,7 +62,7 @@ export class Entry extends React.Component {
 
         if (this.props.isCollapseLong && !this.state.isExpanded && this.isLong(description)) {
             className += ` ${styles.collapsed}`;
-            expandButton = <button className={styles.expandButton} onClick={() => this.expand()}></button>
+            expandButton = <button className={styles.expandButton} onClick={this.onExpand}></button>
         }
 
         return (
@@ -153,10 +154,12 @@ export class Entry extends React.Component {
         }
     }
 
-    expand() {
+    onExpand() {
         this.setState({
             isExpanded: true
         });
+
+        this.onRead();
     }
 
     onRead() {

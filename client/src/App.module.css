@@ -33,6 +33,7 @@
 .list {
     margin: 20px 0;
     flex-grow: 1;
+    overflow: hidden;
 }
 
 .feeds {
