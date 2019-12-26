@@ -170,11 +170,14 @@ function _updateFeed(feed) {
 
                 rss.items.forEach((entry) => {
                     const newEntry = _prepareEntry(feed, entry);
-                    const promise = _addEntry(newEntry).then((entry) => {
-                        items.push(entry);
-                    });
 
-                    promises.push(promise);
+                    if (newEntry.date >= feed.lastUpdate) {
+                        const promise = _addEntry(newEntry).then((entry) => {
+                            items.push(entry);
+                        });
+
+                        promises.push(promise);
+                    }
                 });
 
                 Promise.all(promises).then(() => {
@@ -193,7 +196,7 @@ function _prepareEntry(feed, entry) {
         link: entry.link,
         title: entry.title,
         description: entry.content,
-        date: entry.isoDate,
+        date: new Date(entry.isoDate),
         isRead: Boolean(false),
         isViewed: Boolean(false),
         isFavorite: Boolean(false)
@@ -213,7 +216,7 @@ function _addEntry(entry) {
 
                 resolve(entry);
             } else {
-                db.run('INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [entry.feedId, entry.guid, entry.link, entry.title, entry.description, false, false, false, entry.date], function(error) {
+                db.run('INSERT INTO entries (feed_id, guid, link, title, description, read, viewed, favorite, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [entry.feedId, entry.guid, entry.link, entry.title, entry.description, false, false, false, entry.date.toISOString()], function(error) {
                     if (error) {
                         reject(error);
                     } else {
@@ -236,7 +239,7 @@ function _convertRowFeed(row) {
         image: row.image,
         active: Boolean(row.active),
         status: row.status,
-        lastUpdate: row.last_update,
+        lastUpdate: new Date(row.last_update),
         deleted: Boolean(row.deleted),
         total: 0,
         count: 0
