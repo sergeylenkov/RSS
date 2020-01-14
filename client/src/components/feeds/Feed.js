@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Icons } from '../Icon.js';
+import { CheckmarkIcon, TrashIcon } from '../Icons.js';
 
 import styles from './Feed.module.css';
 
@@ -40,8 +40,8 @@ export class Feed extends React.Component {
         return <div className={styles.editPanel}>
             <div className={styles.icon} style={{ backgroundImage: `url(${feed.icon})` }}></div>
             <input className={styles.titleField} defaultValue={feed.title} type="text" ref={this.titleFieldRef} />
-            <button className={styles.editButton} onClick={this.onChange}><div className={styles.editButtonIcon}><Icon svg={Icons.checkmark}/></div></button>
-            <button className={styles.editButton} onClick={this.onDelete}><div className={styles.editButtonIcon}><Icon svg={Icons.trash}/></div></button>
+            <button className={styles.editButton} onClick={this.onChange}><div className={styles.editButtonIcon}><CheckmarkIcon /></div></button>
+            <button className={styles.editButton} onClick={this.onDelete}><div className={styles.editButtonIcon}><TrashIcon /></div></button>
         </div>
     }
 

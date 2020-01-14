@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Icons } from '../Icon.js';
+import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons.js';
 
 import styles from './Entry.module.css';
 
@@ -54,7 +54,7 @@ export class Entry extends React.Component {
         let readIcon = null;
 
         if (this.props.entry.isRead) {
-            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div></div>;
+            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><ReadIcon /></div></div>;
         }
 
         let className = styles.container;
@@ -72,7 +72,11 @@ export class Entry extends React.Component {
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
                 <div className={styles.info}>
-                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.props.entry.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div></div>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoIcon} onClick={this.onSetFavorite}>
+                            {this.props.entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
+                        </div>
+                    </div>
                     {readIcon}
                 </div>
             </div>
