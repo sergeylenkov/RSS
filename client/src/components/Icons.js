@@ -1,25 +1,5 @@
 import React from 'react';
 
-export const Icons = {
-
-    read: {
-        viewBox: '0 0 24 24',
-        path:
-    },
-    favorite: {
-        viewBox: '0 0 24 24',
-        path:
-    },
-    favoriteSelected: {
-        viewBox: '0 0 24 24',
-        path:
-    },
-    checkmark: {
-        viewBox: '0 0 24 24',
-        path:
-    },
-}
-
 export class ReloadIcon extends React.Component {
     render() {
         return (

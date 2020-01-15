@@ -1,4 +1,5 @@
 import React from 'react';
+import { CSSTransition } from 'react-transition-group';
 import { Menu } from './components/menu/Menu.js';
 import { EntriesList } from './components/entries/List.js';
 import { DataHelper } from './data/DataHelper.js';
@@ -68,7 +69,16 @@ class App extends React.Component {
                     <div className={styles.headerContent}>
                         <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
                         <SettingsButton isActive={this.state.isSettingsVisible} onClick={this.onToggleSettings}/>
+
+                        <CSSTransition
+                            in={this.state.isSettingsVisible}
+                            timeout={200}
+                            classNames="fade"
+                            unmountOnExit
+                            appear
+                        >
                         <Settings isVisible={this.state.isSettingsVisible} />
+                        </CSSTransition>
                     </div>
                 </div>
                 <div className={styles.content}>
