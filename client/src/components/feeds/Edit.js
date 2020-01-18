@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Icons } from '../Icon.js';
+import { CheckmarkIcon, CloseIcon, AddIcon, EditIcon } from '../Icons.js';
 
 import styles from './Edit.module.css';
 
@@ -34,8 +34,8 @@ export class FeedEdit extends React.Component {
                 <div className={className}>
                     <div className={styles.form}>
                         <input className={styles.linkField} placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
-                        <button className={styles.formButton} onClick={this.onAdd}><div className={styles.icon}><Icon svg={Icons.checkmark}/></div></button>
-                        <button className={styles.formButton} onClick={this.onClose}><div className={styles.icon}><Icon svg={Icons.close}/></div></button>
+                        <button className={styles.formButton} onClick={this.onAdd}><div className={styles.icon}><CheckmarkIcon /></div></button>
+                        <button className={styles.formButton} onClick={this.onClose}><div className={styles.icon}><CloseIcon /></div></button>
                     </div>
                 </div>
             );
@@ -48,8 +48,8 @@ export class FeedEdit extends React.Component {
 
             return (
                 <div className={className}>
-                    <button className={styles.button} onClick={this.onShow}><div className={styles.icon}><Icon svg={Icons.add}/></div></button>
-                    <button className={styles.button} onClick={this.props.onEdit}><div className={iconClassName}><Icon svg={Icons.edit}/></div></button>
+                    <button className={styles.button} onClick={this.onShow}><div className={styles.icon}><AddIcon /></div></button>
+                    <button className={styles.button} onClick={this.props.onEdit}><div className={iconClassName}><EditIcon /></div></button>
                 </div>
             );
         }

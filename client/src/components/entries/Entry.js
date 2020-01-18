@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Icons } from '../Icon.js';
+import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons.js';
 
 import styles from './Entry.module.css';
 
@@ -18,6 +18,7 @@ export class Entry extends React.Component {
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
+        this.onExpand = this.onExpand.bind(this);
 
         this.itemRef = element => {
             if (element) {
@@ -50,17 +51,18 @@ export class Entry extends React.Component {
         const entry = this.props.entry;
         const description = this.removeSelfLinks(entry.description, entry.link);
 
-        let className = styles.container;
+        let readIcon = null;
 
-        if (this.props.entry.isRead && this.props.viewMode !== 2) {
-            className += ` ${styles.read}`;
+        if (this.props.entry.isRead) {
+            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><ReadIcon /></div></div>;
         }
 
+        let className = styles.container;
         let expandButton = null;
 
         if (this.props.isCollapseLong && !this.state.isExpanded && this.isLong(description)) {
             className += ` ${styles.collapsed}`;
-            expandButton = <button className={styles.expandButton} onClick={() => this.expand()}></button>
+            expandButton = <button className={styles.expandButton} onClick={this.onExpand}></button>
         }
 
         return (
@@ -70,8 +72,12 @@ export class Entry extends React.Component {
                 <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                 {expandButton}
                 <div className={styles.info}>
-                    <div className={styles.infoItem}><div className={styles.infoIcon} onClick={this.onSetFavorite}><Icon svg={this.props.entry.isFavorite ? Icons.favoriteSelected : Icons.favorite }/></div><div className={styles.infoCounter}>{1}</div></div>
-                    <div className={styles.infoItem}><div className={styles.infoIcon}><Icon svg={Icons.read}/></div><div className={styles.infoCounter}>{this.props.entry.isRead}</div></div>
+                    <div className={styles.infoItem}>
+                        <div className={styles.infoIcon} onClick={this.onSetFavorite}>
+                            {this.props.entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
+                        </div>
+                    </div>
+                    {readIcon}
                 </div>
             </div>
         );
@@ -152,10 +158,12 @@ export class Entry extends React.Component {
         }
     }
 
-    expand() {
+    onExpand() {
         this.setState({
             isExpanded: true
         });
+
+        this.onRead();
     }
 
     onRead() {

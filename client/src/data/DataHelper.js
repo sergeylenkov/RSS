@@ -129,16 +129,6 @@ export class DataHelper {
         });
     }
 
-    totalCount() {
-        return new Promise((resolve) => {
-            fetch(`${this.url}action=total`).then((response) => {
-                return response.json();
-            }).then((data) => {
-                resolve(data);
-            });
-        });
-    }
-
     addFeed(link) {
         return new Promise((resolve) => {
             fetch(`${this.url}feeds`, {
@@ -176,6 +166,16 @@ export class DataHelper {
             fetch(`${this.url}feeds/${id}`, {
                 method: 'DELETE'
             }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                resolve(data);
+            });
+        });
+    }
+
+    clearEntries(days) {
+        return new Promise((resolve) => {
+            fetch(`${this.url}entries/clear/${days}`).then((response) => {
                 return response.json();
             }).then((data) => {
                 resolve(data);

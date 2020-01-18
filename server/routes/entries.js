@@ -75,4 +75,14 @@ router.delete('/:entryId/favorite', function(req, res) {
     });
 });
 
+router.get('/clear/:days', function(req, res) {
+    const days = req.params.days;
+
+    data.clear(days).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
 module.exports = router;

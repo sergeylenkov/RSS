@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Icons } from '../Icon.js';
+import { ReloadIcon } from '../Icons.js';
 import { MenuButton } from './MenuButton.js';
 
 import styles from './ReloadButton.module.css';
@@ -15,10 +15,10 @@ export class ReloadButton extends React.Component {
     render() {
         return (
             <div className={`${styles.container} ${this.props.isActive ? styles.active : ''}`}>
-                <button className={styles.icon}  onClick={this.onUpdate}><Icon svg={Icons.reload}/></button>
+                <button className={styles.icon} onClick={this.onUpdate}><ReloadIcon /></button>
                 <MenuButton title={'Свежее'} isSelected={this.props.isSelected} count={this.props.count} onClick={this.onClick} />
             </div>
-        );        
+        );
     }
 
     onClick() {

@@ -1,12 +1,18 @@
 .container {
-    position: fixed;
-    left: 20px;
-    bottom: 20px;
+    margin: 0;
+    padding: 0 12px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background-color 200ms ease-in;
+}
+
+.active.container {
+    background-color: #ffffff;
 }
 
 .icon {
     width: 20px;
     height: 20px;
-    fill: #000000;
+    fill: #404040;
     stroke: none;
 }

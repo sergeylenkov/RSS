@@ -115,6 +115,23 @@ module.exports.setFavorite = function(id, isFavorite) {
     });
 }
 
+module.exports.clear = function(days) {
+    return new Promise((resolve, reject) => {
+        const date = new Date();
+        date.setDate(date.getDate() - days);
+
+        db.run(`DELETE FROM entries WHERE date < ? AND favorite = ? AND read = ?`, [date.toISOString(), false, false], (error) => {
+            db.run('VACUUM', []);
+
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ days: days });
+            }
+        });
+    });
+}
+
 function _convertRowEntry(row) {
     const item = {
         id: row.id,
