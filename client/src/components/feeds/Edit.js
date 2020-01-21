@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { CheckmarkIcon, CloseIcon, AddIcon, EditIcon } from '../Icons.js';
 
-import styles from './Edit.module.css';
+import lightStyles from './Edit.module.css';
+import darkStyles from './Edit.dark.module.css';
 
-export class FeedEdit extends React.Component {
+export class ConnectedFeedEdit extends React.Component {
     constructor(props) {
         super(props);
 
@@ -19,6 +21,14 @@ export class FeedEdit extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         let className = styles.container;
 
         if (this.props.isDisabled) {
@@ -75,3 +85,13 @@ export class FeedEdit extends React.Component {
         });
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+export const FeedEdit = connect(mapStateToProps)(ConnectedFeedEdit);

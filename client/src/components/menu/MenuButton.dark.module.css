@@ -1,0 +1,22 @@
+.container {
+    composes: container from './MenuButton.module.css';
+}
+
+.label {
+	composes: label from './MenuButton.module.css';
+	color: #f3f3f3;
+}
+
+.container.selected .label {
+	font-weight: bold;
+}
+
+.counter {
+	composes: counter from './MenuButton.module.css';
+	color: #ffffff;
+    background-color: #4da0da;
+}
+
+.disabled {
+	composes: disabled from './MenuButton.module.css';
+}

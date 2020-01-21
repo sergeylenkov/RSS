@@ -4,7 +4,8 @@ import { FeedEdit } from './Edit.js';
 import { connect } from 'react-redux';
 import { feedsEditing, feedsSelect } from '../../store/actions/index.js';
 
-import styles from './Feeds.module.css';
+import lightStyles from './Feeds.module.css';
+import darkStyles from './Feeds.dark.module.css';
 
 class ConnectedFeedsList extends React.Component {
     constructor(props) {
@@ -22,6 +23,14 @@ class ConnectedFeedsList extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         return (
             <div className={styles.container}>
             {
@@ -45,7 +54,6 @@ class ConnectedFeedsList extends React.Component {
     }
 
     onDelete(id) {
-        console.log(id);
         this.props.onDeleteFeed(id);
     }
 
@@ -62,6 +70,7 @@ class ConnectedFeedsList extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        isDarkTheme: state.isDarkTheme,
         isFeedsEditing: state.isFeedsEditing,
         feeds: state.feeds,
         selectedFeeds: state.selectedFeeds

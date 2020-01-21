@@ -1,0 +1,5 @@
+.icon {
+	composes: icon from './Edit.module.css';
+	stroke: #d4d4d4;
+	fill: #d4d4d4;
+}

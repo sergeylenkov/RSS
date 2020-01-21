@@ -13,7 +13,8 @@ import {
     changeViewMode, updateEntriesCount, feedsUpdate, feedsEditing
 } from './store/actions/index.js';
 
-import styles from './App.module.css';
+import lightStyles from './App.module.css';
+import darkStyles from './App.dark.module.css';
 
 class App extends React.Component {
     constructor(props) {
@@ -63,6 +64,14 @@ class App extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+        console.log(styles);
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
@@ -208,6 +217,12 @@ class App extends React.Component {
 
 /* Redux */
 
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         feedsUpdated: (feeds) => dispatch(feedsUpdated(feeds)),
@@ -226,5 +241,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

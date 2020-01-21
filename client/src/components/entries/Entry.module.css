@@ -4,7 +4,7 @@
     margin: 0 0 20px 0;
     padding: 20px;
     box-sizing: border-box;
-    flex-shrink: 0;    
+    flex-shrink: 0;
     background: #ffffff;
 }
 
@@ -30,6 +30,7 @@
 	line-height: 18px;
 	overflow: hidden;
 	margin: 20px 0 0 0;
+	color: #000000
 }
 
 .description img {
@@ -76,8 +77,8 @@
 	white-space: pre-wrap;
 }
 
-.feed {	
-	margin: 10px 0;	
+.feed {
+	margin: 10px 0;
 	display: flex;
 }
 
@@ -102,7 +103,7 @@
 }
 
 .expandButton {
-	position: absolute;	
+	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 58px;
@@ -114,7 +115,7 @@
 
 .info {
 	margin: 20px 0 0 0;
-	width: 100%;	
+	width: 100%;
 	display: flex;
 }
 

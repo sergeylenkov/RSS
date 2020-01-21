@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { toggleTheme } from '../../store/actions/index.js';
 
 import styles from './Settings.module.css';
 
-export class Settings extends React.Component {
+export class ConnectedSettings extends React.Component {
     constructor(props) {
         super(props);
 
@@ -12,11 +14,15 @@ export class Settings extends React.Component {
         }
 
         this.collapseId = 0;
+        this.themeId = 1;
+
         this.collapseFieldRef = React.createRef();
         this.daysFieldRef = React.createRef();
+        this.themeFieldRef = React.createRef();
 
         this.onToggleCollapse = this.onToggleCollapse.bind(this);
         this.onChangeDays = this.onChangeDays.bind(this);
+        this.onToggleTheme = this.onToggleTheme.bind(this);
         this.onClick = this.onClick.bind(this);
     }
 
@@ -34,6 +40,11 @@ export class Settings extends React.Component {
 
                 <div className={styles.item}>
                     <div className={styles.label}>Удалять посты старше <input className={styles.days} ref={this.daysFieldRef} type="text" value={this.state.days} onChange={this.onChangeDays}/> дней</div>
+                </div>
+
+                <div className={styles.item}>
+                    <input id={this.themeId} className={styles.checkbox} ref={this.themeFieldRef} type="checkbox" checked={this.props.isDarkTheme ? 'checked' : ''} onChange={this.onToggleTheme} />
+                    <label className={styles.label} htmlFor={this.themeId}>Темная тема</label>
                 </div>
             </div>
         );
@@ -59,8 +70,30 @@ export class Settings extends React.Component {
         });
     }
 
+    onToggleTheme() {
+        const isDarkTheme = !this.props.isDarkTheme;
+
+        this.props.toggleTheme(isDarkTheme);
+    }
+
     onClick(e) {
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        toggleTheme: (isDarkTheme) => dispatch(toggleTheme(isDarkTheme))
+    };
+};
+
+export const Settings = connect(mapStateToProps, mapDispatchToProps)(ConnectedSettings);

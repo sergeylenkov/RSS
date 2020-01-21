@@ -1,0 +1,21 @@
+.container {
+    composes: container from './Entry.module.css';
+    background-color: #1d1d1d;
+}
+
+.title {
+    composes: title from './Entry.module.css';
+}
+
+.title a {
+	color: #f3f3f3;
+}
+
+.description {
+    composes: description from './Entry.module.css';
+    color: #f3f3f3;
+}
+
+.description font {
+	color: #f3f3f3 !important;
+}

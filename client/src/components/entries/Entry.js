@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons.js';
 
-import styles from './Entry.module.css';
+import lightStyles from './Entry.module.css';
+import darkStyles from './Entry.dark.module.css';
 
-export class Entry extends React.Component {
+export class ConnectedEntry extends React.Component {
     constructor(props) {
         super(props);
 
@@ -48,6 +50,14 @@ export class Entry extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         const entry = this.props.entry;
         const description = this.removeSelfLinks(entry.description, entry.link);
 
@@ -176,3 +186,13 @@ export class Entry extends React.Component {
         this.props.onSetFavorite(this.props.entry.id, !this.props.entry.isFavorite);
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+export const Entry = connect(mapStateToProps)(ConnectedEntry);

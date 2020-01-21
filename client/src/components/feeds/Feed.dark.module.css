@@ -1,0 +1,15 @@
+.icon {
+	composes: icon from './Feed.module.css';
+    background-color: transparent;
+}
+
+.label {
+    composes: label from './Feed.module.css';
+    color: #f3f3f3;
+}
+
+.editButtonIcon {
+	composes: editButtonIcon from './Feed.module.css';
+	stroke: #d4d4d4;
+	fill: #d4d4d4;
+}
