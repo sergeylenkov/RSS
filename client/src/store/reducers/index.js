@@ -145,7 +145,7 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === UPDATE_READ) {
         let entries = state.entries.map(entry => {
-            return entry.id === action.id ? { ...entry, isRead: true } : entry
+            return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
         });
 
         entries = filterEntries(state.selectedFeeds, entries);

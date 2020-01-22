@@ -40,7 +40,7 @@ class App extends React.Component {
         this.onShowRead = this.onShowRead.bind(this);
         this.onShowFavorites = this.onShowFavorites.bind(this);
         this.onUpdateViewed = this.onUpdateViewed.bind(this);
-        this.onUpdateReaded = this.onUpdateReaded.bind(this);
+        this.onSetRead = this.onSetRead.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
         this.onAddFeed = this.onAddFeed.bind(this);
         this.onChangeFeed = this.onChangeFeed.bind(this);
@@ -92,7 +92,7 @@ class App extends React.Component {
                 </div>
                 <div className={styles.content}>
                     <div className={styles.list}>
-                        <EntriesList onUpdateViewed={this.onUpdateViewed} onUpdateReaded={this.onUpdateReaded} onSetFavorite={this.onSetFavorite} />
+                        <EntriesList onUpdateViewed={this.onUpdateViewed} onSetRead={this.onSetRead} onSetFavorite={this.onSetFavorite} />
                     </div>
                     <div className={styles.feeds}>
                         <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
@@ -159,9 +159,9 @@ class App extends React.Component {
         });
     }
 
-    onUpdateReaded(id) {
-        this.dataHelper.setRead(id).then((data) => {
-            this.props.updateRead(id);
+    onSetRead(id, isRead) {
+        this.dataHelper.setRead(id, isRead).then((data) => {
+            this.props.updateRead(id, isRead);
         });
     }
 
@@ -234,7 +234,7 @@ const mapDispatchToProps = dispatch => {
         updateFavorite: (id, isFavorite) => dispatch(updateFavorite(id, isFavorite)),
         feedsAdd: (feed) => dispatch(feedsAdd(feed)),
         feedsDelete: (id) => dispatch(feedsDelete(id)),
-        updateRead: (id) => dispatch(updateRead(id)),
+        updateRead: (id, isRead) => dispatch(updateRead(id, isRead)),
         changeViewMode: (mode) => dispatch(changeViewMode(mode)),
         feedsUpdate: (id, data) => dispatch(feedsUpdate(id, data)),
         feedsEditing: (isEditing) => dispatch(feedsEditing(isEditing))

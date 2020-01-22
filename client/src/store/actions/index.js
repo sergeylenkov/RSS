@@ -49,8 +49,8 @@ export function updateFavorite(id, isFavorite) {
     return { type: UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
 }
 
-export function updateRead(id) {
-    return { type: UPDATE_READ, id: id }
+export function updateRead(id, isRead) {
+    return { type: UPDATE_READ, id: id, isRead: isRead }
 }
 
 export function changeViewMode(mode) {

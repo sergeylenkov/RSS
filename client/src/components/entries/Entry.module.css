@@ -122,6 +122,7 @@
 .infoItem {
 	margin: auto 15px auto 0;
 	display: flex;
+	cursor: pointer;
 }
 
 .infoIcon {

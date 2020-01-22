@@ -1,6 +1,6 @@
 .icon {
 	composes: icon from './Feed.module.css';
-    background-color: transparent;
+    background-color: #bfbfbf;
 }
 
 .label {

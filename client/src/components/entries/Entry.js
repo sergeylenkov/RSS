@@ -19,6 +19,7 @@ export class ConnectedEntry extends React.Component {
         this.handleScroll = this.handleScroll.bind(this);
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
+        this.onUnread = this.onUnread.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
         this.onExpand = this.onExpand.bind(this);
 
@@ -64,7 +65,7 @@ export class ConnectedEntry extends React.Component {
         let readIcon = null;
 
         if (this.props.entry.isRead) {
-            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><ReadIcon /></div></div>;
+            readIcon = <div className={styles.infoItem} onClick={this.onUnread}><div className={styles.infoIcon}><ReadIcon /></div></div>;
         }
 
         let className = styles.container;
@@ -178,8 +179,12 @@ export class ConnectedEntry extends React.Component {
 
     onRead() {
         if (!this.props.entry.isRead) {
-            this.props.onRead(this.props.entry.id);
+            this.props.onSetRead(this.props.entry.id, true);
         }
+    }
+
+    onUnread() {
+        this.props.onSetRead(this.props.entry.id, false);
     }
 
     onSetFavorite() {
