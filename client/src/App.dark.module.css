@@ -1,0 +1,9 @@
+.container {
+    composes: container from './App.module.css';
+    background-color: #212121;
+}
+
+.header {
+    composes: header from './App.module.css';
+    background: #1b1c1d;
+}

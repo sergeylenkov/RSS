@@ -103,10 +103,12 @@ export class DataHelper {
         });
     }
 
-    setRead(id) {
+    setRead(id, isRead) {
         return new Promise((resolve) => {
+            const method = isRead ? 'PUT' : 'DELETE';
+
             fetch(`${this.url}entries/${id}/read`, {
-                method: 'PUT'
+                method: method
             }).then((response) => {
                 return response.json();
             }).then((data) => {
@@ -117,7 +119,7 @@ export class DataHelper {
 
     setFavorite(id, isFavorite) {
         return new Promise((resolve) => {
-            let method = isFavorite ? 'PUT' : 'DELETE';
+            const method = isFavorite ? 'PUT' : 'DELETE';
 
             fetch(`${this.url}entries/${id}/favorite`, {
                 method: method

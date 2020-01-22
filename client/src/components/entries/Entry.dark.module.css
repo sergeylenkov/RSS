@@ -1,0 +1,26 @@
+.container {
+    composes: container from './Entry.module.css';
+    background-color: #1d1d1d;
+}
+
+.title {
+    composes: title from './Entry.module.css';
+}
+
+.title a {
+	color: #bfbfbf;
+}
+
+.description {
+    composes: description from './Entry.module.css';
+    color: #bfbfbf;
+}
+
+.description font {
+	color: #bfbfbf !important;
+}
+
+.expandButton {
+    composes: expandButton from './Entry.module.css';
+    background-color: rgba(29, 29, 29, 0.8);
+}

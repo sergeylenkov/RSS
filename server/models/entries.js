@@ -91,13 +91,13 @@ module.exports.setViewed = function(ids) {
     });
 }
 
-module.exports.setRead = function(id) {
+module.exports.setRead = function(id, isRead) {
     return new Promise((resolve, reject) => {
-        db.run(`UPDATE entries SET read = ? WHERE id = ?`, [true, id], (error) => {
+        db.run(`UPDATE entries SET read = ? WHERE id = ?`, [isRead, id], (error) => {
             if (error) {
                 reject(error);
             } else {
-                resolve({ id: id, isRead: true });
+                resolve({ id: id, isRead: isRead });
             }
         });
     });

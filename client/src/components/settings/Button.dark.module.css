@@ -1,0 +1,20 @@
+.container {
+    composes: container from './Button.module.css';
+}
+
+.active {
+    composes: active from './Button.module.css';
+}
+
+.active.container {
+    background-color: #ffffff;
+}
+
+.icon {
+    composes: icon from './Button.module.css';
+    fill: #d4d4d4;
+}
+
+.active .icon {
+    fill: #404040;
+}

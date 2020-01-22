@@ -1,0 +1,4 @@
+.container {
+    composes: container from './Feeds.module.css';
+    background-color: #1d1d1d;
+}

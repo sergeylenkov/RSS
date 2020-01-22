@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { CheckmarkIcon, TrashIcon } from '../Icons.js';
 
-import styles from './Feed.module.css';
+import lightStyles from './Feed.module.css';
+import darkStyles from './Feed.dark.module.css';
 
-export class Feed extends React.Component {
+export class ConnectedFeed extends React.Component {
     constructor(props) {
         super(props);
 
@@ -15,6 +17,14 @@ export class Feed extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         return (
             <div className={styles.container}>
                 {
@@ -25,6 +35,14 @@ export class Feed extends React.Component {
     }
 
     renderViewMode() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         const feed = this.props.feed;
 
         return <button className={`${styles.button} ${this.props.isSelected ? styles.selected : ''}`} onClick={this.onSelect}>
@@ -35,6 +53,14 @@ export class Feed extends React.Component {
     }
 
     renderEditMode() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         const feed = this.props.feed;
 
         return <div className={styles.editPanel}>
@@ -59,3 +85,13 @@ export class Feed extends React.Component {
         this.props.onChange(this.props.feed.id, value);
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+export const Feed = connect(mapStateToProps)(ConnectedFeed);

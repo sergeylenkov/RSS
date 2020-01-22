@@ -48,7 +48,17 @@ router.post('/view', function(req, res) {
 router.put('/:entryId/read', function(req, res) {
     const id = req.params.entryId;
 
-    data.setRead(id).then((item) => {
+    data.setRead(id, true).then((item) => {
+        return res.json(item);
+    }).catch((error) => {
+        res.status(500).send({ error: error });
+    });
+});
+
+router.delete('/:entryId/read', function(req, res) {
+    const id = req.params.entryId;
+
+    data.setRead(id, false).then((item) => {
         return res.json(item);
     }).catch((error) => {
         res.status(500).send({ error: error });

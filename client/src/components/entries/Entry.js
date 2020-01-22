@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons.js';
 
-import styles from './Entry.module.css';
+import lightStyles from './Entry.module.css';
+import darkStyles from './Entry.dark.module.css';
 
-export class Entry extends React.Component {
+export class ConnectedEntry extends React.Component {
     constructor(props) {
         super(props);
 
@@ -17,6 +19,7 @@ export class Entry extends React.Component {
         this.handleScroll = this.handleScroll.bind(this);
         this.handleMove = this.handleMove.bind(this);
         this.onRead = this.onRead.bind(this);
+        this.onUnread = this.onUnread.bind(this);
         this.onSetFavorite = this.onSetFavorite.bind(this);
         this.onExpand = this.onExpand.bind(this);
 
@@ -48,13 +51,21 @@ export class Entry extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         const entry = this.props.entry;
         const description = this.removeSelfLinks(entry.description, entry.link);
 
         let readIcon = null;
 
         if (this.props.entry.isRead) {
-            readIcon = <div className={styles.infoItem}><div className={styles.infoIcon}><ReadIcon /></div></div>;
+            readIcon = <div className={styles.infoItem} onClick={this.onUnread}><div className={styles.infoIcon}><ReadIcon /></div></div>;
         }
 
         let className = styles.container;
@@ -168,11 +179,25 @@ export class Entry extends React.Component {
 
     onRead() {
         if (!this.props.entry.isRead) {
-            this.props.onRead(this.props.entry.id);
+            this.props.onSetRead(this.props.entry.id, true);
         }
+    }
+
+    onUnread() {
+        this.props.onSetRead(this.props.entry.id, false);
     }
 
     onSetFavorite() {
         this.props.onSetFavorite(this.props.entry.id, !this.props.entry.isFavorite);
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+export const Entry = connect(mapStateToProps)(ConnectedEntry);

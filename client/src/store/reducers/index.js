@@ -2,12 +2,13 @@ import {
     FEEDS_UPDATING, FEEDS_UPDATED, FEEDS_ADD, FEEDS_DELETE, FEEDS_UPDATE,
     ENTRIES_UPDATING, ENTRIES_LOADED, UPDATE_UNVIEWED_COUNT, UPDATE_VIEWED,
     UPDATE_FAVORITE, UPDATE_READ, CHANGE_VIEW_MODE, UPDATE_ENTRIES_COUNT,
-    FEEDS_EDITING, FEEDS_SELECT
+    FEEDS_EDITING, FEEDS_SELECT, TOGGLE_THEME
 } from '../constants/index.js';
 
 const initialState = {
     isUpdating: false,
     isFeedsEditing: false,
+    isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
     entriesCount: 0,
     unviewedCount: 0,
     viewMode: 0,
@@ -144,7 +145,7 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === UPDATE_READ) {
         let entries = state.entries.map(entry => {
-            return entry.id === action.id ? { ...entry, isRead: true } : entry
+            return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
         });
 
         entries = filterEntries(state.selectedFeeds, entries);
@@ -199,6 +200,14 @@ function rootReducer(state = initialState, action) {
         }
     }
 
+    if (action.type === TOGGLE_THEME) {
+        localStorage.setItem('darkTheme', action.isDarkTheme);
+
+        return {
+            ...state,
+            isDarkTheme: action.isDarkTheme
+        }
+    }
     return state;
 };
 

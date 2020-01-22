@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export class ReloadIcon extends React.Component {
+export class ReloadIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -10,7 +10,7 @@ export class ReloadIcon extends React.Component {
     }
 }
 
-export class AddIcon extends React.Component {
+export class AddIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -20,17 +20,17 @@ export class AddIcon extends React.Component {
     }
 }
 
-export class EditIcon extends React.Component {
+export class EditIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
-                <polygon fill="none" stroke-linecap="round" stroke-linejoin="round" points="16 3 21 8 8 21 3 21 3 16 16 3"/>
+                <polygon fill="none" strokeLinecap="round" strokeLinejoin="round" points="16 3 21 8 8 21 3 21 3 16 16 3"/>
             </svg>
         );
     }
 }
 
-export class CloseIcon extends React.Component {
+export class CloseIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export class CloseIcon extends React.Component {
     }
 }
 
-export class TrashIcon extends React.Component {
+export class TrashIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ export class TrashIcon extends React.Component {
     }
 }
 
-export class SettingsIcon extends React.Component {
+export class SettingsIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -60,7 +60,7 @@ export class SettingsIcon extends React.Component {
     }
 }
 
-export class ReadIcon extends React.Component {
+export class ReadIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -70,7 +70,7 @@ export class ReadIcon extends React.Component {
     }
 }
 
-export class FavoriteIcon extends React.Component {
+export class FavoriteIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -80,7 +80,7 @@ export class FavoriteIcon extends React.Component {
     }
 }
 
-export class FavoriteSelectedIcon extends React.Component {
+export class FavoriteSelectedIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ export class FavoriteSelectedIcon extends React.Component {
     }
 }
 
-export class CheckmarkIcon extends React.Component {
+export class CheckmarkIcon extends Component {
     render() {
         return (
             <svg viewBox="0 0 24 24">

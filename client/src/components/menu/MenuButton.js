@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import styles from './MenuButton.module.css';
+import lightStyles from './MenuButton.module.css';
+import darkStyles from './MenuButton.dark.module.css';
 
-export class MenuButton extends React.Component {
+export class ConnectedMenuButton extends React.Component {
     constructor(props) {
         super(props);
 
@@ -10,10 +12,12 @@ export class MenuButton extends React.Component {
     }
 
     render() {
+        const styles = this.props.isDarkTheme ? darkStyles : lightStyles;
+
         let counter;
 
         if (this.props.isSelected) {
-            counter = <div className={styles.counter}>{this.props.count}</div>                  
+            counter = <div className={styles.counter}>{this.props.count}</div>
         }
 
         return (
@@ -30,3 +34,13 @@ export class MenuButton extends React.Component {
         }
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+export const MenuButton = connect(mapStateToProps)(ConnectedMenuButton);

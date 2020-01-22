@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { ReloadIcon } from '../Icons.js';
 import { MenuButton } from './MenuButton.js';
 
-import styles from './ReloadButton.module.css';
+import lightStyles from './ReloadButton.module.css';
+import darkStyles from './ReloadButton.dark.module.css';
 
-export class ReloadButton extends React.Component {
+export class ConnectedReloadButton extends React.Component {
     constructor(props) {
         super(props);
 
@@ -13,6 +15,14 @@ export class ReloadButton extends React.Component {
     }
 
     render() {
+        let styles = {};
+
+        if (this.props.isDarkTheme) {
+            styles = {...lightStyles, ...darkStyles};
+        } else {
+            styles = lightStyles;
+        }
+
         return (
             <div className={`${styles.container} ${this.props.isActive ? styles.active : ''}`}>
                 <button className={styles.icon} onClick={this.onUpdate}><ReloadIcon /></button>
@@ -31,3 +41,14 @@ export class ReloadButton extends React.Component {
         this.props.onUpdate();
     }
 }
+
+/* Redux */
+
+const mapStateToProps = state => {
+    return {
+        isDarkTheme: state.isDarkTheme
+    };
+};
+
+
+export const ReloadButton = connect(mapStateToProps)(ConnectedReloadButton);
