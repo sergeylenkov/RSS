@@ -71,7 +71,7 @@ class App extends React.Component {
         } else {
             styles = lightStyles;
         }
-        console.log(styles);
+
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
@@ -84,7 +84,7 @@ class App extends React.Component {
                             timeout={200}
                             classNames="fade"
                             unmountOnExit
-                            appear
+                            mountOnEnter
                         >
                         <Settings isVisible={this.state.isSettingsVisible} />
                         </CSSTransition>
