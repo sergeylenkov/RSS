@@ -19,3 +19,8 @@
 .description font {
 	color: #f3f3f3 !important;
 }
+
+.expandButton {
+    composes: expandButton from './Entry.module.css';
+    background-color: rgba(29, 29, 29, 0.8);
+}
