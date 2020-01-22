@@ -5,11 +5,11 @@
 
 .label {
     composes: label from './Feed.module.css';
-    color: #f3f3f3;
+    color: #bfbfbf;
 }
 
 .editButtonIcon {
 	composes: editButtonIcon from './Feed.module.css';
-	stroke: #d4d4d4;
-	fill: #d4d4d4;
+	stroke: #a5a5a5;
+	fill: #a5a5a5;
 }

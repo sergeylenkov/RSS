@@ -34,17 +34,17 @@ export class ConnectedSettings extends React.Component {
         return (
             <div className={styles.container} onClick={this.onClick}>
                 <div className={styles.item}>
+                    <input id={this.themeId} className={styles.checkbox} ref={this.themeFieldRef} type="checkbox" checked={this.props.isDarkTheme ? 'checked' : ''} onChange={this.onToggleTheme} />
+                    <label className={styles.label} htmlFor={this.themeId}>Темная тема</label>
+                </div>
+
+                <div className={styles.item}>
                     <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={this.state.collapse ? 'checked' : ''} onChange={this.onToggleCollapse} />
                     <label className={styles.label} htmlFor={this.collapseId}>Сворачивать длинные посты</label>
                 </div>
 
                 <div className={styles.item}>
                     <div className={styles.label}>Удалять посты старше <input className={styles.days} ref={this.daysFieldRef} type="text" value={this.state.days} onChange={this.onChangeDays}/> дней</div>
-                </div>
-
-                <div className={styles.item}>
-                    <input id={this.themeId} className={styles.checkbox} ref={this.themeFieldRef} type="checkbox" checked={this.props.isDarkTheme ? 'checked' : ''} onChange={this.onToggleTheme} />
-                    <label className={styles.label} htmlFor={this.themeId}>Темная тема</label>
                 </div>
             </div>
         );

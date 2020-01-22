@@ -8,7 +8,7 @@ import {
 const initialState = {
     isUpdating: false,
     isFeedsEditing: false,
-    isDarkTheme: localStorage.getItem('darkTheme'),
+    isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
     entriesCount: 0,
     unviewedCount: 0,
     viewMode: 0,

@@ -8,16 +8,16 @@
 }
 
 .title a {
-	color: #f3f3f3;
+	color: #bfbfbf;
 }
 
 .description {
     composes: description from './Entry.module.css';
-    color: #f3f3f3;
+    color: #bfbfbf;
 }
 
 .description font {
-	color: #f3f3f3 !important;
+	color: #bfbfbf !important;
 }
 
 .expandButton {

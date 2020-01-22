@@ -4,7 +4,7 @@
 
 .label {
 	composes: label from './MenuButton.module.css';
-	color: #f3f3f3;
+	color: #bfbfbf;
 }
 
 .container.selected .label {
