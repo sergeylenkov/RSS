@@ -37,7 +37,19 @@ class ConnectedFeedsList extends React.Component {
                 this.props.feeds.map((feed) => {
                     const isSelected = this.props.selectedFeeds.includes(feed.id);
 
-                    return <Feed key={feed.id} feed={feed} isSelected={isSelected} isEditing={this.props.isFeedsEditing} onDelete={this.onDelete} onChange={this.onChange} onSelect={this.onSelect} />
+                    return (
+                        <Feed
+                            key={feed.id}
+                            icon={feed.icon}
+                            title={feed.title}
+                            count={feed.count}
+                            isSelected={isSelected}
+                            isEditing={this.props.isFeedsEditing}
+                            onDelete={this.onDelete}
+                            onChange={this.onChange}
+                            onSelect={this.onSelect}
+                        />
+                    )
                 })
             }
             <FeedEdit isEditing={this.props.isFeedsEditing} onAdd={this.onAdd} onEdit={this.onEdit} />
