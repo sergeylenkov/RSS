@@ -2,7 +2,7 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../index');
 
-describe('GET /feeds', function () {
+describe('GET /feeds', function() {
   it('should get all feeds', (done) => {
     request(app).get('/feeds')
       .expect(200)
@@ -13,7 +13,7 @@ describe('GET /feeds', function () {
   });
 });
 
-describe('GET /entries', function () {
+describe('GET /entries', function() {
   it('should get all entries', (done) => {
     request(app).get('/entries')
       .expect(200)
@@ -24,7 +24,7 @@ describe('GET /entries', function () {
   });
 });
 
-describe('GET /entries/unviewed', function () {
+describe('GET /entries/unviewed', function() {
   it('should get unviewed entries', (done) => {
     request(app).get('/entries/unviewed')
       .expect(200)
@@ -35,7 +35,7 @@ describe('GET /entries/unviewed', function () {
   });
 });
 
-describe('GET /feeds/update', function () {
+describe('GET /feeds/update', function() {
   this.timeout(0);
 
   it('should update feeds', (done) => {
@@ -48,7 +48,7 @@ describe('GET /feeds/update', function () {
   });
 });
 
-describe('GET /entries/1/favorite', function () {
+describe('GET /entries/1/favorite', function() {
   it('should set entru as favroite', (done) => {
     request(app).put('/entries/1/favorite')
       .expect(200)

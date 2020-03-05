@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "API_TEST=true mocha test/api.js",
+    "test": "mocha test/api.js --db=test",
     "prod": "node index.js -p 8080"
   },
   "keywords": [],

@@ -1,8 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
+const args = require('minimist')(process.argv.slice(2));
 
 let name = 'database.sqlite';
 
-if (process.env.API_TEST) {
+if (args.db === 'test') {
     name = 'test/test.sqlite';
 }
 
