@@ -24,7 +24,13 @@ app.get('*', (req, res) =>{
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-const port = process.env.PORT || 5000;
+const args = require('minimist')(process.argv.slice(2));
+let port = 5000;
+
+if (args.p) {
+    port = args.p;
+}
+
 app.listen(port);
 
 console.log('App is listening on port ' + port);

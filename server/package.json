@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "API_TEST=true mocha test/api.js"
+    "test": "API_TEST=true mocha test/api.js",
+    "prod": "node index.js -p 8080"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "minimist": "^1.2.0",
     "mocha": "^5.2.0",
     "supertest": "^3.0.0"
   }

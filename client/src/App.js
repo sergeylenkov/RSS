@@ -20,7 +20,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.dataHelper = new DataHelper('http://localhost:5000/', false);
+        this.dataHelper = new DataHelper('http://localhost:8080/', false);
 
         this.state = {
             isSettingsVisible: false
