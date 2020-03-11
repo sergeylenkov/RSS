@@ -133,7 +133,8 @@ function _addFeed(link) {
               description: rss.description,
               link: rss.link,
               image: rss.image.url,
-              lastUpdate: Date()
+              count: 0,
+              lastUpdate: new Date()
             }
 
             db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',

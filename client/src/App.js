@@ -189,6 +189,9 @@ class App extends React.Component {
     this.dataHelper.addFeed(link).then((feed) => {
       console.log(feed);
       this.props.feedsAdd(feed);
+      this.props.feedsEditing(false);
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
