@@ -3,3 +3,10 @@
 	margin: 0 auto 0 0;
 	display: flex;
 }
+
+
+@media (max-width: 768px) {
+	.container {
+		overflow: auto;
+	}
+}

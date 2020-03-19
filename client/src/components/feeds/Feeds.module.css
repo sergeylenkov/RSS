@@ -7,3 +7,13 @@
     flex-direction: column;
     background: #ffffff;
 }
+
+@media (max-width: 768px) {
+    .container {
+        position: relative;
+        top: auto;
+        width: auto;
+        flex-direction: row;
+        overflow: auto;
+    }
+}

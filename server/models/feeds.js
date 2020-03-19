@@ -1,7 +1,7 @@
 const db = require('../db');
 const Parser = require('rss-parser');
 
-module.exports.all = function () {
+module.exports.all = function() {
   return new Promise((resolve, reject) => {
     _getFeeds().then((items) => {
       resolve(items);
@@ -11,7 +11,7 @@ module.exports.all = function () {
   });
 }
 
-module.exports.update = function () {
+module.exports.update = function() {
   return new Promise((resolve, reject) => {
     let items = [];
 
@@ -40,11 +40,11 @@ module.exports.update = function () {
   });
 }
 
-module.exports.add = function (feed) {
+module.exports.add = function(feed) {
   return _addFeed(feed);
 }
 
-module.exports.patch = function (id, data) {
+module.exports.patch = function(id, data) {
   return new Promise((resolve, reject) => {
     _getFeed(id).then((feed) => {
       if (data.title) {
@@ -64,7 +64,7 @@ module.exports.patch = function (id, data) {
   });
 }
 
-module.exports.delete = function (id) {
+module.exports.delete = function(id) {
   return new Promise((resolve, reject) => {
     db.run('DELETE FROM feeds WHERE id = ?', [id], function (error) {
       if (error) {
@@ -121,6 +121,7 @@ function _addFeed(link) {
         reject({ message: 'Feed already exists' });
       } else {
         const parser = new Parser();
+
         parser.parseURL(link, (error, rss) => {
           if (error) {
             reject(error);
@@ -132,10 +133,12 @@ function _addFeed(link) {
               description: rss.description,
               link: rss.link,
               image: rss.image.url,
-              lastUpdate: Date()
+              count: 0,
+              lastUpdate: new Date()
             }
 
-            db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [feed.rss, feed.link, feed.title, feed.description, feed.image, true, 0, feed.lastUpdate.toISOString(), false], function (error) {
+            db.run('INSERT INTO feeds (rss, link, title, description, image, active, status, last_update, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [feed.rss, feed.link, feed.title, feed.description, feed.image, true, 0, feed.lastUpdate.toISOString(), false], (error) => {
               if (error) {
                 reject(error);
               } else {
@@ -161,27 +164,29 @@ function _updateFeed(feed) {
         const date = new Date();
 
         db.run(`UPDATE feeds SET last_update = ? WHERE id = ?`, [date.toISOString(), feed.id], (error) => {
-          reject(error);
-        });
+          if (error) {
+            reject(error);
+          } else {
+            let items = [];
+            let promises = [];
 
-        let items = [];
-        let promises = [];
+            rss.items.forEach((entry) => {
+              const newEntry = _prepareEntry(feed, entry);
 
-        rss.items.forEach((entry) => {
-          const newEntry = _prepareEntry(feed, entry);
+              if (newEntry.date >= feed.lastUpdate) {
+                const promise = _addEntry(newEntry).then((entry) => {
+                  items.push(entry);
+                });
 
-          if (newEntry.date >= feed.lastUpdate) {
-            const promise = _addEntry(newEntry).then((entry) => {
-              items.push(entry);
+                promises.push(promise);
+              }
             });
 
-            promises.push(promise);
+            Promise.all(promises).then(() => {
+              resolve(items);
+            });
           }
         });
-
-        Promise.all(promises).then(() => {
-          resolve(items);
-        })
       }
     });
   });
