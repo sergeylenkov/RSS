@@ -40,3 +40,30 @@
 .feeds {
     margin: 20px 0 0 20px;
 }
+
+@media (max-width: 768px) {
+    .header {
+        box-sizing: border-box;
+        padding: 0 0 0 20px;
+    }
+
+    .headerContent {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .content {
+        width: 100%;
+        flex-direction: column-reverse;
+        padding: 120px 0 0 0;
+    }
+
+    .feeds {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+}
