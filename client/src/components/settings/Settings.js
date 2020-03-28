@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { toggleTheme } from '../../store/actions/index.js';
+import { toggleTheme, toggleCollapseLong } from '../../store/actions';
 
 import styles from './Settings.module.css';
 
@@ -9,9 +9,8 @@ export class ConnectedSettings extends React.Component {
         super(props);
 
         this.state = {
-            collapse: JSON.parse(localStorage.getItem('collpaseLong')),
             days: localStorage.getItem('keepDays')
-        }
+        };
 
         this.collapseId = 0;
         this.themeId = 1;
@@ -39,7 +38,7 @@ export class ConnectedSettings extends React.Component {
                 </div>
 
                 <div className={styles.item}>
-                    <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={this.state.collapse ? 'checked' : ''} onChange={this.onToggleCollapse} />
+                    <input id={this.collapseId} className={styles.checkbox} ref={this.collapseFieldRef} type="checkbox" checked={this.state.isCollapseLong ? 'checked' : ''} onChange={this.onToggleCollapse} />
                     <label className={styles.label} htmlFor={this.collapseId}>Сворачивать длинные посты</label>
                 </div>
 
@@ -51,13 +50,8 @@ export class ConnectedSettings extends React.Component {
     }
 
     onToggleCollapse() {
-        const collapse = this.collapseFieldRef.current.checked;
-
-        localStorage.setItem('collpaseLong', collapse);
-
-        this.setState({
-            collapse: collapse
-        });
+        const isCollapseLong = !this.props.isCollapseLong;
+        this.props.toggleCollapseLong(isCollapseLong);
     }
 
     onChangeDays() {
@@ -72,7 +66,6 @@ export class ConnectedSettings extends React.Component {
 
     onToggleTheme() {
         const isDarkTheme = !this.props.isDarkTheme;
-
         this.props.toggleTheme(isDarkTheme);
     }
 
@@ -86,13 +79,15 @@ export class ConnectedSettings extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isDarkTheme: state.isDarkTheme
+        isDarkTheme: state.isDarkTheme,
+        isCollapseLong: state.isCollapseLong
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleTheme: (isDarkTheme) => dispatch(toggleTheme(isDarkTheme))
+        toggleTheme: (isDarkTheme) => dispatch(toggleTheme(isDarkTheme)),
+        toggleCollapseLong: (isCollapse) => dispatch(toggleCollapseLong(isCollapse))
     };
 };
 

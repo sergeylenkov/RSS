@@ -27,8 +27,11 @@ import { connect } from 'react-redux';
 import darkStyles from './App.dark.module.css';
 import lightStyles from './App.module.css';
 
-interface AppProps {
+interface MapStateToProps {
   isDarkTheme: boolean;
+}
+
+interface AppProps extends MapStateToProps {
   entriesUpdating: () => void;
   changeViewMode: (mode: number) => void;
   updateUnviewedCount: () => void;
@@ -61,44 +64,30 @@ class App extends React.Component<AppProps, AppState> {
 
     this.dataHelper = new DataHelper('http://localhost:8080/');
 
-    if (localStorage.getItem('collpaseLong') === null) {
-      localStorage.setItem('collpaseLong', String(false));
-    }
-
     if (localStorage.getItem('keepDays') === null) {
       localStorage.setItem('keepDays', String(30));
     }
 
-    this.onUpdate = this.onUpdate.bind(this);
-    this.onShowUnviewed = this.onShowUnviewed.bind(this);
-    this.onShowAll = this.onShowAll.bind(this);
-    this.onShowRead = this.onShowRead.bind(this);
-    this.onShowFavorites = this.onShowFavorites.bind(this);
-    this.onUpdateViewed = this.onUpdateViewed.bind(this);
-    this.onSetRead = this.onSetRead.bind(this);
-    this.onSetFavorite = this.onSetFavorite.bind(this);
-    this.onAddFeed = this.onAddFeed.bind(this);
-    this.onChangeFeed = this.onChangeFeed.bind(this);
-    this.onDeleteFeed = this.onDeleteFeed.bind(this);
-    this.onToggleSettings = this.onToggleSettings.bind(this);
     this.hideSettings = this.hideSettings.bind(this);
   }
 
-  componentDidMount() {
+  public componentDidMount() {
+    const { feedsUpdated, entriesUpdated, updateUnviewedCount } = this.props;
+
     this.dataHelper.getFeeds().then((feeds: any[]) => {
       console.log(feeds);
-      this.props.feedsUpdated(feeds);
+      feedsUpdated(feeds);
       this.dataHelper.getUnviewed().then((entries: any[]) => {
         console.log(entries);
-        this.props.entriesUpdated(entries);
-        this.props.updateUnviewedCount();
+        entriesUpdated(entries);
+        updateUnviewedCount();
       });
     });
 
     this.dataHelper.clearEntries(localStorage.getItem('keepDays'));
   }
 
-  render() {
+  public render() {
     let styles = lightStyles;
 
     if (this.props.isDarkTheme) {
@@ -135,105 +124,124 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 
-  onUpdate() {
-    this.props.entriesUpdating();
-    this.props.changeViewMode(0);
+  private onUpdate() {
+    const { changeViewMode, entriesUpdated, updateUnviewedCount, entriesUpdateError } = this.props;
+
+    entriesUpdating();
+    changeViewMode(0);
 
     this.dataHelper.update().then((entries: any[]) => {
       const unviewed = entries.filter((entry: any) => {
         return !entry.isViewed;
       });
 
-      this.props.entriesUpdated(unviewed);
-      this.props.updateUnviewedCount();
+      entriesUpdated(unviewed);
+      updateUnviewedCount();
     }).catch((error: any) => {
       console.log(error);
-      this.props.entriesUpdateError();
+      entriesUpdateError();
     });
   }
 
-  onShowUnviewed() {
-    this.props.changeViewMode(0);
+  private onShowUnviewed() {
+    const { changeViewMode, entriesUpdated, updateUnviewedCount } = this.props;
+
+    changeViewMode(0);
 
     this.dataHelper.getUnviewed().then((entries: any[]) => {
-      this.props.entriesUpdated(entries);
-      this.props.updateUnviewedCount();
+      entriesUpdated(entries);
+      updateUnviewedCount();
     });
   }
 
-  onShowAll() {
-    this.props.changeViewMode(1);
+  private onShowAll() {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(1);
 
     this.dataHelper.allEntries().then((entries: any[]) => {
-      this.props.entriesUpdated(entries);
-      this.props.updateEntriesCount();
+      entriesUpdated(entries);
+      updateEntriesCount();
     });
   }
 
-  onShowRead() {
-    this.props.changeViewMode(2);
+  private onShowRead() {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(2);
 
     this.dataHelper.readEntries().then((entries: any[]) => {
-      this.props.entriesUpdated(entries);
-      this.props.updateEntriesCount();
+      entriesUpdated(entries);
+      updateEntriesCount();
     });
   }
 
-  onShowFavorites() {
-    this.props.changeViewMode(3);
+  private onShowFavorites() {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(3);
 
     this.dataHelper.getFavorites().then((entries: any[]) => {
-      this.props.entriesUpdated(entries);
-      this.props.updateEntriesCount();
+      entriesUpdated(entries);
+      updateEntriesCount();
     });
   }
 
-  onUpdateViewed(ids: number[]) {
+  private onUpdateViewed(ids: number[]) {
+    const { updateViewed, updateUnviewedCount } = this.props;
+
     this.dataHelper.setViewed(ids).then(() => {
-      this.props.updateViewed(ids);
-      this.props.updateUnviewedCount();
+      updateViewed(ids);
+      updateUnviewedCount();
     });
   }
 
-  onSetRead(id: number, isRead: boolean) {
+  private onSetRead(id: number, isRead: boolean) {
+    const { updateRead } = this.props;
+
     this.dataHelper.setRead(id, isRead).then(() => {
-      this.props.updateRead(id, isRead);
+      updateRead(id, isRead);
     });
   }
 
-  onSetFavorite(id: number, isFavorite: boolean) {
+  private onSetFavorite(id: number, isFavorite: boolean) {
+    const { updateFavorite } = this.props;
+
     this.dataHelper.setFavorite(id, isFavorite).then(() => {
-      this.props.updateFavorite(id, isFavorite);
+      updateFavorite(id, isFavorite);
     });
   }
 
-  onAddFeed(link: string) {
+  private onAddFeed(link: string) {
+    const { feedsAdd, feedsEditing } = this.props;
+
     this.dataHelper.addFeed(link).then((feed: any) => {
-      console.log(feed);
-      this.props.feedsAdd(feed);
-      this.props.feedsEditing(false);
+      feedsAdd(feed);
+      feedsEditing(false);
     }).catch((error: any) => {
       console.log(error);
     });
   }
 
-  onChangeFeed(id: number, data: any) {
+  private onChangeFeed(id: number, data: any) {
+    const { feedsUpdate, feedsEditing } = this.props;
+
     this.dataHelper.updateFeed(id, data).then((data: { data: any; }) => {
-      console.log(data);
-      this.props.feedsUpdate(id, data.data);
-      this.props.feedsEditing(false);
+      feedsUpdate(id, data.data);
+      feedsEditing(false);
     });
   }
 
-  onDeleteFeed(id: number) {
+  private onDeleteFeed(id: number) {
+    const { feedsDelete, feedsEditing } = this.props;
+
     this.dataHelper.deleteFeed(id).then((data: any) => {
-      console.log(data);
-      this.props.feedsDelete(id);
-      this.props.feedsEditing(false);
+      feedsDelete(id);
+      feedsEditing(false);
     });
   }
 
-  onToggleSettings() {
+  private onToggleSettings() {
     const visible = !this.state.isSettingsVisible;
 
     if (visible) {
@@ -247,7 +255,7 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  hideSettings() {
+  private hideSettings() {
     if (this.state.isSettingsVisible) {
       this.onToggleSettings();
     }
@@ -256,7 +264,7 @@ class App extends React.Component<AppProps, AppState> {
 
 /* Redux */
 
-const mapStateToProps = (state: { isDarkTheme: boolean }) => {
+const mapStateToProps = (state: MapStateToProps) => {
   return {
     isDarkTheme: state.isDarkTheme
   };

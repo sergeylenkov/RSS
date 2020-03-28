@@ -15,7 +15,8 @@ import {
   UPDATE_FAVORITE,
   UPDATE_READ,
   UPDATE_UNVIEWED_COUNT,
-  UPDATE_VIEWED
+  UPDATE_VIEWED,
+  TOGGLE_COLLAPSE_LONG
 } from '../constants/index.js';
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   isFeedsEditing: false,
   isUpdateError: false,
   isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
+  isCollapseLong: JSON.parse(localStorage.getItem('collapseLong')),
   entriesCount: 0,
   unviewedCount: 0,
   viewMode: 0,
@@ -229,6 +231,15 @@ function rootReducer(state = initialState, action) {
       ...state,
       isUpdating: false,
       isUpdateError: true
+    }
+  }
+
+  if (action.type === TOGGLE_COLLAPSE_LONG) {
+    localStorage.setItem('collapseLong', action.isCollapse);
+
+    return {
+      ...state,
+      isCollapseLong: action.isCollapse
     }
   }
 

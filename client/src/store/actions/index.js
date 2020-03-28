@@ -15,7 +15,8 @@ import {
   UPDATE_FAVORITE,
   UPDATE_READ,
   UPDATE_UNVIEWED_COUNT,
-  UPDATE_VIEWED
+  UPDATE_VIEWED,
+  TOGGLE_COLLAPSE_LONG
 } from '../constants/index.js';
 
 export function feedsUpdating() {
@@ -84,4 +85,8 @@ export function toggleTheme(isDarkTheme) {
 
 export function entriesUpdateError() {
   return { type: ENTRIES_UPDATE_ERROR }
+}
+
+export function toggleCollapseLong(isCollapse) {
+  return { type: TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
 }
