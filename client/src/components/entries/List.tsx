@@ -60,4 +60,4 @@ const mapStateToProps = (state: MapStateToProps) => {
   };
 };
 
-export const EntriesList = connect(mapStateToProps)(ConnectedEntriesList);
+export default connect(mapStateToProps)(ConnectedEntriesList);

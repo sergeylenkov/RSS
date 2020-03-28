@@ -16,7 +16,8 @@ import {
   UPDATE_READ,
   UPDATE_UNVIEWED_COUNT,
   UPDATE_VIEWED,
-  TOGGLE_COLLAPSE_LONG
+  TOGGLE_COLLAPSE_LONG,
+  UPDATE_KEEP_DAYS
 } from '../constants/index.js';
 
 export function feedsUpdating() {
@@ -89,4 +90,8 @@ export function entriesUpdateError() {
 
 export function toggleCollapseLong(isCollapse) {
   return { type: TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
+}
+
+export function updateKeepDays(days) {
+  return { type: UPDATE_KEEP_DAYS, days: days};
 }

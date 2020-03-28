@@ -17,11 +17,11 @@ import {
 
 import { CSSTransition } from 'react-transition-group';
 import { DataHelper } from './data/DataHelper';
-import { EntriesList } from './components/entries/List';
+import EntriesList from './components/entries/List';
 import { FeedsList } from './components/feeds/Feeds';
-import { Menu } from './components/menu/Menu';
+import Menu from './components/menu/Menu';
 import React from 'react';
-import { Settings } from './components/settings/Settings';
+import Settings from './components/settings/Settings';
 import { SettingsButton } from './components/settings/Button';
 import { connect } from 'react-redux';
 import { Dispatch } from "redux";
@@ -30,9 +30,7 @@ import lightStyles from './App.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
-}
-
-interface AppProps extends MapStateToProps {
+  keepDays: number;
   entriesUpdating: () => void;
   changeViewMode: (mode: number) => void;
   updateUnviewedCount: () => void;
@@ -47,6 +45,9 @@ interface AppProps extends MapStateToProps {
   feedsUpdate: (id: number, data: any) => void;
   feedsEditing: (isEditing: boolean) => void;
   feedsAdd: (feed: any) => void;
+}
+
+interface AppProps extends MapStateToProps {
 }
 
 interface AppState {
@@ -65,15 +66,11 @@ class App extends React.Component<AppProps, AppState> {
 
     this.dataHelper = new DataHelper('http://localhost:8080/');
 
-    if (localStorage.getItem('keepDays') === null) {
-      localStorage.setItem('keepDays', String(30));
-    }
-
     this.hideSettings = this.hideSettings.bind(this);
   }
 
   public componentDidMount() {
-    const { feedsUpdated, entriesUpdated, updateUnviewedCount } = this.props;
+    const { feedsUpdated, entriesUpdated, updateUnviewedCount, keepDays } = this.props;
 
     this.dataHelper.getFeeds().then((feeds: any[]) => {
       console.log(feeds);
@@ -85,13 +82,14 @@ class App extends React.Component<AppProps, AppState> {
       });
     });
 
-    this.dataHelper.clearEntries(localStorage.getItem('keepDays'));
+    this.dataHelper.clearEntries(keepDays);
   }
 
   public render() {
+    const { isDarkTheme } = this.props;
     let styles = lightStyles;
 
-    if (this.props.isDarkTheme) {
+    if (isDarkTheme) {
       styles = { ...lightStyles, ...darkStyles };
     }
 
@@ -273,7 +271,8 @@ class App extends React.Component<AppProps, AppState> {
 
 const mapStateToProps = (state: MapStateToProps) => {
   return {
-    isDarkTheme: state.isDarkTheme
+    isDarkTheme: state.isDarkTheme,
+    keepDays: state.keepDays
   };
 };
 

@@ -16,7 +16,8 @@ import {
   UPDATE_READ,
   UPDATE_UNVIEWED_COUNT,
   UPDATE_VIEWED,
-  TOGGLE_COLLAPSE_LONG
+  TOGGLE_COLLAPSE_LONG,
+  UPDATE_KEEP_DAYS,
 } from '../constants/index.js';
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
   isUpdateError: false,
   isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
   isCollapseLong: JSON.parse(localStorage.getItem('collapseLong')),
+  keepDays: localStorage.getItem('keepDays'),
   entriesCount: 0,
   unviewedCount: 0,
   viewMode: 0,
@@ -240,6 +242,15 @@ function rootReducer(state = initialState, action) {
     return {
       ...state,
       isCollapseLong: action.isCollapse
+    }
+  }
+
+  if (action.type === UPDATE_KEEP_DAYS) {
+    localStorage.setItem('keepDays', action.days);
+
+    return {
+      ...state,
+      keepDays: action.days
     }
   }
 
