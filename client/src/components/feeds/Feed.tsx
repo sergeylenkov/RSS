@@ -1,4 +1,4 @@
-import { CheckmarkIcon, TrashIcon } from '../Icons.js';
+import { CheckmarkIcon, TrashIcon } from '../Icons';
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -24,22 +24,21 @@ interface FeedProps extends MapStateToProps {
 class Feed extends React.Component<FeedProps> {
   private titleFieldRef = React.createRef<HTMLInputElement>();
 
-  public render() {
-    const { isDarkTheme, isEditing } = this.props;
+  onSelect = () => {
+    const { id, onSelect } = this.props;
+    onSelect(id);
+  };
 
-    let styles =lightStyles;
+  onDelete = () => {
+    const { id, onDelete } = this.props;
+    onDelete(id);
+  };
 
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+  onChange = () => {
+    const { id, onChange } = this.props;
+    const value = this.titleFieldRef.current!.value;
 
-    return (
-      <div className={styles.container}>
-        {
-          isEditing ? this.renderEditMode() : this.renderViewMode()
-        }
-      </div>
-    );
+    onChange(id, value);
   }
 
   renderViewMode() {
@@ -79,21 +78,22 @@ class Feed extends React.Component<FeedProps> {
     )
   }
 
-  onSelect() {
-    const { id, onSelect } = this.props;
-    onSelect(id);
-  }
+  public render() {
+    const { isDarkTheme, isEditing } = this.props;
 
-  onDelete() {
-    const { id, onDelete } = this.props;
-    onDelete(id);
-  }
+    let styles =lightStyles;
 
-  onChange() {
-    const { id, onChange } = this.props;
-    const value = this.titleFieldRef.current!.value;
+    if (isDarkTheme) {
+      styles = { ...lightStyles, ...darkStyles };
+    }
 
-    onChange(id, value);
+    return (
+      <div className={styles.container}>
+        {
+          isEditing ? this.renderEditMode() : this.renderViewMode()
+        }
+      </div>
+    );
   }
 }
 

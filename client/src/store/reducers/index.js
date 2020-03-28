@@ -26,7 +26,7 @@ const initialState = {
   isUpdateError: false,
   isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
   isCollapseLong: JSON.parse(localStorage.getItem('collapseLong')),
-  keepDays: localStorage.getItem('keepDays'),
+  keepDays: localStorage.getItem('keepDays') ? localStorage.getItem('keepDays') : 30,
   entriesCount: 0,
   unviewedCount: 0,
   viewMode: 0,

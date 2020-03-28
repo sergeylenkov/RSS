@@ -29,7 +29,7 @@ interface FeedsListState {
 }
 
 class FeedsList extends React.Component<FeedsListProps, FeedsListState> {
-  state = {
+  public state: FeedsListState = {
     isEditing: false
   };
 

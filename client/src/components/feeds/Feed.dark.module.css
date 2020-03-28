@@ -8,6 +8,10 @@
     color: #bfbfbf;
 }
 
+.selected .label {
+	color: #f3f3f3;
+}
+
 .editButtonIcon {
 	composes: editButtonIcon from './Feed.module.css';
 	stroke: #a5a5a5;

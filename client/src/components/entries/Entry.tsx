@@ -22,6 +22,10 @@ interface EntryState {
 }
 
 class Entry extends React.Component<EntryProps, EntryState> {
+  public state: EntryState = {
+    isExpanded: false
+  };
+
   private itemElement: HTMLDivElement | null = null;
   private titleElement: HTMLDivElement | null = null;
 
@@ -39,16 +43,8 @@ class Entry extends React.Component<EntryProps, EntryState> {
   constructor(props: Readonly<EntryProps>) {
     super(props);
 
-    this.state = {
-      isExpanded: false
-    };
-
     this.handleScroll = this.handleScroll.bind(this);
     this.handleMove = this.handleMove.bind(this);
-    this.onRead = this.onRead.bind(this);
-    this.onUnread = this.onUnread.bind(this);
-    this.onSetFavorite = this.onSetFavorite.bind(this);
-    this.onExpand = this.onExpand.bind(this);
   }
 
   public componentDidMount() {
@@ -132,31 +128,31 @@ class Entry extends React.Component<EntryProps, EntryState> {
     }
   }
 
-  private onExpand() {
+  private onExpand = () => {
     this.setState({
       isExpanded: true
     });
 
     this.onRead();
-  }
+  };
 
-  private onRead() {
+  private onRead = () => {
     const { onSetRead, entry } = this.props;
 
     if (!entry.isRead) {
       onSetRead(entry.id, true);
     }
-  }
+  };
 
-  private onUnread() {
+  private onUnread = () => {
     const { onSetRead, entry } = this.props;
     onSetRead(entry.id, false);
-  }
+  };
 
-  private onSetFavorite() {
+  private onSetFavorite = () => {
     const { onSetFavorite, entry } = this.props;
     onSetFavorite(entry.id, !entry.isFavorite);
-  }
+  };
 
   public render() {
     const { isDarkTheme, entry, isCollapseLong } = this.props;

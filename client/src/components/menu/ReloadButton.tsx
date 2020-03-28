@@ -19,7 +19,7 @@ interface ReloadButtonProps extends MapStateToProps {
 }
 
 class ReloadButton extends React.Component<ReloadButtonProps> {
-  private onClick() {
+  private onClick = () => {
     const { isSelected, onClick } = this.props;
 
     if (!isSelected) {

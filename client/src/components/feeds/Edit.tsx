@@ -22,32 +22,32 @@ interface FeedEditState {
 }
 
 class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
-  private linkFieldRef = React.createRef<HTMLInputElement>();
-
-  state = {
+  public state: FeedEditState = {
     isFormVisible: false
   };
 
-  private onAdd() {
+  private linkFieldRef = React.createRef<HTMLInputElement>();
+
+  private onAdd= () => {
     const { onAdd } = this.props;
     const value = this.linkFieldRef.current!.value;
 
     if (value.length > 0) {
       onAdd(value);
     }
-  }
+  };
 
-  private onShow() {
+  private onShow = () => {
     this.setState({
       isFormVisible: true
     });
-  }
+  };
 
-  private onClose() {
+  private onClose = () => {
     this.setState({
       isFormVisible: false
     });
-  }
+  };
 
   public render() {
     const { isDarkTheme, isDisabled, isScrolled, isEditing, onEdit } = this.props;

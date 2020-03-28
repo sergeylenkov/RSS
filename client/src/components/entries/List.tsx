@@ -23,6 +23,11 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
     this.viewedIds = [];
   }, 1000, false);
 
+  private onView = (id: number) => {
+    this.viewedIds.push(id);
+    this.updateViewed();
+  };
+
   public render() {
     const { onSetFavorite, onSetRead, entries, isCollapseLong } = this.props;
 
@@ -43,11 +48,6 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
         }
       </div>
     );
-  }
-
-  private onView(id: number) {
-    this.viewedIds.push(id);
-    this.updateViewed();
   }
 }
 

@@ -16,6 +16,14 @@ interface MenuButtonProps extends MapStateToProps {
 }
 
 class MenuButton extends React.Component<MenuButtonProps> {
+  private onClick = () => {
+    const { isSelected, onClick } = this.props;
+
+    if (!isSelected) {
+      onClick();
+    }
+  };
+
   public render() {
     const { isDarkTheme, isSelected, count, title } = this.props;
     const styles = isDarkTheme ? darkStyles : lightStyles;
@@ -32,14 +40,6 @@ class MenuButton extends React.Component<MenuButtonProps> {
         {counter}
       </button>
     )
-  }
-
-  private onClick() {
-    const { isSelected, onClick } = this.props;
-
-    if (!isSelected) {
-      onClick();
-    }
   }
 }
 

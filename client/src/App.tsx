@@ -16,9 +16,9 @@ import {
 } from './store/actions';
 
 import { CSSTransition } from 'react-transition-group';
-import { DataHelper } from './data/DataHelper';
+import {DataHelper, UpdateFeedResponse} from './data/DataHelper';
 import EntriesList from './components/entries/List';
-import { FeedsList } from './components/feeds/Feeds';
+import FeedsList from './components/feeds/Feeds';
 import Menu from './components/menu/Menu';
 import React from 'react';
 import Settings from './components/settings/Settings';
@@ -55,19 +55,11 @@ interface AppState {
 }
 
 class App extends React.Component<AppProps, AppState> {
-  state: AppState = {
+  public state: AppState = {
     isSettingsVisible: false
   };
 
-  private dataHelper: DataHelper;
-
-  constructor(props: Readonly<AppProps>) {
-    super(props);
-
-    this.dataHelper = new DataHelper('http://localhost:8080/');
-
-    this.hideSettings = this.hideSettings.bind(this);
-  }
+  private dataHelper: DataHelper = new DataHelper('http://localhost:8080/');
 
   public componentDidMount() {
     const { feedsUpdated, entriesUpdated, updateUnviewedCount, keepDays } = this.props;
@@ -82,8 +74,150 @@ class App extends React.Component<AppProps, AppState> {
       });
     });
 
-    this.dataHelper.clearEntries(keepDays);
+    this.dataHelper.clearEntries(keepDays).then(days => {
+
+    });
   }
+
+  private onUpdate = () => {
+    const { changeViewMode, entriesUpdated, updateUnviewedCount, entriesUpdateError } = this.props;
+
+    entriesUpdating();
+    changeViewMode(0);
+
+    this.dataHelper.update().then((entries: any[]) => {
+      const unviewed = entries.filter((entry: any) => {
+        return !entry.isViewed;
+      });
+
+      entriesUpdated(unviewed);
+      updateUnviewedCount();
+    }).catch((error: any) => {
+      console.log(error);
+      entriesUpdateError();
+    });
+  };
+
+  private onShowUnviewed = () => {
+    const { changeViewMode, entriesUpdated, updateUnviewedCount } = this.props;
+
+    changeViewMode(0);
+
+    this.dataHelper.getUnviewed().then((entries: any[]) => {
+      entriesUpdated(entries);
+      updateUnviewedCount();
+    });
+  };
+
+  private onShowAll = () => {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(1);
+
+    this.dataHelper.allEntries().then((entries: any[]) => {
+      entriesUpdated(entries);
+      updateEntriesCount();
+    });
+  };
+
+  private onShowRead= () => {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(2);
+
+    this.dataHelper.readEntries().then((entries: any[]) => {
+      entriesUpdated(entries);
+      updateEntriesCount();
+    });
+  };
+
+  private onShowFavorites = () => {
+    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
+
+    changeViewMode(3);
+
+    this.dataHelper.getFavorites().then((entries: any[]) => {
+      entriesUpdated(entries);
+      updateEntriesCount();
+    });
+  };
+
+  private onUpdateViewed = (ids: number[]) => {
+    const { updateViewed, updateUnviewedCount } = this.props;
+
+    this.dataHelper.setViewed(ids).then(() => {
+      updateViewed(ids);
+      updateUnviewedCount();
+    });
+  };
+
+  private onSetRead = (id: number, isRead: boolean) => {
+    const { updateRead } = this.props;
+
+    this.dataHelper.setRead(id, isRead).then(() => {
+      updateRead(id, isRead);
+    });
+  };
+
+  private onSetFavorite = (id: number, isFavorite: boolean) => {
+    const { updateFavorite } = this.props;
+
+    this.dataHelper.setFavorite(id, isFavorite).then(() => {
+      updateFavorite(id, isFavorite);
+    });
+  };
+
+  private onAddFeed = (link: string) => {
+    const { feedsAdd, feedsEditing } = this.props;
+
+    this.dataHelper.addFeed(link).then((feed: any) => {
+      feedsAdd(feed);
+      feedsEditing(false);
+    }).catch((error: any) => {
+      console.log(error);
+    });
+  };
+
+  private onChangeFeed = (id: number, data: any) => {
+    const { feedsUpdate, feedsEditing } = this.props;
+
+    this.dataHelper.updateFeed(id, data).then((data: UpdateFeedResponse) => {
+      feedsUpdate(id, data.data);
+      feedsEditing(false);
+    });
+  };
+
+  private onDeleteFeed = (id: number) => {
+    const { feedsDelete, feedsEditing } = this.props;
+
+    this.dataHelper.deleteFeed(id).then((data: any) => {
+      feedsDelete(id);
+      feedsEditing(false);
+    });
+  };
+
+  private onToggleSettings = () => {
+    const { isSettingsVisible } = this.state;
+    const visible = !isSettingsVisible;
+
+    if (visible) {
+      document.addEventListener('click', this.hideSettings);
+    } else {
+      document.removeEventListener('click', this.hideSettings);
+    }
+
+    this.setState({
+      isSettingsVisible: visible
+    });
+  };
+
+  private hideSettings= () => {
+    const { isSettingsVisible } = this.state;
+
+    if (isSettingsVisible) {
+      this.onToggleSettings();
+    }
+  };
 
   public render() {
     const { isDarkTheme } = this.props;
@@ -129,146 +263,6 @@ class App extends React.Component<AppProps, AppState> {
         </div>
       </div>
     );
-  }
-
-  private onUpdate() {
-    const { changeViewMode, entriesUpdated, updateUnviewedCount, entriesUpdateError } = this.props;
-
-    entriesUpdating();
-    changeViewMode(0);
-
-    this.dataHelper.update().then((entries: any[]) => {
-      const unviewed = entries.filter((entry: any) => {
-        return !entry.isViewed;
-      });
-
-      entriesUpdated(unviewed);
-      updateUnviewedCount();
-    }).catch((error: any) => {
-      console.log(error);
-      entriesUpdateError();
-    });
-  }
-
-  private onShowUnviewed() {
-    const { changeViewMode, entriesUpdated, updateUnviewedCount } = this.props;
-
-    changeViewMode(0);
-
-    this.dataHelper.getUnviewed().then((entries: any[]) => {
-      entriesUpdated(entries);
-      updateUnviewedCount();
-    });
-  }
-
-  private onShowAll() {
-    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
-
-    changeViewMode(1);
-
-    this.dataHelper.allEntries().then((entries: any[]) => {
-      entriesUpdated(entries);
-      updateEntriesCount();
-    });
-  }
-
-  private onShowRead() {
-    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
-
-    changeViewMode(2);
-
-    this.dataHelper.readEntries().then((entries: any[]) => {
-      entriesUpdated(entries);
-      updateEntriesCount();
-    });
-  }
-
-  private onShowFavorites() {
-    const { changeViewMode, entriesUpdated, updateEntriesCount } = this.props;
-
-    changeViewMode(3);
-
-    this.dataHelper.getFavorites().then((entries: any[]) => {
-      entriesUpdated(entries);
-      updateEntriesCount();
-    });
-  }
-
-  private onUpdateViewed(ids: number[]) {
-    const { updateViewed, updateUnviewedCount } = this.props;
-
-    this.dataHelper.setViewed(ids).then(() => {
-      updateViewed(ids);
-      updateUnviewedCount();
-    });
-  }
-
-  private onSetRead(id: number, isRead: boolean) {
-    const { updateRead } = this.props;
-
-    this.dataHelper.setRead(id, isRead).then(() => {
-      updateRead(id, isRead);
-    });
-  }
-
-  private onSetFavorite(id: number, isFavorite: boolean) {
-    const { updateFavorite } = this.props;
-
-    this.dataHelper.setFavorite(id, isFavorite).then(() => {
-      updateFavorite(id, isFavorite);
-    });
-  }
-
-  private onAddFeed(link: string) {
-    const { feedsAdd, feedsEditing } = this.props;
-
-    this.dataHelper.addFeed(link).then((feed: any) => {
-      feedsAdd(feed);
-      feedsEditing(false);
-    }).catch((error: any) => {
-      console.log(error);
-    });
-  }
-
-  private onChangeFeed(id: number, data: any) {
-    const { feedsUpdate, feedsEditing } = this.props;
-
-    this.dataHelper.updateFeed(id, data).then((data: { data: any; }) => {
-      feedsUpdate(id, data.data);
-      feedsEditing(false);
-    });
-  }
-
-  private onDeleteFeed(id: number) {
-    const { feedsDelete, feedsEditing } = this.props;
-
-    this.dataHelper.deleteFeed(id).then((data: any) => {
-      feedsDelete(id);
-      feedsEditing(false);
-    });
-  }
-
-  private onToggleSettings() {
-    const { isSettingsVisible } = this.state;
-    const visible = !isSettingsVisible;
-
-    if (visible) {
-      document.addEventListener('click', this.hideSettings);
-    } else {
-      document.removeEventListener('click', this.hideSettings);
-    }
-
-    this.setState({
-      isSettingsVisible: visible
-    });
-  }
-
-  private hideSettings() {
-    const { isSettingsVisible } = this.state;
-
-    if (isSettingsVisible) {
-      this.onToggleSettings();
-    }
   }
 }
 

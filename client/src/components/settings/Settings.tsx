@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { connect } from 'react-redux';
 import { toggleTheme, toggleCollapseLong, updateKeepDays } from '../../store/actions';
 import { Dispatch } from "redux";
@@ -19,34 +19,33 @@ interface SettingsProps extends MapStateToProps {
 }
 
 class Settings extends React.Component<SettingsProps> {
-
   private collapseId = '0';
   private themeId = '1';
   private collapseFieldRef = React.createRef<HTMLInputElement>();
   private daysFieldRef = React.createRef<HTMLInputElement>();
   private themeFieldRef = React.createRef<HTMLInputElement>();
 
-  onToggleCollapse() {
+  onToggleCollapse = () => {
     const { isCollapseLong, toggleCollapseLong } = this.props;
     toggleCollapseLong(!isCollapseLong);
-  }
+  };
 
-  onChangeDays() {
+  onChangeDays = () => {
     const { updateKeepDays } = this.props;
     const days = parseInt(this.daysFieldRef.current!.value);
 
     updateKeepDays(days);
-  }
+  };
 
-  onToggleTheme() {
+  onToggleTheme = () => {
     const { isDarkTheme, toggleTheme } = this.props;
     toggleTheme(!isDarkTheme);
-  }
+  };
 
-  onClick(e: any) {
+  onClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-  }
+  };
 
   render() {
     const { isVisible, isDarkTheme, isCollapseLong, keepDays } = this.props;
