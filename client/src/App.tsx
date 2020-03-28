@@ -24,6 +24,7 @@ import React from 'react';
 import { Settings } from './components/settings/Settings';
 import { SettingsButton } from './components/settings/Button';
 import { connect } from 'react-redux';
+import { Dispatch } from "redux";
 import darkStyles from './App.dark.module.css';
 import lightStyles from './App.module.css';
 
@@ -98,7 +99,13 @@ class App extends React.Component<AppProps, AppState> {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerContent}>
-            <Menu onUpdate={this.onUpdate} onShowUnviewed={this.onShowUnviewed} onShowAll={this.onShowAll} onShowRead={this.onShowRead} onShowFavorites={this.onShowFavorites} />
+            <Menu
+              onUpdate={this.onUpdate}
+              onShowUnviewed={this.onShowUnviewed}
+              onShowAll={this.onShowAll}
+              onShowRead={this.onShowRead}
+              onShowFavorites={this.onShowFavorites}
+            />
             <SettingsButton isActive={this.state.isSettingsVisible} onClick={this.onToggleSettings} />
 
             <CSSTransition
@@ -270,7 +277,7 @@ const mapStateToProps = (state: MapStateToProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     feedsUpdated: (feeds: any[]) => dispatch(feedsUpdated(feeds)),
     entriesUpdating: () => dispatch(entriesUpdating()),

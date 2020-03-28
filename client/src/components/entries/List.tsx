@@ -1,5 +1,5 @@
 import React from 'react';
-import { Entry } from './Entry';
+import Entry from './Entry';
 import { debounce } from '../../Utils';
 import { connect } from 'react-redux';
 
@@ -7,7 +7,6 @@ import styles from './List.module.css';
 
 interface MapStateToProps {
   entries: any[];
-  viewMode: number;
   isCollapseLong: boolean;
 }
 
@@ -25,7 +24,7 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
   }, 1000, false);
 
   public render() {
-    const { onSetFavorite, onSetRead, viewMode, entries, isCollapseLong } = this.props;
+    const { onSetFavorite, onSetRead, entries, isCollapseLong } = this.props;
 
     return (
       <div className={styles.container}>
@@ -36,7 +35,6 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
                 key={entry.id}
                 entry={entry}
                 isCollapseLong={isCollapseLong}
-                viewMode={viewMode}
                 onView={this.onView}
                 onSetRead={onSetRead}
                 onSetFavorite={onSetFavorite} />
@@ -58,7 +56,6 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
 const mapStateToProps = (state: MapStateToProps) => {
   return {
     entries: state.entries,
-    viewMode: state.viewMode,
     isCollapseLong: state.isCollapseLong
   };
 };
