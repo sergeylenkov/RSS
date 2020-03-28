@@ -82,7 +82,8 @@ class Settings extends React.Component<SettingsProps> {
 const mapStateToProps = (state: MapStateToProps) => {
   return {
     isDarkTheme: state.isDarkTheme,
-    isCollapseLong: state.isCollapseLong
+    isCollapseLong: state.isCollapseLong,
+    keepDays: state.keepDays
   };
 };
 

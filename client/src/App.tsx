@@ -22,7 +22,7 @@ import { FeedsList } from './components/feeds/Feeds';
 import Menu from './components/menu/Menu';
 import React from 'react';
 import Settings from './components/settings/Settings';
-import { SettingsButton } from './components/settings/Button';
+import SettingsButton from './components/settings/Button';
 import { connect } from 'react-redux';
 import { Dispatch } from "redux";
 import darkStyles from './App.dark.module.css';
@@ -87,6 +87,8 @@ class App extends React.Component<AppProps, AppState> {
 
   public render() {
     const { isDarkTheme } = this.props;
+    const { isSettingsVisible } = this.state;
+
     let styles = lightStyles;
 
     if (isDarkTheme) {
@@ -104,16 +106,16 @@ class App extends React.Component<AppProps, AppState> {
               onShowRead={this.onShowRead}
               onShowFavorites={this.onShowFavorites}
             />
-            <SettingsButton isActive={this.state.isSettingsVisible} onClick={this.onToggleSettings} />
+            <SettingsButton isActive={isSettingsVisible} onClick={this.onToggleSettings} />
 
             <CSSTransition
-              in={this.state.isSettingsVisible}
+              in={isSettingsVisible}
               timeout={200}
               classNames="fade"
               unmountOnExit
               mountOnEnter
             >
-              <Settings isVisible={this.state.isSettingsVisible} />
+              <Settings isVisible={isSettingsVisible} />
             </CSSTransition>
           </div>
         </div>
@@ -247,7 +249,8 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private onToggleSettings() {
-    const visible = !this.state.isSettingsVisible;
+    const { isSettingsVisible } = this.state;
+    const visible = !isSettingsVisible;
 
     if (visible) {
       document.addEventListener('click', this.hideSettings);
@@ -261,7 +264,9 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private hideSettings() {
-    if (this.state.isSettingsVisible) {
+    const { isSettingsVisible } = this.state;
+
+    if (isSettingsVisible) {
       this.onToggleSettings();
     }
   }
