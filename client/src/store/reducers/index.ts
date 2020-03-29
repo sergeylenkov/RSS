@@ -1,28 +1,28 @@
-import {
-  CHANGE_VIEW_MODE,
-  ENTRIES_LOADED,
-  ENTRIES_UPDATE_ERROR,
-  ENTRIES_UPDATING,
-  FEEDS_ADD,
-  FEEDS_DELETE,
-  FEEDS_EDITING,
-  FEEDS_SELECT,
-  FEEDS_UPDATE,
-  FEEDS_UPDATED,
-  FEEDS_UPDATING,
-  TOGGLE_THEME,
-  UPDATE_ENTRIES_COUNT,
-  UPDATE_FAVORITE,
-  UPDATE_READ,
-  UPDATE_UNVIEWED_COUNT,
-  UPDATE_VIEWED
-} from '../constants/index.js';
+import { ActionTypes } from '../constants';
 
-const initialState = {
+interface State {
+  isUpdating: boolean,
+  isFeedsEditing: boolean,
+  isUpdateError: boolean,
+  isDarkTheme: boolean,
+  isCollapseLong: boolean,
+  keepDays: number,
+  entriesCount: number,
+  unviewedCount: number,
+  viewMode: number,
+  feeds: any[],
+  allEntries: any[],
+  entries: any[],
+  selectedFeeds: any[]
+}
+
+const initialState: State = {
   isUpdating: false,
   isFeedsEditing: false,
   isUpdateError: false,
-  isDarkTheme: JSON.parse(localStorage.getItem('darkTheme')),
+  isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : false,
+  isCollapseLong: localStorage.getItem('collapseLong') ? JSON.parse(<string>localStorage.getItem('collapseLong')) : true,
+  keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
   entriesCount: 0,
   unviewedCount: 0,
   viewMode: 0,
@@ -32,15 +32,15 @@ const initialState = {
   selectedFeeds: []
 };
 
-function rootReducer(state = initialState, action) {
-  if (action.type === FEEDS_UPDATING) {
+function rootReducer(state = initialState, action: any) {
+  if (action.type === ActionTypes.FEEDS_UPDATING) {
     return {
       ...state,
       isUpdating: true
     }
   }
 
-  if (action.type === FEEDS_UPDATED) {
+  if (action.type === ActionTypes.FEEDS_UPDATED) {
     return {
       ...state,
       isUpdating: false,
@@ -48,7 +48,7 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === FEEDS_ADD) {
+  if (action.type === ActionTypes.FEEDS_ADD) {
     const feeds = [...state.feeds];
 
     feeds.push(action.feed);
@@ -59,8 +59,8 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === FEEDS_UPDATE) {
-    const feeds = state.feeds.map(feed => {
+  if (action.type === ActionTypes.FEEDS_UPDATE) {
+    const feeds = state.feeds.map((feed: any) => {
       return feed.id === action.id ? { ...feed, ...action.data } : feed
     });
 
@@ -70,8 +70,8 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === FEEDS_DELETE) {
-    const feeds = state.feeds.filter(feed => {
+  if (action.type === ActionTypes.FEEDS_DELETE) {
+    const feeds = state.feeds.filter((feed: any) => {
       return feed.id !== action.id
     });
 
@@ -81,22 +81,22 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === FEEDS_EDITING) {
+  if (action.type === ActionTypes.FEEDS_EDITING) {
     return {
       ...state,
       isFeedsEditing: action.isEditing
     }
   }
 
-  if (action.type === ENTRIES_UPDATING) {
+  if (action.type === ActionTypes.ENTRIES_UPDATING) {
     return {
       ...state,
-      isUpdating: true,
-      isUpdateError: false,
+      isUpdating: action.isUpdating,
+      isUpdateError: false
     }
   }
 
-  if (action.type === ENTRIES_LOADED) {
+  if (action.type === ActionTypes.ENTRIES_LOADED) {
     const entries = filterEntries(state.selectedFeeds, action.entries);
 
     return {
@@ -108,13 +108,13 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === UPDATE_UNVIEWED_COUNT) {
+  if (action.type === ActionTypes.UPDATE_UNVIEWED_COUNT) {
     const feeds = [...state.feeds];
     let totalCount = 0;
 
-    feeds.forEach(feed => {
-      const count = state.entries.filter(entry => {
-        return entry.feedId === feed.id && entry.isViewed !== true
+    feeds.forEach((feed: any) => {
+      const count = state.entries.filter((entry: any) => {
+        return entry.feedId === feed.id && !entry.isViewed
       }).length;
 
       feed.count = count;
@@ -128,8 +128,8 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === UPDATE_VIEWED) {
-    let entries = state.entries.map(entry => {
+  if (action.type === ActionTypes.UPDATE_VIEWED) {
+    let entries = state.entries.map((entry: any) => {
       if (action.ids.indexOf(entry.id) !== -1) {
         return { ...entry, isViewed: true }
       }
@@ -145,8 +145,8 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === UPDATE_FAVORITE) {
-    let entries = state.entries.map(entry => {
+  if (action.type === ActionTypes.UPDATE_FAVORITE) {
+    let entries = state.entries.map((entry: any) => {
       return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
     });
 
@@ -158,8 +158,8 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === UPDATE_READ) {
-    let entries = state.entries.map(entry => {
+  if (action.type === ActionTypes.UPDATE_READ) {
+    let entries = state.entries.map((entry: any) => {
       return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
     });
 
@@ -171,22 +171,20 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === CHANGE_VIEW_MODE) {
+  if (action.type === ActionTypes.CHANGE_VIEW_MODE) {
     return {
       ...state,
       viewMode: action.mode
     }
   }
 
-  if (action.type === UPDATE_ENTRIES_COUNT) {
+  if (action.type === ActionTypes.UPDATE_ENTRIES_COUNT) {
     const feeds = [...state.feeds];
 
-    feeds.forEach(feed => {
-      const count = state.entries.filter(entry => {
+    feeds.forEach((feed: any) => {
+      feed.count = state.entries.filter((entry: any) => {
         return entry.feedId === feed.id
       }).length;
-
-      feed.count = count;
     });
 
     return {
@@ -195,7 +193,7 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === FEEDS_SELECT) {
+  if (action.type === ActionTypes.FEEDS_SELECT) {
     const selectedFeeds = [...state.selectedFeeds];
 
     const index = selectedFeeds.indexOf(action.id);
@@ -215,7 +213,7 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === TOGGLE_THEME) {
+  if (action.type === ActionTypes.TOGGLE_THEME) {
     localStorage.setItem('darkTheme', action.isDarkTheme);
 
     return {
@@ -224,7 +222,7 @@ function rootReducer(state = initialState, action) {
     }
   }
 
-  if (action.type === ENTRIES_UPDATE_ERROR) {
+  if (action.type === ActionTypes.ENTRIES_UPDATE_ERROR) {
     return {
       ...state,
       isUpdating: false,
@@ -232,14 +230,32 @@ function rootReducer(state = initialState, action) {
     }
   }
 
+  if (action.type === ActionTypes.TOGGLE_COLLAPSE_LONG) {
+    localStorage.setItem('collapseLong', action.isCollapse);
+
+    return {
+      ...state,
+      isCollapseLong: action.isCollapse
+    }
+  }
+
+  if (action.type === ActionTypes.UPDATE_KEEP_DAYS) {
+    localStorage.setItem('keepDays', action.days);
+
+    return {
+      ...state,
+      keepDays: action.days
+    }
+  }
+
   return state;
 };
 
-function filterEntries(selectedFeeds, allEntries) {
+function filterEntries(selectedFeeds: number[], allEntries: any[]) {
   let entries = [];
 
   if (selectedFeeds.length > 0) {
-    entries = allEntries.filter(entry => {
+    entries = allEntries.filter((entry: any) => {
       return selectedFeeds.includes(entry.feedId)
     });
   } else {

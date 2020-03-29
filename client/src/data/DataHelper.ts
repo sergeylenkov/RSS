@@ -1,13 +1,38 @@
-export class DataHelper {
-  constructor(url) {
-    this.url = url;
+export interface SetReadResponse {
+  id: number;
+  isRead: boolean;
+}
 
-    this._feeds = [];
-    this._feedsDict = {};
+export interface SetFavoriteResponse {
+  id: number;
+  isFavorite: boolean;
+}
+
+export interface SetViewedResponse {
+  ids: number[];
+  isViewed: boolean;
+}
+
+export interface ClearEntriesResponse {
+  days: number;
+}
+
+export interface UpdateFeedResponse {
+  id: number;
+  data: any;
+}
+
+export class DataHelper {
+  private url = '';
+  private feeds: any[] = [];
+  private feedsDict: { [key: string]: any } = {};
+
+  constructor(url: string) {
+    this.url = url;
   }
 
-  update() {
-    return new Promise((resolve, reject) => {
+  public update() {
+    return new Promise<any[]>((resolve, reject) => {
       fetch(`${this.url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -19,34 +44,33 @@ export class DataHelper {
     });
   }
 
-  getFeeds() {
-    return new Promise((resolve) => {
+  public getFeeds() {
+    return new Promise<any[]>((resolve) => {
       fetch(`${this.url}feeds`).then((response) => {
         return response.json();
       }).then((data) => {
-        this._feeds = data;
+        this.feeds = data;
 
-        this._feeds.forEach(feed => {
+        this.feeds.forEach(feed => {
           const a = document.createElement('a');
           a.href = feed.link;
 
           if (feed.image && feed.image.length > 0) {
             feed.icon = feed.image;
           } else {
-            const icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-            feed.icon = icon;
+            feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
           }
 
-          this._feedsDict[feed.id] = feed;
+          this.feedsDict[feed.id] = feed;
         });
 
-        resolve(data);
+        resolve(this.feeds);
       });
     });
   }
 
-  allEntries() {
-    return new Promise((resolve) => {
+  public allEntries() {
+    return new Promise<any[]>((resolve) => {
       fetch(`${this.url}entries`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -56,8 +80,8 @@ export class DataHelper {
     });
   }
 
-  readEntries() {
-    return new Promise((resolve) => {
+  public readEntries() {
+    return new Promise<any[]>((resolve) => {
       fetch(`${this.url}entries/read`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -67,8 +91,8 @@ export class DataHelper {
     });
   }
 
-  getFavorites() {
-    return new Promise((resolve) => {
+  public getFavorites() {
+    return new Promise<any[]>((resolve) => {
       fetch(`${this.url}entries/favorites`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -78,8 +102,8 @@ export class DataHelper {
     });
   }
 
-  getUnviewed() {
-    return new Promise((resolve) => {
+  public getUnviewed() {
+    return new Promise<any[]>((resolve) => {
       fetch(`${this.url}entries/unviewed`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -89,8 +113,8 @@ export class DataHelper {
     });
   }
 
-  setViewed(ids) {
-    return new Promise((resolve) => {
+  public setViewed(ids: number[]) {
+    return new Promise<SetViewedResponse>((resolve) => {
       fetch(`${this.url}entries/view`, {
         method: 'POST',
         body: JSON.stringify({ ids: ids }),
@@ -105,8 +129,8 @@ export class DataHelper {
     });
   }
 
-  setRead(id, isRead) {
-    return new Promise((resolve) => {
+  public setRead(id: number, isRead: boolean) {
+    return new Promise<SetReadResponse>((resolve) => {
       const method = isRead ? 'PUT' : 'DELETE';
 
       fetch(`${this.url}entries/${id}/read`, {
@@ -119,8 +143,8 @@ export class DataHelper {
     });
   }
 
-  setFavorite(id, isFavorite) {
-    return new Promise((resolve) => {
+  public setFavorite(id: number, isFavorite: boolean) {
+    return new Promise<SetFavoriteResponse>((resolve) => {
       const method = isFavorite ? 'PUT' : 'DELETE';
 
       fetch(`${this.url}entries/${id}/favorite`, {
@@ -133,7 +157,7 @@ export class DataHelper {
     });
   }
 
-  addFeed(link) {
+  public addFeed(link: string) {
     return new Promise((resolve) => {
       fetch(`${this.url}feeds`, {
         method: 'POST',
@@ -149,8 +173,8 @@ export class DataHelper {
     });
   }
 
-  updateFeed(id, data) {
-    return new Promise((resolve) => {
+  public updateFeed(id: number, data: any) {
+    return new Promise<UpdateFeedResponse>((resolve) => {
       fetch(`${this.url}feeds/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
@@ -165,7 +189,7 @@ export class DataHelper {
     });
   }
 
-  deleteFeed(id) {
+  public deleteFeed(id: number) {
     return new Promise((resolve) => {
       fetch(`${this.url}feeds/${id}`, {
         method: 'DELETE'
@@ -177,8 +201,8 @@ export class DataHelper {
     });
   }
 
-  clearEntries(days) {
-    return new Promise((resolve) => {
+  public clearEntries(days: number) {
+    return new Promise<ClearEntriesResponse>((resolve) => {
       fetch(`${this.url}entries/clear/${days}`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -187,11 +211,11 @@ export class DataHelper {
     });
   }
 
-  getFeedById(id) {
-    return this._feedsDict[id];
+  public getFeedById(id: number) {
+    return this.feedsDict[id];
   }
 
-  updateFeedsInEntries(entries) {
+  public updateFeedsInEntries(entries: any[]) {
     entries.forEach(entry => {
       entry.feed = this.getFeedById(entry.feedId);
     });

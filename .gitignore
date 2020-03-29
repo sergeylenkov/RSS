@@ -3,3 +3,4 @@ node_modules/
 database.sqlite
 .DS_Store
 client/build
+.idea
