@@ -1,97 +1,77 @@
-import {
-  CHANGE_VIEW_MODE,
-  ENTRIES_LOADED,
-  ENTRIES_UPDATE_ERROR,
-  ENTRIES_UPDATING,
-  FEEDS_ADD,
-  FEEDS_DELETE,
-  FEEDS_EDITING,
-  FEEDS_SELECT,
-  FEEDS_UPDATE,
-  FEEDS_UPDATED,
-  FEEDS_UPDATING,
-  TOGGLE_THEME,
-  UPDATE_ENTRIES_COUNT,
-  UPDATE_FAVORITE,
-  UPDATE_READ,
-  UPDATE_UNVIEWED_COUNT,
-  UPDATE_VIEWED,
-  TOGGLE_COLLAPSE_LONG,
-  UPDATE_KEEP_DAYS
-} from '../constants';
+import { ActionTypes } from '../constants';
 
 export function feedsUpdating() {
-  return { type: FEEDS_UPDATING }
+  return { type: ActionTypes.FEEDS_UPDATING }
 }
 
 export function feedsUpdated(feeds: any[]) {
-  return { type: FEEDS_UPDATED, feeds }
+  return { type: ActionTypes.FEEDS_UPDATED, feeds }
 }
 
 export function feedsAdd(feed: any) {
-  return { type: FEEDS_ADD, feed }
+  return { type: ActionTypes.FEEDS_ADD, feed }
 }
 
 export function feedsDelete(id: number) {
-  return { type: FEEDS_DELETE, id }
+  return { type: ActionTypes.FEEDS_DELETE, id }
 }
 
 export function feedsEditing(isEditing: boolean) {
-  return { type: FEEDS_EDITING, isEditing }
+  return { type: ActionTypes.FEEDS_EDITING, isEditing }
 }
 
 export function feedsSelect(id: number) {
-  return { type: FEEDS_SELECT, id }
+  return { type: ActionTypes.FEEDS_SELECT, id }
 }
 
 export function entriesUpdating() {
-  return { type: ENTRIES_UPDATING }
+  return { type: ActionTypes.ENTRIES_UPDATING }
 }
 
 export function entriesUpdated(entries: any[]) {
-  return { type: ENTRIES_LOADED, entries }
+  return { type: ActionTypes.ENTRIES_LOADED, entries }
 }
 
 export function updateUnviewedCount() {
-  return { type: UPDATE_UNVIEWED_COUNT }
+  return { type: ActionTypes.UPDATE_UNVIEWED_COUNT }
 }
 
 export function updateViewed(ids: number[]) {
-  return { type: UPDATE_VIEWED, ids }
+  return { type: ActionTypes.UPDATE_VIEWED, ids }
 }
 
 export function updateFavorite(id: number, isFavorite: boolean) {
-  return { type: UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
+  return { type: ActionTypes.UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
 }
 
 export function updateRead(id: number, isRead: boolean) {
-  return { type: UPDATE_READ, id: id, isRead: isRead }
+  return { type: ActionTypes.UPDATE_READ, id: id, isRead: isRead }
 }
 
 export function changeViewMode(mode: number) {
-  return { type: CHANGE_VIEW_MODE, mode: mode }
+  return { type: ActionTypes.CHANGE_VIEW_MODE, mode: mode }
 }
 
 export function updateEntriesCount() {
-  return { type: UPDATE_ENTRIES_COUNT }
+  return { type: ActionTypes.UPDATE_ENTRIES_COUNT }
 }
 
 export function feedsUpdate(id: number, data: any) {
-  return { type: FEEDS_UPDATE, id: id, data: data }
+  return { type: ActionTypes.FEEDS_UPDATE, id: id, data: data }
 }
 
 export function toggleTheme(isDarkTheme: boolean) {
-  return { type: TOGGLE_THEME, isDarkTheme: isDarkTheme }
+  return { type: ActionTypes.TOGGLE_THEME, isDarkTheme: isDarkTheme }
 }
 
 export function entriesUpdateError() {
-  return { type: ENTRIES_UPDATE_ERROR }
+  return { type: ActionTypes.ENTRIES_UPDATE_ERROR }
 }
 
 export function toggleCollapseLong(isCollapse: boolean) {
-  return { type: TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
+  return { type: ActionTypes.TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
 }
 
 export function updateKeepDays(days: number) {
-  return { type: UPDATE_KEEP_DAYS, days: days};
+  return { type: ActionTypes.UPDATE_KEEP_DAYS, days: days};
 }

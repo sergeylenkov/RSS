@@ -1,24 +1,4 @@
-import {
-  CHANGE_VIEW_MODE,
-  ENTRIES_LOADED,
-  ENTRIES_UPDATE_ERROR,
-  ENTRIES_UPDATING,
-  FEEDS_ADD,
-  FEEDS_DELETE,
-  FEEDS_EDITING,
-  FEEDS_SELECT,
-  FEEDS_UPDATE,
-  FEEDS_UPDATED,
-  FEEDS_UPDATING,
-  TOGGLE_COLLAPSE_LONG,
-  TOGGLE_THEME,
-  UPDATE_ENTRIES_COUNT,
-  UPDATE_FAVORITE,
-  UPDATE_KEEP_DAYS,
-  UPDATE_READ,
-  UPDATE_UNVIEWED_COUNT,
-  UPDATE_VIEWED,
-} from '../constants';
+import { ActionTypes } from '../constants';
 
 interface State {
   isUpdating: boolean,
@@ -53,14 +33,14 @@ const initialState: State = {
 };
 
 function rootReducer(state = initialState, action: any) {
-  if (action.type === FEEDS_UPDATING) {
+  if (action.type === ActionTypes.FEEDS_UPDATING) {
     return {
       ...state,
       isUpdating: true
     }
   }
 
-  if (action.type === FEEDS_UPDATED) {
+  if (action.type === ActionTypes.FEEDS_UPDATED) {
     return {
       ...state,
       isUpdating: false,
@@ -68,7 +48,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === FEEDS_ADD) {
+  if (action.type === ActionTypes.FEEDS_ADD) {
     const feeds = [...state.feeds];
 
     feeds.push(action.feed);
@@ -79,7 +59,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === FEEDS_UPDATE) {
+  if (action.type === ActionTypes.FEEDS_UPDATE) {
     const feeds = state.feeds.map((feed: any) => {
       return feed.id === action.id ? { ...feed, ...action.data } : feed
     });
@@ -90,7 +70,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === FEEDS_DELETE) {
+  if (action.type === ActionTypes.FEEDS_DELETE) {
     const feeds = state.feeds.filter((feed: any) => {
       return feed.id !== action.id
     });
@@ -101,14 +81,14 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === FEEDS_EDITING) {
+  if (action.type === ActionTypes.FEEDS_EDITING) {
     return {
       ...state,
       isFeedsEditing: action.isEditing
     }
   }
 
-  if (action.type === ENTRIES_UPDATING) {
+  if (action.type === ActionTypes.ENTRIES_UPDATING) {
     return {
       ...state,
       isUpdating: true,
@@ -116,7 +96,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === ENTRIES_LOADED) {
+  if (action.type === ActionTypes.ENTRIES_LOADED) {
     const entries = filterEntries(state.selectedFeeds, action.entries);
 
     return {
@@ -128,7 +108,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === UPDATE_UNVIEWED_COUNT) {
+  if (action.type === ActionTypes.UPDATE_UNVIEWED_COUNT) {
     const feeds = [...state.feeds];
     let totalCount = 0;
 
@@ -148,7 +128,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === UPDATE_VIEWED) {
+  if (action.type === ActionTypes.UPDATE_VIEWED) {
     let entries = state.entries.map((entry: any) => {
       if (action.ids.indexOf(entry.id) !== -1) {
         return { ...entry, isViewed: true }
@@ -165,7 +145,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === UPDATE_FAVORITE) {
+  if (action.type === ActionTypes.UPDATE_FAVORITE) {
     let entries = state.entries.map((entry: any) => {
       return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
     });
@@ -178,7 +158,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === UPDATE_READ) {
+  if (action.type === ActionTypes.UPDATE_READ) {
     let entries = state.entries.map((entry: any) => {
       return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
     });
@@ -191,14 +171,14 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === CHANGE_VIEW_MODE) {
+  if (action.type === ActionTypes.CHANGE_VIEW_MODE) {
     return {
       ...state,
       viewMode: action.mode
     }
   }
 
-  if (action.type === UPDATE_ENTRIES_COUNT) {
+  if (action.type === ActionTypes.UPDATE_ENTRIES_COUNT) {
     const feeds = [...state.feeds];
 
     feeds.forEach((feed: any) => {
@@ -213,7 +193,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === FEEDS_SELECT) {
+  if (action.type === ActionTypes.FEEDS_SELECT) {
     const selectedFeeds = [...state.selectedFeeds];
 
     const index = selectedFeeds.indexOf(action.id);
@@ -233,7 +213,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === TOGGLE_THEME) {
+  if (action.type === ActionTypes.TOGGLE_THEME) {
     localStorage.setItem('darkTheme', action.isDarkTheme);
 
     return {
@@ -242,7 +222,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === ENTRIES_UPDATE_ERROR) {
+  if (action.type === ActionTypes.ENTRIES_UPDATE_ERROR) {
     return {
       ...state,
       isUpdating: false,
@@ -250,7 +230,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === TOGGLE_COLLAPSE_LONG) {
+  if (action.type === ActionTypes.TOGGLE_COLLAPSE_LONG) {
     localStorage.setItem('collapseLong', action.isCollapse);
 
     return {
@@ -259,7 +239,7 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  if (action.type === UPDATE_KEEP_DAYS) {
+  if (action.type === ActionTypes.UPDATE_KEEP_DAYS) {
     localStorage.setItem('keepDays', action.days);
 
     return {
