@@ -19,16 +19,8 @@ interface ReloadButtonProps extends MapStateToProps {
 }
 
 class ReloadButton extends React.Component<ReloadButtonProps> {
-  private onClick = () => {
-    const { isSelected, onClick } = this.props;
-
-    if (!isSelected) {
-      onClick();
-    }
-  }
-
   public render() {
-    const { isDarkTheme, onUpdate, isSelected, count, isActive, isError } = this.props;
+    const { isDarkTheme, isSelected, count, isActive, isError, onUpdate, onClick } = this.props;
     let styles = lightStyles;
 
     if (isDarkTheme) {
@@ -38,7 +30,7 @@ class ReloadButton extends React.Component<ReloadButtonProps> {
     return (
       <div className={`${styles.container} ${isActive ? styles.active : ''} ${isError ? styles.error : ''}`}>
         <button className={styles.icon} onClick={onUpdate}><ReloadIcon /></button>
-        <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={this.onClick} />
+        <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
       </div>
     );
   }

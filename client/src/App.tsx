@@ -31,7 +31,7 @@ import lightStyles from './App.module.css';
 interface MapStateToProps {
   isDarkTheme: boolean;
   keepDays: number;
-  entriesUpdating: () => void;
+  entriesUpdating: (isUpdating: boolean) => void;
   changeViewMode: (mode: number) => void;
   updateUnviewedCount: () => void;
   updateEntriesCount: () => void;
@@ -80,9 +80,9 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private onUpdate = () => {
-    const { changeViewMode, entriesUpdated, updateUnviewedCount, entriesUpdateError } = this.props;
+    const { changeViewMode, entriesUpdated, entriesUpdating, updateUnviewedCount, entriesUpdateError } = this.props;
 
-    entriesUpdating();
+    entriesUpdating(true);
     changeViewMode(0);
 
     this.dataHelper.update().then((entries: any[]) => {
@@ -211,7 +211,7 @@ class App extends React.Component<AppProps, AppState> {
     });
   };
 
-  private hideSettings= () => {
+  private hideSettings = () => {
     const { isSettingsVisible } = this.state;
 
     if (isSettingsVisible) {
@@ -278,7 +278,7 @@ const mapStateToProps = (state: MapStateToProps) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     feedsUpdated: (feeds: any[]) => dispatch(feedsUpdated(feeds)),
-    entriesUpdating: () => dispatch(entriesUpdating()),
+    entriesUpdating: (isUpdating: boolean) => dispatch(entriesUpdating(isUpdating)),
     entriesUpdated: (entries: any[]) => dispatch(entriesUpdated(entries)),
     updateUnviewedCount: () => dispatch(updateUnviewedCount()),
     updateEntriesCount: () => dispatch(updateEntriesCount()),

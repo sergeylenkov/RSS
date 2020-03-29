@@ -1,9 +1,5 @@
 import { ActionTypes } from '../constants';
 
-export function feedsUpdating() {
-  return { type: ActionTypes.FEEDS_UPDATING }
-}
-
 export function feedsUpdated(feeds: any[]) {
   return { type: ActionTypes.FEEDS_UPDATED, feeds }
 }
@@ -24,8 +20,8 @@ export function feedsSelect(id: number) {
   return { type: ActionTypes.FEEDS_SELECT, id }
 }
 
-export function entriesUpdating() {
-  return { type: ActionTypes.ENTRIES_UPDATING }
+export function entriesUpdating(isUpdating: boolean) {
+  return { type: ActionTypes.ENTRIES_UPDATING, isUpdating: isUpdating }
 }
 
 export function entriesUpdated(entries: any[]) {

@@ -91,8 +91,8 @@ function rootReducer(state = initialState, action: any) {
   if (action.type === ActionTypes.ENTRIES_UPDATING) {
     return {
       ...state,
-      isUpdating: true,
-      isUpdateError: false,
+      isUpdating: action.isUpdating,
+      isUpdateError: false
     }
   }
 
