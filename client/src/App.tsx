@@ -16,7 +16,7 @@ import {
 } from './store/actions';
 
 import { CSSTransition } from 'react-transition-group';
-import {DataHelper, UpdateFeedResponse} from './data/DataHelper';
+import { Data, Entry, Feed, UpdateFeedResponse } from './data/data';
 import EntriesList from './components/entries/List';
 import FeedsList from './components/feeds/Feeds';
 import Menu from './components/menu/Menu';
@@ -36,8 +36,8 @@ interface MapStateToProps {
   updateUnviewedCount: () => void;
   updateEntriesCount: () => void;
   updateRead: (id: number, isRead: boolean) => void;
-  entriesUpdated: (entries: any[]) => void;
-  feedsUpdated: (feeds: any[]) => void;
+  entriesUpdated: (entries: Entry[]) => void;
+  feedsUpdated: (feeds: Feed[]) => void;
   entriesUpdateError: () => void;
   updateViewed: (ids: number[]) => void;
   updateFavorite: (id: number, isFavorite: boolean) => void;
@@ -59,15 +59,15 @@ class App extends React.Component<AppProps, AppState> {
     isSettingsVisible: false
   };
 
-  private dataHelper: DataHelper = new DataHelper('http://localhost:8080/');
+  private dataHelper: Data = new Data('http://localhost:8080/');
 
   public componentDidMount() {
     const { feedsUpdated, entriesUpdated, updateUnviewedCount, keepDays } = this.props;
 
-    this.dataHelper.getFeeds().then((feeds: any[]) => {
+    this.dataHelper.getFeeds().then((feeds: Feed[]) => {
       console.log(feeds);
       feedsUpdated(feeds);
-      this.dataHelper.getUnviewed().then((entries: any[]) => {
+      this.dataHelper.getUnviewed().then((entries: Entry[]) => {
         console.log(entries);
         entriesUpdated(entries);
         updateUnviewedCount();
@@ -85,8 +85,8 @@ class App extends React.Component<AppProps, AppState> {
     entriesUpdating(true);
     changeViewMode(0);
 
-    this.dataHelper.update().then((entries: any[]) => {
-      const unviewed = entries.filter((entry: any) => {
+    this.dataHelper.update().then((entries: Entry[]) => {
+      const unviewed = entries.filter((entry: Entry) => {
         return !entry.isViewed;
       });
 
@@ -103,7 +103,7 @@ class App extends React.Component<AppProps, AppState> {
 
     changeViewMode(0);
 
-    this.dataHelper.getUnviewed().then((entries: any[]) => {
+    this.dataHelper.getUnviewed().then((entries: Entry[]) => {
       entriesUpdated(entries);
       updateUnviewedCount();
     });
@@ -114,7 +114,7 @@ class App extends React.Component<AppProps, AppState> {
 
     changeViewMode(1);
 
-    this.dataHelper.allEntries().then((entries: any[]) => {
+    this.dataHelper.allEntries().then((entries: Entry[]) => {
       entriesUpdated(entries);
       updateEntriesCount();
     });
@@ -125,7 +125,7 @@ class App extends React.Component<AppProps, AppState> {
 
     changeViewMode(2);
 
-    this.dataHelper.readEntries().then((entries: any[]) => {
+    this.dataHelper.readEntries().then((entries: Entry[]) => {
       entriesUpdated(entries);
       updateEntriesCount();
     });
@@ -136,7 +136,7 @@ class App extends React.Component<AppProps, AppState> {
 
     changeViewMode(3);
 
-    this.dataHelper.getFavorites().then((entries: any[]) => {
+    this.dataHelper.getFavorites().then((entries: Entry[]) => {
       entriesUpdated(entries);
       updateEntriesCount();
     });
@@ -277,14 +277,14 @@ const mapStateToProps = (state: MapStateToProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    feedsUpdated: (feeds: any[]) => dispatch(feedsUpdated(feeds)),
+    feedsUpdated: (feeds: Feed[]) => dispatch(feedsUpdated(feeds)),
     entriesUpdating: (isUpdating: boolean) => dispatch(entriesUpdating(isUpdating)),
-    entriesUpdated: (entries: any[]) => dispatch(entriesUpdated(entries)),
+    entriesUpdated: (entries: Entry[]) => dispatch(entriesUpdated(entries)),
     updateUnviewedCount: () => dispatch(updateUnviewedCount()),
     updateEntriesCount: () => dispatch(updateEntriesCount()),
     updateViewed: (ids: number[]) => dispatch(updateViewed(ids)),
     updateFavorite: (id: number, isFavorite: boolean) => dispatch(updateFavorite(id, isFavorite)),
-    feedsAdd: (feed: any) => dispatch(feedsAdd(feed)),
+    feedsAdd: (feed: Feed) => dispatch(feedsAdd(feed)),
     feedsDelete: (id: number) => dispatch(feedsDelete(id)),
     updateRead: (id: number, isRead: boolean) => dispatch(updateRead(id, isRead)),
     changeViewMode: (mode: number) => dispatch(changeViewMode(mode)),

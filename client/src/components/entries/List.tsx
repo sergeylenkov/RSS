@@ -1,12 +1,13 @@
 import React from 'react';
-import Entry from './Entry';
+import EntryItem from './Entry';
 import { debounce } from '../../Utils';
 import { connect } from 'react-redux';
+import { Entry } from "../../data/data";
 
 import styles from './List.module.css';
 
 interface MapStateToProps {
-  entries: any[];
+  entries: Entry[];
   isCollapseLong: boolean;
 }
 
@@ -34,9 +35,9 @@ class ConnectedEntriesList extends React.Component<ConnectedEntriesListProps> {
     return (
       <div className={styles.container}>
         {
-          entries.map((entry) => {
+          entries.map((entry: Entry) => {
             return (
-              <Entry
+              <EntryItem
                 key={entry.id}
                 entry={entry}
                 isCollapseLong={isCollapseLong}

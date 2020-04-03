@@ -22,10 +22,31 @@ export interface UpdateFeedResponse {
   data: any;
 }
 
-export class DataHelper {
+export interface Feed {
+  id: number;
+  title: string;
+  link: string;
+  image: string;
+  icon: string;
+  count: number;
+}
+
+export interface Entry {
+  id: number;
+  feedId: number;
+  feed: Feed;
+  title: string;
+  description: string;
+  link: string;
+  isViewed: boolean;
+  isFavorite: boolean;
+  isRead: boolean;
+}
+
+export class Data {
   private url = '';
-  private feeds: any[] = [];
-  private feedsDict: { [key: string]: any } = {};
+  private feeds: Feed[] = [];
+  private feedsDict: { [key: string]: Feed } = {};
 
   constructor(url: string) {
     this.url = url;
@@ -45,13 +66,13 @@ export class DataHelper {
   }
 
   public getFeeds() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Feed[]>((resolve) => {
       fetch(`${this.url}feeds`).then((response) => {
         return response.json();
-      }).then((data) => {
+      }).then((data: Feed[]) => {
         this.feeds = data;
 
-        this.feeds.forEach(feed => {
+        this.feeds.forEach((feed: Feed) => {
           const a = document.createElement('a');
           a.href = feed.link;
 
@@ -70,10 +91,10 @@ export class DataHelper {
   }
 
   public allEntries() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries`).then((response) => {
         return response.json();
-      }).then((data) => {
+      }).then((data: Entry[]) => {
         this.updateFeedsInEntries(data);
         resolve(data);
       });
@@ -81,10 +102,10 @@ export class DataHelper {
   }
 
   public readEntries() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/read`).then((response) => {
         return response.json();
-      }).then((data) => {
+      }).then((data: Entry[]) => {
         this.updateFeedsInEntries(data);
         resolve(data);
       });
@@ -92,10 +113,10 @@ export class DataHelper {
   }
 
   public getFavorites() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/favorites`).then((response) => {
         return response.json();
-      }).then((data) => {
+      }).then((data: Entry[]) => {
         this.updateFeedsInEntries(data);
         resolve(data);
       });
@@ -103,10 +124,10 @@ export class DataHelper {
   }
 
   public getUnviewed() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/unviewed`).then((response) => {
         return response.json();
-      }).then((data) => {
+      }).then((data: Entry[]) => {
         this.updateFeedsInEntries(data);
         resolve(data);
       });
@@ -211,11 +232,11 @@ export class DataHelper {
     });
   }
 
-  public getFeedById(id: number) {
+  public getFeedById(id: number) : Feed {
     return this.feedsDict[id];
   }
 
-  public updateFeedsInEntries(entries: any[]) {
+  public updateFeedsInEntries(entries: Entry[]) {
     entries.forEach(entry => {
       entry.feed = this.getFeedById(entry.feedId);
     });
