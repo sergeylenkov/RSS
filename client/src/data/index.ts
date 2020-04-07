@@ -45,8 +45,6 @@ export interface Entry {
 
 export class Data {
   private url = '';
-  private feeds: Feed[] = [];
-  private feedsDict: { [key: string]: Feed } = {};
 
   constructor(url: string) {
     this.url = url;
@@ -57,7 +55,6 @@ export class Data {
       fetch(`${this.url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       }).catch((error) => {
         reject(error);
@@ -69,10 +66,8 @@ export class Data {
     return new Promise<Feed[]>((resolve) => {
       fetch(`${this.url}feeds`).then((response) => {
         return response.json();
-      }).then((data: Feed[]) => {
-        this.feeds = data;
-
-        this.feeds.forEach((feed: Feed) => {
+      }).then((feeds: Feed[]) => {
+        feeds.forEach((feed: Feed) => {
           const a = document.createElement('a');
           a.href = feed.link;
 
@@ -81,11 +76,9 @@ export class Data {
           } else {
             feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
           }
-
-          this.feedsDict[feed.id] = feed;
         });
 
-        resolve(this.feeds);
+        resolve(feeds);
       });
     });
   }
@@ -95,7 +88,6 @@ export class Data {
       fetch(`${this.url}entries`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       });
     });
@@ -106,7 +98,6 @@ export class Data {
       fetch(`${this.url}entries/read`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       });
     });
@@ -117,7 +108,6 @@ export class Data {
       fetch(`${this.url}entries/favorites`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       });
     });
@@ -128,7 +118,6 @@ export class Data {
       fetch(`${this.url}entries/unviewed`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       });
     });
@@ -229,16 +218,6 @@ export class Data {
       }).then((data) => {
         resolve(data);
       });
-    });
-  }
-
-  public getFeedById(id: number) : Feed {
-    return this.feedsDict[id];
-  }
-
-  public updateFeedsInEntries(entries: Entry[]) {
-    entries.forEach(entry => {
-      entry.feed = this.getFeedById(entry.feedId);
     });
   }
 }

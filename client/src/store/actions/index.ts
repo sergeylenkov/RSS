@@ -44,8 +44,8 @@ export function updateRead(id: number, isRead: boolean) {
   return { type: ActionTypes.UPDATE_READ, id: id, isRead: isRead }
 }
 
-export function changeViewMode(mode: number) {
-  return { type: ActionTypes.CHANGE_VIEW_MODE, mode: mode }
+export function changePath(path: string) {
+  return { type: ActionTypes.CHANGE_PATH, mode: path }
 }
 
 export function updateEntriesCount() {

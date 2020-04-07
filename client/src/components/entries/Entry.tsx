@@ -1,10 +1,10 @@
-import React, {createRef} from 'react';
-import { connect } from 'react-redux';
-import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons';
-import { Entry } from "../../data/data";
+import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 
-import lightStyles from './Entry.module.css';
+import { Entry } from "../../data";
+import React from 'react';
+import { connect } from 'react-redux';
 import darkStyles from './Entry.dark.module.css';
+import lightStyles from './Entry.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean;

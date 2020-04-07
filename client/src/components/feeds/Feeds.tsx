@@ -1,12 +1,11 @@
 import { feedsEditing, feedsSelect } from '../../store/actions';
 
-import { Feed } from '../../data/data';
-import FeedItem from './Feed';
+import { Dispatch } from "redux";
+import { Feed } from '../../data';
 import FeedEdit from './Edit';
+import FeedItem from './Feed';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from "redux";
-
 import darkStyles from './Feeds.dark.module.css';
 import lightStyles from './Feeds.module.css';
 
