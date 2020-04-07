@@ -1,10 +1,8 @@
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Dispatch } from 'redux';
 import MenuButton from './MenuButton';
 import React from 'react';
 import ReloadButton from './ReloadButton';
-import { changePath } from '../../store/actions';
 import { connect } from 'react-redux';
 import styles from './Menu.module.css';
 
@@ -13,7 +11,6 @@ interface MapStateToProps extends RouteComponentProps {
   isUpdateError: boolean;
   unviewedCount: number;
   entriesCount: number;
-  changePath: (path: string) => void;
 }
 
 interface MenuProps extends MapStateToProps {
@@ -66,10 +63,4 @@ const mapStateToProps = (state: MapStateToProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    changePath: (path: string) => dispatch(changePath(path)),
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Menu));
+export default connect(mapStateToProps)(withRouter(Menu));

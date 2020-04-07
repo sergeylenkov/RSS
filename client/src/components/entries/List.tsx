@@ -36,7 +36,7 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   }
 
   public componentDidUpdate(prevProps: EntriesListProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
+    if (prevProps.isInitialized !== this.props.isInitialized || prevProps.location.pathname !== this.props.location.pathname) {
       this.getEntries(this.props.location.pathname);
     }
   }
@@ -57,7 +57,6 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
     this.updateViewed();
   };
 
-
   private onSetRead = (id: number, isRead: boolean) => {
     const { updateRead } = this.props;
 
@@ -75,7 +74,7 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   };
 
   private getEntries(path: string) {
-    const { isInitialized, entriesUpdated, updateUnviewedCount } = this.props;
+    const { isInitialized, entriesUpdated, updateUnviewedCount, updateEntriesCount } = this.props;
 
     if (!isInitialized) {
       return;

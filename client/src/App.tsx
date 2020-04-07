@@ -9,9 +9,7 @@ import {
   feedsEditing,
   feedsUpdate,
   feedsUpdated,
-  updateEntriesCount,
-  updateUnviewedCount,
-  updateViewed
+  updateUnviewedCount
 } from './store/actions';
 
 import { CSSTransition } from 'react-transition-group';
@@ -31,13 +29,9 @@ interface MapStateToProps {
   keepDays: number;
   entriesUpdating: (isUpdating: boolean) => void;
   updateUnviewedCount: () => void;
-  updateEntriesCount: () => void;
-  updateRead: (id: number, isRead: boolean) => void;
   entriesUpdated: (entries: Entry[]) => void;
   feedsUpdated: (feeds: Feed[]) => void;
   entriesUpdateError: () => void;
-  updateViewed: (ids: number[]) => void;
-  updateFavorite: (id: number, isFavorite: boolean) => void;
   feedsDelete: (id: number) => void;
   feedsUpdate: (id: number, data: any) => void;
   feedsEditing: (isEditing: boolean) => void;
@@ -74,7 +68,6 @@ class App extends React.Component<AppProps, AppState> {
     const { entriesUpdated, entriesUpdating, updateUnviewedCount, entriesUpdateError } = this.props;
 
     entriesUpdating(true);
-    //changeViewMode(0);
 
     this.dataHelper.update().then((entries: Entry[]) => {
       const unviewed = entries.filter((entry: Entry) => {
@@ -205,8 +198,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     entriesUpdating: (isUpdating: boolean) => dispatch(entriesUpdating(isUpdating)),
     entriesUpdated: (entries: Entry[]) => dispatch(entriesUpdated(entries)),
     updateUnviewedCount: () => dispatch(updateUnviewedCount()),
-    updateEntriesCount: () => dispatch(updateEntriesCount()),
-    updateViewed: (ids: number[]) => dispatch(updateViewed(ids)),
     feedsAdd: (feed: Feed) => dispatch(feedsAdd(feed)),
     feedsDelete: (id: number) => dispatch(feedsDelete(id)),
     feedsUpdate: (id: number, data: any) => dispatch(feedsUpdate(id, data)),

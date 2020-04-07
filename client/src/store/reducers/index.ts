@@ -11,10 +11,9 @@ interface State {
   keepDays: number,
   entriesCount: number,
   unviewedCount: number,
-  path: string,
-  feeds: any[],
-  allEntries: any[],
-  entries: any[],
+  feeds: Feed[],
+  allEntries: Entry[],
+  entries: Entry[],
   selectedFeeds: any[]
 }
 
@@ -28,7 +27,6 @@ const initialState: State = {
   keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
   entriesCount: 0,
   unviewedCount: 0,
-  path: '/',
   feeds: [],
   allEntries: [],
   entries: [],
@@ -180,13 +178,6 @@ function rootReducer(state = initialState, action: any) {
     return {
       ...state,
       entries: entries
-    }
-  }
-
-  if (action.type === ActionTypes.CHANGE_PATH) {
-    return {
-      ...state,
-      path: action.path
     }
   }
 
