@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Data, Entry, Feed, UpdateFeedResponse } from './data';
+import Data, { Entry, Feed, UpdateFeedResponse } from './data';
 import {
   entriesUpdateError,
   entriesUpdated,
@@ -50,16 +50,14 @@ class App extends React.Component<AppProps, AppState> {
     isSettingsVisible: false
   };
 
-  private dataHelper: Data = new Data('http://localhost:8080/');
-
   public componentDidMount() {
     const { feedsUpdated, keepDays } = this.props;
 
-    this.dataHelper.getFeeds().then((feeds: Feed[]) => {
+    Data.getFeeds().then((feeds: Feed[]) => {
       feedsUpdated(feeds);
     });
 
-    this.dataHelper.clearEntries(keepDays).then(days => {
+    Data.clearEntries(keepDays).then(days => {
 
     });
   }
@@ -69,7 +67,7 @@ class App extends React.Component<AppProps, AppState> {
 
     entriesUpdating(true);
 
-    this.dataHelper.update().then((entries: Entry[]) => {
+    Data.update().then((entries: Entry[]) => {
       const unviewed = entries.filter((entry: Entry) => {
         return !entry.isViewed;
       });
@@ -85,7 +83,7 @@ class App extends React.Component<AppProps, AppState> {
   private onAddFeed = (link: string) => {
     const { feedsAdd, feedsEditing } = this.props;
 
-    this.dataHelper.addFeed(link).then((feed: any) => {
+    Data.addFeed(link).then((feed: any) => {
       feedsAdd(feed);
       feedsEditing(false);
     }).catch((error: any) => {
@@ -96,7 +94,7 @@ class App extends React.Component<AppProps, AppState> {
   private onChangeFeed = (id: number, data: any) => {
     const { feedsUpdate, feedsEditing } = this.props;
 
-    this.dataHelper.updateFeed(id, data).then((data: UpdateFeedResponse) => {
+    Data.updateFeed(id, data).then((data: UpdateFeedResponse) => {
       feedsUpdate(id, data.data);
       feedsEditing(false);
     });
@@ -105,7 +103,7 @@ class App extends React.Component<AppProps, AppState> {
   private onDeleteFeed = (id: number) => {
     const { feedsDelete, feedsEditing } = this.props;
 
-    this.dataHelper.deleteFeed(id).then((data: any) => {
+    Data.deleteFeed(id).then((data: any) => {
       feedsDelete(id);
       feedsEditing(false);
     });

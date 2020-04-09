@@ -43,7 +43,7 @@ export interface Entry {
   isRead: boolean;
 }
 
-export class Data {
+class Data {
   private url = '';
 
   constructor(url: string) {
@@ -221,3 +221,5 @@ export class Data {
     });
   }
 }
+
+export default new Data('http://localhost:8080/');

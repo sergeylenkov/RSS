@@ -1,4 +1,4 @@
-import { Data, Entry } from '../../data';
+import Data, { Entry } from '../../data';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { entriesUpdated, updateEntriesCount, updateFavorite, updateRead, updateUnviewedCount, updateViewed } from '../../store/actions';
 
@@ -28,7 +28,6 @@ interface EntriesListState {
 }
 
 class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
-  private dataHelper: Data = new Data('http://localhost:8080/');
   private viewedIds: number[] = [];
 
   public componentDidMount() {
@@ -44,7 +43,7 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   private updateViewed = debounce(() => {
     const { updateViewed, updateUnviewedCount } = this.props;
 
-    this.dataHelper.setViewed(this.viewedIds).then(() => {
+    Data.setViewed(this.viewedIds).then(() => {
       updateViewed(this.viewedIds);
       updateUnviewedCount();
     });
@@ -60,7 +59,7 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   private onSetRead = (id: number, isRead: boolean) => {
     const { updateRead } = this.props;
 
-    this.dataHelper.setRead(id, isRead).then(() => {
+    Data.setRead(id, isRead).then(() => {
       updateRead(id, isRead);
     });
   };
@@ -68,7 +67,7 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   private onSetFavorite = (id: number, isFavorite: boolean) => {
     const { updateFavorite } = this.props;
 
-    this.dataHelper.setFavorite(id, isFavorite).then(() => {
+    Data.setFavorite(id, isFavorite).then(() => {
       updateFavorite(id, isFavorite);
     });
   };
@@ -81,28 +80,28 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
     }
 
     if (path === '/') {
-      this.dataHelper.getUnviewed().then((entries: Entry[]) => {
+      Data.getUnviewed().then((entries: Entry[]) => {
         entriesUpdated(entries);
         updateUnviewedCount();
       });
     }
 
     if (path === '/all') {
-      this.dataHelper.allEntries().then((entries: Entry[]) => {
+     Data.allEntries().then((entries: Entry[]) => {
         entriesUpdated(entries);
         updateEntriesCount();
       });
     }
 
     if (path === '/read') {
-      this.dataHelper.readEntries().then((entries: Entry[]) => {
+      Data.readEntries().then((entries: Entry[]) => {
         entriesUpdated(entries);
         updateEntriesCount();
       });
     }
 
     if (path === '/favorites') {
-      this.dataHelper.getFavorites().then((entries: Entry[]) => {
+      Data.getFavorites().then((entries: Entry[]) => {
         entriesUpdated(entries);
         updateEntriesCount();
       });
