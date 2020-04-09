@@ -21,7 +21,7 @@ interface FeedProps extends MapStateToProps {
   onChange: (id: number, title: string) => void;
 }
 
-class Feed extends React.Component<FeedProps> {
+class FeedItem extends React.Component<FeedProps> {
   private titleFieldRef = React.createRef<HTMLInputElement>();
 
   onSelect = () => {
@@ -105,4 +105,4 @@ const mapStateToProps = (state: MapStateToProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Feed);
+export default connect(mapStateToProps)(FeedItem);

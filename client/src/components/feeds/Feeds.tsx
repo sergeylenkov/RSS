@@ -1,18 +1,18 @@
 import { feedsEditing, feedsSelect } from '../../store/actions';
 
-import Feed from './Feed';
+import { Dispatch } from "redux";
+import { Feed } from '../../data';
 import FeedEdit from './Edit';
+import FeedItem from './Feed';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from "redux";
-
 import darkStyles from './Feeds.dark.module.css';
 import lightStyles from './Feeds.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean,
   isFeedsEditing: boolean,
-  feeds: any[],
+  feeds: Feed[],
   selectedFeeds: number[],
   feedsSelect: (id: number) => void;
   feedsEditing: (isFeedsEditing: boolean) => void;
@@ -55,11 +55,11 @@ class FeedsList extends React.Component<FeedsListProps, FeedsListState> {
     return (
       <div className={styles.container}>
         {
-          feeds.map((feed) => {
+          feeds.map((feed: Feed) => {
             const isSelected = selectedFeeds.includes(feed.id);
 
             return (
-              <Feed
+              <FeedItem
                 key={feed.id}
                 id={feed.id}
                 icon={feed.icon}

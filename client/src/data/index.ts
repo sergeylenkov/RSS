@@ -22,10 +22,29 @@ export interface UpdateFeedResponse {
   data: any;
 }
 
-export class DataHelper {
+export interface Feed {
+  id: number;
+  title: string;
+  link: string;
+  image: string;
+  icon: string;
+  count: number;
+}
+
+export interface Entry {
+  id: number;
+  feedId: number;
+  feed: Feed;
+  title: string;
+  description: string;
+  link: string;
+  isViewed: boolean;
+  isFavorite: boolean;
+  isRead: boolean;
+}
+
+class Data {
   private url = '';
-  private feeds: any[] = [];
-  private feedsDict: { [key: string]: any } = {};
 
   constructor(url: string) {
     this.url = url;
@@ -36,7 +55,6 @@ export class DataHelper {
       fetch(`${this.url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
-        this.updateFeedsInEntries(data);
         resolve(data);
       }).catch((error) => {
         reject(error);
@@ -45,13 +63,11 @@ export class DataHelper {
   }
 
   public getFeeds() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Feed[]>((resolve) => {
       fetch(`${this.url}feeds`).then((response) => {
         return response.json();
-      }).then((data) => {
-        this.feeds = data;
-
-        this.feeds.forEach(feed => {
+      }).then((feeds: Feed[]) => {
+        feeds.forEach((feed: Feed) => {
           const a = document.createElement('a');
           a.href = feed.link;
 
@@ -60,54 +76,48 @@ export class DataHelper {
           } else {
             feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
           }
-
-          this.feedsDict[feed.id] = feed;
         });
 
-        resolve(this.feeds);
+        resolve(feeds);
       });
     });
   }
 
   public allEntries() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries`).then((response) => {
         return response.json();
-      }).then((data) => {
-        this.updateFeedsInEntries(data);
+      }).then((data: Entry[]) => {
         resolve(data);
       });
     });
   }
 
   public readEntries() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/read`).then((response) => {
         return response.json();
-      }).then((data) => {
-        this.updateFeedsInEntries(data);
+      }).then((data: Entry[]) => {
         resolve(data);
       });
     });
   }
 
   public getFavorites() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/favorites`).then((response) => {
         return response.json();
-      }).then((data) => {
-        this.updateFeedsInEntries(data);
+      }).then((data: Entry[]) => {
         resolve(data);
       });
     });
   }
 
   public getUnviewed() {
-    return new Promise<any[]>((resolve) => {
+    return new Promise<Entry[]>((resolve) => {
       fetch(`${this.url}entries/unviewed`).then((response) => {
         return response.json();
-      }).then((data) => {
-        this.updateFeedsInEntries(data);
+      }).then((data: Entry[]) => {
         resolve(data);
       });
     });
@@ -210,14 +220,6 @@ export class DataHelper {
       });
     });
   }
-
-  public getFeedById(id: number) {
-    return this.feedsDict[id];
-  }
-
-  public updateFeedsInEntries(entries: any[]) {
-    entries.forEach(entry => {
-      entry.feed = this.getFeedById(entry.feedId);
-    });
-  }
 }
+
+export default new Data('http://localhost:8080/');

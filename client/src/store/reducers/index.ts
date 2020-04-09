@@ -1,6 +1,8 @@
 import { ActionTypes } from '../constants';
+import { Feed, Entry } from '../../data';
 
 interface State {
+  isInitialized: boolean,
   isUpdating: boolean,
   isFeedsEditing: boolean,
   isUpdateError: boolean,
@@ -9,14 +11,14 @@ interface State {
   keepDays: number,
   entriesCount: number,
   unviewedCount: number,
-  viewMode: number,
-  feeds: any[],
-  allEntries: any[],
-  entries: any[],
+  feeds: Feed[],
+  allEntries: Entry[],
+  entries: Entry[],
   selectedFeeds: any[]
 }
 
 const initialState: State = {
+  isInitialized: false,
   isUpdating: false,
   isFeedsEditing: false,
   isUpdateError: false,
@@ -25,12 +27,13 @@ const initialState: State = {
   keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
   entriesCount: 0,
   unviewedCount: 0,
-  viewMode: 0,
   feeds: [],
   allEntries: [],
   entries: [],
   selectedFeeds: []
 };
+
+const feedsDict: { [key: string]: Feed } = {};
 
 function rootReducer(state = initialState, action: any) {
   if (action.type === ActionTypes.FEEDS_UPDATING) {
@@ -41,9 +44,14 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATED) {
+    action.feeds.forEach((feed: Feed) => {
+      feedsDict[feed.id] = feed;
+    });
+
     return {
       ...state,
       isUpdating: false,
+      isInitialized: true,
       feeds: [...action.feeds]
     }
   }
@@ -97,6 +105,8 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.ENTRIES_LOADED) {
+    updateFeedsInEntries(action.entries);
+
     const entries = filterEntries(state.selectedFeeds, action.entries);
 
     return {
@@ -168,13 +178,6 @@ function rootReducer(state = initialState, action: any) {
     return {
       ...state,
       entries: entries
-    }
-  }
-
-  if (action.type === ActionTypes.CHANGE_VIEW_MODE) {
-    return {
-      ...state,
-      viewMode: action.mode
     }
   }
 
@@ -263,6 +266,16 @@ function filterEntries(selectedFeeds: number[], allEntries: any[]) {
   }
 
   return entries;
+}
+
+function getFeedById(id: number) : Feed {
+  return feedsDict[id];
+}
+
+function updateFeedsInEntries(entries: Entry[]) {
+  entries.forEach(entry => {
+    entry.feed = getFeedById(entry.feedId);
+  });
 }
 
 export default rootReducer;

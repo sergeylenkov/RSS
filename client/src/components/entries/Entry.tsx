@@ -1,16 +1,17 @@
-import React, {createRef} from 'react';
-import { connect } from 'react-redux';
-import { FavoriteSelectedIcon, FavoriteIcon, ReadIcon } from '../Icons';
+import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 
-import lightStyles from './Entry.module.css';
+import { Entry } from "../../data";
+import React from 'react';
+import { connect } from 'react-redux';
 import darkStyles from './Entry.dark.module.css';
+import lightStyles from './Entry.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
 }
 
 interface EntryProps extends MapStateToProps {
-  entry: any;
+  entry: Entry;
   isCollapseLong: boolean;
   onView: (id: number) => void;
   onSetRead: (id: number, isRead: boolean) => void;
@@ -21,7 +22,7 @@ interface EntryState {
   isExpanded: boolean;
 }
 
-class Entry extends React.Component<EntryProps, EntryState> {
+class EntryItem extends React.Component<EntryProps, EntryState> {
   public state: EntryState = {
     isExpanded: false
   };
@@ -175,7 +176,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
     let className = styles.container;
     let expandButton = null;
 
-    if (isCollapseLong && !isExpanded && Entry.isLong(description)) {
+    if (isCollapseLong && !isExpanded && EntryItem.isLong(description)) {
       className += ` ${styles.collapsed}`;
       expandButton = <button className={styles.expandButton} onClick={this.onExpand} />
     }
@@ -214,4 +215,4 @@ const mapStateToProps = (state: MapStateToProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Entry);
+export default connect(mapStateToProps)(EntryItem);
