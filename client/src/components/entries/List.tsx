@@ -28,7 +28,7 @@ interface EntriesListState {
 }
 
 class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
-  private viewedIds: number[] = [];
+  private viewedIds: { [key: number] : boolean } = {};
 
   public componentDidMount() {
     this.getEntries(this.props.location.pathname);
@@ -40,20 +40,25 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
     }
   }
 
-  private updateViewed = debounce(() => {
+  private OnViewDebonce = debounce(() => {
     const { updateViewed, updateUnviewedCount } = this.props;
 
-    Data.setViewed(this.viewedIds).then(() => {
-      updateViewed(this.viewedIds);
-      updateUnviewedCount();
-    });
+    const ids = Object.keys(this.viewedIds).map(Number);
 
-    this.viewedIds = [];
+    Data.setViewed(ids).then(() => {
+      updateViewed(ids);
+      updateUnviewedCount();
+
+      ids.forEach(id => {
+        delete this.viewedIds[id];
+      });
+    });
   }, 1000, false);
 
   private onView = (id: number) => {
-    this.viewedIds.push(id);
-    this.updateViewed();
+    this.viewedIds[id] = true;
+
+    this.OnViewDebonce();
   };
 
   private onSetRead = (id: number, isRead: boolean) => {

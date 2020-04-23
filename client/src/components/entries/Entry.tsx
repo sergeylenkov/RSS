@@ -4,6 +4,7 @@ import { Entry } from "../../data";
 import React from 'react';
 import { connect } from 'react-redux';
 import darkStyles from './Entry.dark.module.css';
+import { debounce } from '../../utils';
 import lightStyles from './Entry.module.css';
 
 interface MapStateToProps {
@@ -41,24 +42,21 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     }
   };
 
-  constructor(props: Readonly<EntryProps>) {
-    super(props);
-
-    this.handleScroll = this.handleScroll.bind(this);
-    this.handleMove = this.handleMove.bind(this);
-  }
-
   public componentDidMount() {
     if (!this.props.entry.isViewed) {
-      window.addEventListener('scroll', this.handleScroll);
-      window.addEventListener('mousemove', this.handleMove);
+      window.addEventListener('scroll', this.onScrollDebounce);
+      window.addEventListener('mousemove', this.onMouseMove);
     }
   }
 
   public componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener('mousemove', this.handleMove);
+    window.removeEventListener('scroll', this.onScrollDebounce);
+    window.removeEventListener('mousemove', this.onMouseMove);
   }
+
+  private onScrollDebounce = debounce(() => {
+    this.onScroll();
+  }, 500, false)
 
   private removeSelfLinks(description: string, link: string) {
     let el = document.createElement('div');
@@ -90,7 +88,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     return el.innerText.length > 1500;
   }
 
-  private handleScroll() {
+  private onScroll() {
     const { entry, onView } = this.props;
 
     if (!entry.isViewed) {
@@ -116,7 +114,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     }
   }
 
-  private handleMove() {
+  private onMouseMove = () => {
     if (!this.props.entry.isViewed) {
       const rect = this.itemElement!.getBoundingClientRect();
       const height = rect.top + rect.height;
@@ -125,7 +123,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
         this.props.onView(this.props.entry.id);
       }
 
-      window.removeEventListener('mousemove', this.handleMove);
+      window.removeEventListener('mousemove', this.onMouseMove);
     }
   }
 
