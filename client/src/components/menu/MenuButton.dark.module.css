@@ -9,6 +9,7 @@
 
 .container.selected .label {
 	font-weight: bold;
+	color: #f3f3f3;
 }
 
 .counter {

@@ -16,11 +16,11 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "nodemon": "^1.18.8",
-    "rss-parser": "^3.7.3",
-    "sqlite3": "^4.0.6"
+    "rss-parser": "^3.9.0",
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.5",
     "mocha": "^5.2.0",
     "supertest": "^3.0.0"
   }
