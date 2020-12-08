@@ -2,11 +2,15 @@ import { CheckmarkIcon, TrashIcon } from '../Icons';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import darkStyles from './Feed.dark.module.css';
+import { combineStyles } from '../../utils/styles';
+
 import lightStyles from './Feed.module.css';
+import gridStyles from './Feed.grid.module.css';
+import darkStyles from './Feed.dark.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
+  isGrid: boolean;
 }
 
 interface FeedProps extends MapStateToProps {
@@ -44,11 +48,7 @@ class FeedItem extends React.Component<FeedProps> {
   renderViewMode() {
     const { icon, title, count, isDarkTheme, isSelected } = this.props;
 
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const styles = combineStyles(lightStyles, (isDarkTheme && darkStyles));
 
     return (
       <button className={`${styles.button} ${isSelected ? styles.selected : ''}`} onClick={this.onSelect}>
@@ -62,11 +62,7 @@ class FeedItem extends React.Component<FeedProps> {
   renderEditMode() {
     const { icon, title, isDarkTheme } = this.props;
 
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const styles = combineStyles(lightStyles, (isDarkTheme && darkStyles));
 
     return (
       <div className={styles.editPanel}>
@@ -79,13 +75,9 @@ class FeedItem extends React.Component<FeedProps> {
   }
 
   public render() {
-    const { isDarkTheme, isEditing } = this.props;
+    const { isDarkTheme, isGrid, isEditing } = this.props;
 
-    let styles =lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const styles = combineStyles(lightStyles, (isGrid && gridStyles), (isDarkTheme && darkStyles));
 
     return (
       <div className={styles.container}>
@@ -101,7 +93,8 @@ class FeedItem extends React.Component<FeedProps> {
 
 const mapStateToProps = (state: MapStateToProps) => {
   return {
-    isDarkTheme: state.isDarkTheme
+    isDarkTheme: state.isDarkTheme,
+    isGrid: state.isGrid
   };
 };
 

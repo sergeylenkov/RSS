@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { CheckmarkIcon, CloseIcon, AddIcon, EditIcon } from '../Icons';
+import { combineStyles } from '../../utils/styles';
 
 import lightStyles from './Edit.module.css';
+import gridStyles from './Edit.grid.module.css';
 import darkStyles from './Edit.dark.module.css';
 
 interface MapStateToProps {
-  isDarkTheme: boolean,
+  isDarkTheme: boolean;
+  isGrid: boolean;
 }
 
 interface FeedEditProps extends MapStateToProps {
@@ -50,14 +53,10 @@ class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
   };
 
   public render() {
-    const { isDarkTheme, isDisabled, isScrolled, isEditing, onEdit } = this.props;
+    const { isDarkTheme, isGrid, isDisabled, isScrolled, isEditing, onEdit } = this.props;
     const { isFormVisible } = this.state;
 
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = {...lightStyles, ...darkStyles};
-    }
+    const styles = combineStyles(lightStyles, (isGrid && gridStyles), (isDarkTheme && darkStyles));
 
     let className = styles.container;
 
@@ -100,7 +99,8 @@ class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
 
 const mapStateToProps = (state: MapStateToProps) => {
   return {
-    isDarkTheme: state.isDarkTheme
+    isDarkTheme: state.isDarkTheme,
+    isGrid: state.isGrid
   };
 };
 

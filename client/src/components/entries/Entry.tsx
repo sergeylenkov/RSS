@@ -3,9 +3,11 @@ import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 import { Entry } from "../../data";
 import React from 'react';
 import { connect } from 'react-redux';
-import darkStyles from './Entry.dark.module.css';
 import { debounce } from '../../utils';
+import { combineStyles } from '../../utils/styles';
+
 import lightStyles from './Entry.module.css';
+import darkStyles from './Entry.dark.module.css';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
@@ -157,11 +159,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     const { isDarkTheme, entry, isCollapseLong } = this.props;
     const { isExpanded } = this.state;
 
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = {...lightStyles, ...darkStyles};
-    }
+    const styles = combineStyles(lightStyles, (isDarkTheme && darkStyles));
 
     const description = this.removeSelfLinks(entry.description, entry.link);
 
