@@ -1,0 +1,16 @@
+.headerContent {
+  width: 90%;
+}
+
+.content {
+  width: 90%;
+  padding-top: 120px;
+}
+
+.feeds {
+  position: fixed;
+  width: 100%;
+  top: 70px;
+  margin: 0;
+  z-index: 10;
+}

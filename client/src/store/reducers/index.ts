@@ -9,6 +9,7 @@ interface State {
   isDarkTheme: boolean,
   isCollapseLong: boolean,
   keepDays: number,
+  isGrid: boolean,
   entriesCount: number,
   unviewedCount: number,
   feeds: Feed[],
@@ -25,6 +26,7 @@ const initialState: State = {
   isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : false,
   isCollapseLong: localStorage.getItem('collapseLong') ? JSON.parse(<string>localStorage.getItem('collapseLong')) : true,
   keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
+  isGrid: localStorage.getItem('grid') ? JSON.parse(<string>localStorage.getItem('grid')) : false,
   entriesCount: 0,
   unviewedCount: 0,
   feeds: [],
@@ -248,6 +250,15 @@ function rootReducer(state = initialState, action: any) {
     return {
       ...state,
       keepDays: action.days
+    }
+  }
+
+  if (action.type === ActionTypes.TOGGLE_GRID) {
+    localStorage.setItem('grid', action.isGrid);
+
+    return {
+      ...state,
+      isGrid: action.isGrid
     }
   }
 

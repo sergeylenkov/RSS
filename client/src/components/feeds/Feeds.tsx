@@ -6,14 +6,18 @@ import FeedEdit from './Edit';
 import FeedItem from './Feed';
 import React from 'react';
 import { connect } from 'react-redux';
-import darkStyles from './Feeds.dark.module.css';
+import { combineStyles } from '../../utils/styles';
+
 import lightStyles from './Feeds.module.css';
+import gridStyles from './Feeds.grid.module.css';
+import darkStyles from './Feeds.dark.module.css';
 
 interface MapStateToProps {
-  isDarkTheme: boolean,
-  isFeedsEditing: boolean,
-  feeds: Feed[],
-  selectedFeeds: number[],
+  isDarkTheme: boolean;
+  isFeedsEditing: boolean;
+  isGrid: boolean;
+  feeds: Feed[];
+  selectedFeeds: number[];
   feedsSelect: (id: number) => void;
   feedsEditing: (isFeedsEditing: boolean) => void;
 }
@@ -39,6 +43,7 @@ class FeedsList extends React.Component<FeedsListProps, FeedsListState> {
       feeds,
       selectedFeeds,
       isFeedsEditing,
+      isGrid,
       onAddFeed,
       feedsEditing,
       onDeleteFeed,
@@ -46,11 +51,7 @@ class FeedsList extends React.Component<FeedsListProps, FeedsListState> {
       onChangeFeed
     } = this.props;
 
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const styles = combineStyles(lightStyles, (isGrid && gridStyles), (isDarkTheme && darkStyles));
 
     return (
       <div className={styles.container}>
@@ -86,6 +87,7 @@ const mapStateToProps = (state: MapStateToProps) => {
   return {
     isDarkTheme: state.isDarkTheme,
     isFeedsEditing: state.isFeedsEditing,
+    isGrid: state.isGrid,
     feeds: state.feeds,
     selectedFeeds: state.selectedFeeds
   };

@@ -7,12 +7,16 @@ import EntryItem from './Entry';
 import React from 'react';
 import { connect } from 'react-redux';
 import { debounce } from '../../utils';
-import styles from './List.module.css';
+import { combineStyles } from '../../utils/styles';
+
+import lightStyles from './List.module.css';
+import gridStyles from './List.grid.module.css';
 
 interface MapStateToProps extends RouteComponentProps {
   entries: Entry[];
   isCollapseLong: boolean;
   isInitialized: boolean;
+  isGrid: boolean;
   entriesUpdated: (entries: Entry[]) => void;
   updateUnviewedCount: () => void;
   updateEntriesCount: () => void;
@@ -114,7 +118,9 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   }
 
   public render() {
-    const { isCollapseLong, entries } = this.props;
+    const { entries, isCollapseLong, isGrid } = this.props;
+
+    const styles = combineStyles(lightStyles, (isGrid && gridStyles));
 
     return (
       <div className={styles.container}>
@@ -142,7 +148,8 @@ const mapStateToProps = (state: MapStateToProps) => {
   return {
     entries: state.entries,
     isCollapseLong: state.isCollapseLong,
-    isInitialized: state.isInitialized
+    isInitialized: state.isInitialized,
+    isGrid: state.isGrid
   };
 };
 

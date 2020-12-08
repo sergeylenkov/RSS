@@ -41,24 +41,6 @@
     margin: 20px 0 0 20px;
 }
 
-:global(.grid) .headerContent {
-    width: 90%;
-}
-
-:global(.grid) .content {
-    width: 90%;
-}
-
-:global(.grid) .list {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-column-gap: 20px;
-}
-
-:global(.grid) .list {
-    margin: 10px;
-}
-
 @media (max-width: 768px) {
     .header {
         box-sizing: border-box;

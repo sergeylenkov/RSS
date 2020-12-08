@@ -21,7 +21,7 @@ export function feedsSelect(id: number) {
 }
 
 export function entriesUpdating(isUpdating: boolean) {
-  return { type: ActionTypes.ENTRIES_UPDATING, isUpdating: isUpdating }
+  return { type: ActionTypes.ENTRIES_UPDATING, isUpdating }
 }
 
 export function entriesUpdated(entries: any[]) {
@@ -37,11 +37,11 @@ export function updateViewed(ids: number[]) {
 }
 
 export function updateFavorite(id: number, isFavorite: boolean) {
-  return { type: ActionTypes.UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
+  return { type: ActionTypes.UPDATE_FAVORITE, id, isFavorite }
 }
 
 export function updateRead(id: number, isRead: boolean) {
-  return { type: ActionTypes.UPDATE_READ, id: id, isRead: isRead }
+  return { type: ActionTypes.UPDATE_READ, id, isRead }
 }
 
 export function updateEntriesCount() {
@@ -49,11 +49,11 @@ export function updateEntriesCount() {
 }
 
 export function feedsUpdate(id: number, data: any) {
-  return { type: ActionTypes.FEEDS_UPDATE, id: id, data: data }
+  return { type: ActionTypes.FEEDS_UPDATE, id, data }
 }
 
 export function toggleTheme(isDarkTheme: boolean) {
-  return { type: ActionTypes.TOGGLE_THEME, isDarkTheme: isDarkTheme }
+  return { type: ActionTypes.TOGGLE_THEME, isDarkTheme }
 }
 
 export function entriesUpdateError() {
@@ -61,9 +61,13 @@ export function entriesUpdateError() {
 }
 
 export function toggleCollapseLong(isCollapse: boolean) {
-  return { type: ActionTypes.TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
+  return { type: ActionTypes.TOGGLE_COLLAPSE_LONG, isCollapse }
 }
 
 export function updateKeepDays(days: number) {
-  return { type: ActionTypes.UPDATE_KEEP_DAYS, days: days};
+  return { type: ActionTypes.UPDATE_KEEP_DAYS, days };
+}
+
+export function toggleGrid(isGrid: boolean) {
+  return { type: ActionTypes.TOGGLE_GRID, isGrid };
 }
