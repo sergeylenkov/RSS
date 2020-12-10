@@ -1,0 +1,48 @@
+.menu_button {
+	&__container {
+		display: flex;
+		flex-direction: row;
+		flex-shrink: 0;
+		height: 100%;
+		margin: 0 20px 0 0;
+		cursor: pointer;
+	}
+
+	&__label {
+		margin: auto 0;
+		font-size: 14px;
+		color: #000000;
+
+		&--selected {
+			font-weight: bold;
+		}
+	}
+
+	&__counter {
+		margin: auto 0 auto 10px;
+		padding: 2px 5px;
+		font-size: 11px;
+		border-radius: 2px;
+		color: #ffffff;
+    background-color: #4da0da;
+	}
+}
+
+/*
+* theme
+*/
+
+.dark .menu_button {
+	&__label {
+		color: #bfbfbf;
+
+		&--selected {
+			color: #f3f3f3;
+		}
+	}
+
+	&__counter {
+		color: #ffffff;
+		background-color: #4da0da;
+	}
+}
