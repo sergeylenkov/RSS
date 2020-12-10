@@ -1,0 +1,55 @@
+.reload_button {
+	&__container {
+		display: flex;
+		flex-direction: row;
+		flex-shrink: 0;
+		overflow: hidden;
+		margin: 0;
+		opacity: 1;
+		transition: opacity 0.2s ease-in-out;
+
+		&--active {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+	}
+
+	&__icon {
+  	width: 16px;
+		height: 16px;
+		margin: auto 10px auto 0;
+		stroke: #000000;
+		stroke-width: 2px;
+		fill: none;
+		cursor: pointer;
+
+		&--active {
+			animation: spin 2s linear infinite;
+		}
+
+		&--error {
+			stroke: #ff0000;
+		}
+	}
+
+	&__icon > svg {
+		width: 100%;
+  	height: 100%;
+	}
+}
+
+/*
+* theme
+*/
+
+.dark .reload_button {
+	&__icon {
+		stroke: #f3f3f3;
+	}
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}

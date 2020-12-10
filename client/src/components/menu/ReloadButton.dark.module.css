@@ -1,4 +1,0 @@
-.icon {
-    composes: icon from './ReloadButton.module.css';
-	stroke: #f3f3f3;
-}

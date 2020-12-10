@@ -21,11 +21,8 @@ import React from 'react';
 import Settings from './components/settings/Settings';
 import SettingsButton from './components/settings/Button';
 import { connect } from 'react-redux';
-import { combineStyles } from './utils/styles';
 
-import lightStyles from './App.module.css';
-import gridStyles from './App.grid.module.css';
-import darkStyles from './App.dark.module.css';
+import './App.scss';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
@@ -137,16 +134,14 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   public render() {
-    const { isDarkTheme, isGrid } = this.props;
+    const { isGrid, isDarkTheme } = this.props;
     const { isSettingsVisible } = this.state;
-
-    const styles = combineStyles(lightStyles, (isGrid && gridStyles), (isDarkTheme && darkStyles));
 
     return (
       <BrowserRouter>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div className={styles.headerContent}>
+        <div className={`container ${isGrid && 'grid'} ${isDarkTheme && 'dark'}`}>
+          <div className='header'>
+            <div className='header__content'>
               <Menu
                 onUpdate={this.onUpdate}
               />
@@ -164,20 +159,20 @@ class App extends React.Component<AppProps, AppState> {
             </div>
           </div>
           {isGrid &&
-            <div className={styles.feeds}>
+            <div className='feeds'>
               <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
             </div>
           }
-          <div className={styles.content}>
+          <div className='content'>
             <Switch>
               <Route path='/'>
-                <div className={styles.list}>
+                <div className='list'>
                   <EntriesList />
                 </div>
               </Route>
             </Switch>
             {!isGrid &&
-              <div className={styles.feeds}>
+              <div className='feeds'>
                 <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
               </div>
             }

@@ -4,7 +4,8 @@ import MenuButton from './MenuButton';
 import React from 'react';
 import ReloadButton from './ReloadButton';
 import { connect } from 'react-redux';
-import styles from './Menu.module.css';
+
+import './Menu.scss';
 
 interface MapStateToProps extends RouteComponentProps {
   isUpdating: boolean;
@@ -35,7 +36,7 @@ class Menu extends React.Component<MenuProps> {
     } = this.props;
 
     return (
-      <div className={styles.container}>
+      <div className='menu__container'>
         <ReloadButton
           isActive={isUpdating}
           isSelected={pathname === '/'}
