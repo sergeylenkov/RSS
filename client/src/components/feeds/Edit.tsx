@@ -1,18 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { CheckmarkIcon, CloseIcon, AddIcon, EditIcon } from '../Icons';
-import { combineStyles } from '../../utils/styles';
 
-import lightStyles from './Edit.module.css';
-import gridStyles from './Edit.grid.module.css';
-import darkStyles from './Edit.dark.module.css';
+import './Edit.scss';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-  isGrid: boolean;
-}
-
-interface FeedEditProps extends MapStateToProps {
+interface FeedEditProps {
   isEditing: boolean;
   isDisabled?: boolean;
   isScrolled?: boolean;
@@ -53,55 +44,28 @@ class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
   };
 
   public render() {
-    const { isDarkTheme, isGrid, isDisabled, isScrolled, isEditing, onEdit } = this.props;
+    const { isDisabled, isScrolled, isEditing, onEdit } = this.props;
     const { isFormVisible } = this.state;
-
-    const styles = combineStyles(lightStyles, (isGrid && gridStyles), (isDarkTheme && darkStyles));
-
-    let className = styles.container;
-
-    if (isDisabled) {
-      className += ` ${styles.disabled}`;
-    }
-
-    if (isScrolled) {
-      className += ` ${styles.scrolled}`;
-    }
 
     if (isFormVisible) {
       return (
-        <div className={className}>
-          <div className={styles.form}>
-            <input className={styles.linkField} placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
-            <button className={styles.formButton} onClick={this.onAdd}><div className={styles.icon}><CheckmarkIcon /></div></button>
-            <button className={styles.formButton} onClick={this.onClose}><div className={styles.icon}><CloseIcon /></div></button>
+        <div className={`edit__container ${isDisabled ? 'edit__container--disabled' : ''} ${isScrolled ? 'edit__container--scrolled' : ''}`}>
+          <div className='edit__form'>
+            <input className='edit__link_field' placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
+            <button className='edit__form_button' onClick={this.onAdd}><div className='edit__icon'><CheckmarkIcon /></div></button>
+            <button className='edit__form_button' onClick={this.onClose}><div className='edit__icon'><CloseIcon /></div></button>
           </div>
         </div>
       );
     } else {
-      let iconClassName = styles.icon;
-
-      if (isEditing) {
-        iconClassName += ` ${styles.editing}`;
-      }
-
       return (
-        <div className={className}>
-          <button className={styles.button} onClick={this.onShow}><div className={styles.icon}><AddIcon /></div></button>
-          <button className={styles.button} onClick={onEdit}><div className={iconClassName}><EditIcon /></div></button>
+        <div className={`edit__icon ${isEditing ? 'edit__icon--editing' : ''}`}>
+          <button className='edit__button' onClick={this.onShow}><div className='edit__icon'><AddIcon /></div></button>
+          <button className='edit__button' onClick={onEdit}><div className={`edit__icon ${isEditing ? 'edit__icon--editing' : ''}`}><EditIcon /></div></button>
         </div>
       );
     }
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme,
-    isGrid: state.isGrid
-  };
-};
-
-export default connect(mapStateToProps)(FeedEdit);
+export default FeedEdit;

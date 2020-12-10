@@ -1,0 +1,58 @@
+.feeds {
+  &__container {
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    top: 70px;
+    width: 300px;
+    padding: 20px;
+    background: #ffffff;
+  }
+}
+
+@media (max-width: 768px) {
+  .feeds {
+    &__container {
+      position: relative;
+      flex-direction: row;
+      top: auto;
+      width: auto;
+      overflow: auto;
+    }
+  }
+}
+
+/*
+* grid
+*/
+
+.grid .feeds {
+  &__container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    top: 0;
+    width: 90%;
+    height: 70px;
+    padding: 0;
+    margin: 0 auto;
+    background: transparent;
+  }
+}
+
+/*
+* theme
+*/
+
+.dark .feeds {
+  &__container {
+    background-color: #1d1d1d;
+  }
+}
+
+.grid.dark .feeds {
+  &__container {
+    background: transparent;
+  }
+}

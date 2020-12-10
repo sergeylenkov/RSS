@@ -1,0 +1,91 @@
+.edit {
+	&__container {
+		display: flex;
+		height: 30px;
+		margin: 30px 0 0 0;
+		padding: 0;
+		opacity: 1;
+		transition: opacity 0.2s ease-in-out;
+
+		&--disabled {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+
+		&--scrolled {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
+
+	&__button {
+		display: flex;
+		padding: 0;
+		margin: auto 10px auto 0;
+		cursor: pointer;
+	}
+
+	&__form_button {
+		display: flex;
+		padding: 0;
+		margin: auto 0 auto 10px;
+		cursor: pointer;
+	}
+
+	&__icon {
+		width: 16px;
+		height: 16px;
+		stroke: #000000;
+		stroke-width: 2px;
+		fill: #000000;
+
+		&--editing {
+			stroke: #2f74f1;
+		}
+
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&__form {
+		display: flex;
+		width: 100%;
+	}
+
+	&__link_field {
+		flex-grow: 1;
+		margin: auto 0;
+		font-size: 14px;
+	}
+}
+
+/*
+* grid
+*/
+
+.grid .edit {
+	&__container {
+		margin: auto 0 auto auto;
+	}
+}
+
+/*
+* theme
+*/
+
+.edit {
+	&__icon {
+		stroke: #a5a5a5;
+		fill: #a5a5a5;
+	}
+}
+
+@media (max-width: 768px) {
+	.edit {
+		&__container {
+			margin: 0;
+		}
+	}
+}
