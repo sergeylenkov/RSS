@@ -43,13 +43,15 @@ class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
     });
   };
 
+
   public render() {
     const { isDisabled, isScrolled, isEditing, onEdit } = this.props;
     const { isFormVisible } = this.state;
+    const className = `edit__container ${isDisabled ? 'edit__container--disabled' : ''} ${isScrolled ? 'edit__container--scrolled' : ''}`;
 
     if (isFormVisible) {
       return (
-        <div className={`edit__container ${isDisabled ? 'edit__container--disabled' : ''} ${isScrolled ? 'edit__container--scrolled' : ''}`}>
+        <div className={className}>
           <div className='edit__form'>
             <input className='edit__link_field' placeholder="ссылка на канал" type="text" ref={this.linkFieldRef} />
             <button className='edit__form_button' onClick={this.onAdd}><div className='edit__icon'><CheckmarkIcon /></div></button>
@@ -59,7 +61,7 @@ class FeedEdit extends React.Component<FeedEditProps, FeedEditState> {
       );
     } else {
       return (
-        <div className={`edit__icon ${isEditing ? 'edit__icon--editing' : ''}`}>
+        <div className={className}>
           <button className='edit__button' onClick={this.onShow}><div className='edit__icon'><AddIcon /></div></button>
           <button className='edit__button' onClick={onEdit}><div className={`edit__icon ${isEditing ? 'edit__icon--editing' : ''}`}><EditIcon /></div></button>
         </div>
