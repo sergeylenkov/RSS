@@ -2,13 +2,11 @@ import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 
 import { Entry } from "../../data";
 import React from 'react';
-import { connect } from 'react-redux';
-import darkStyles from './Entry.dark.module.css';
 import { debounce } from '../../utils';
-import lightStyles from './Entry.module.css';
+
+import './Entry.scss';
 
 interface MapStateToProps {
-  isDarkTheme: boolean;
 }
 
 interface EntryProps extends MapStateToProps {
@@ -115,12 +113,14 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   }
 
   private onMouseMove = () => {
-    if (!this.props.entry.isViewed) {
+    const { entry, onView } = this.props;
+
+    if (!entry.isViewed) {
       const rect = this.itemElement!.getBoundingClientRect();
       const height = rect.top + rect.height;
 
       if (height < window.innerHeight) {
-        this.props.onView(this.props.entry.id);
+        onView(entry.id);
       }
 
       window.removeEventListener('mousemove', this.onMouseMove);
@@ -154,47 +154,41 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   };
 
   public render() {
-    const { isDarkTheme, entry, isCollapseLong } = this.props;
+    const { entry, isCollapseLong } = this.props;
     const { isExpanded } = this.state;
-
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = {...lightStyles, ...darkStyles};
-    }
 
     const description = this.removeSelfLinks(entry.description, entry.link);
 
     let readIcon = null;
 
     if (entry.isRead) {
-      readIcon = <div className={styles.infoItem} onClick={this.onUnread}><div className={styles.infoIcon}><ReadIcon /></div></div>;
+      readIcon = <div className='entry__info__item' onClick={this.onUnread}><div className='entry__info__icon'><ReadIcon /></div></div>;
     }
 
-    let className = styles.container;
+    let className = 'entry__container';
     let expandButton = null;
 
     if (isCollapseLong && !isExpanded && EntryItem.isLong(description)) {
-      className += ` ${styles.collapsed}`;
-      expandButton = <button className={styles.expandButton} onClick={this.onExpand} />
+      className += ` collapsed`;
+      expandButton = <button className='entry__expandButton' onClick={this.onExpand} />
     }
 
     return (
       <div className={className} ref={this.itemRefCallback}>
         <div
-          className={styles.title}
+          className='entry__title'
           ref={this.titleRefCallback}>
           <a href={entry.link}>{entry.title}</a>
         </div>
-        <div className={styles.feed}>
-          <div className={styles.feedIcon} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
-          <div className={styles.feedTitle}>{entry.feed.title}</div>
+        <div className='entry__feed'>
+          <div className='entry__feed__icon' style={{ backgroundImage: `url(${entry.feed.icon})` }} />
+          <div className='entry__feed__title'>{entry.feed.title}</div>
         </div>
-        <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
+        <div className='entry__description' dangerouslySetInnerHTML={{ __html: description }} />
         {expandButton}
-        <div className={styles.info}>
-          <div className={styles.infoItem}>
-            <div className={styles.infoIcon} onClick={this.onSetFavorite}>
+        <div className='entry__info'>
+          <div className='entry__info__item'>
+            <div className='entry__info__icon' onClick={this.onSetFavorite}>
               {entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
             </div>
           </div>
@@ -205,12 +199,4 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme
-  };
-};
-
-export default connect(mapStateToProps)(EntryItem);
+export default EntryItem;

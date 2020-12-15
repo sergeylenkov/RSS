@@ -1,11 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import lightStyles from './MenuButton.module.css';
-import darkStyles from './MenuButton.dark.module.css';
+import './MenuButton.scss';
 
 interface MapStateToProps {
-  isDarkTheme: boolean;
 }
 
 interface MenuButtonProps extends MapStateToProps {
@@ -25,30 +22,15 @@ class MenuButton extends React.Component<MenuButtonProps> {
   };
 
   public render() {
-    const { isDarkTheme, isSelected, count, title } = this.props;
-    const styles = isDarkTheme ? darkStyles : lightStyles;
-
-    let counter;
-
-    if (isSelected) {
-      counter = <div className={styles.counter}>{count}</div>
-    }
+    const { isSelected, count, title } = this.props;
 
     return (
-      <button className={`${styles.container} ${isSelected ? styles.selected : ''}`} onClick={this.onClick}>
-        <div className={styles.label}>{title}</div>
-        {counter}
+      <button className={`menu_button__container`} onClick={this.onClick}>
+        <div className={`menu_button__label ${isSelected ? 'menu_button__label--selected' : ''}`}>{title}</div>
+        {isSelected && <div className='menu_button__counter'>{count}</div>}
       </button>
     )
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme
-  };
-};
-
-export default connect(mapStateToProps)(MenuButton);
+export default MenuButton;

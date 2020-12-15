@@ -1,43 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { SettingsIcon } from '../Icons';
 
-import lightStyles from './Button.module.css';
-import darkStyles from './Button.dark.module.css';
+import './Button.scss';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-}
-
-interface SettingsButtonProps extends MapStateToProps {
+interface SettingsButtonProps {
   isActive: boolean;
   onClick: () => void;
 }
 
 class SettingsButton extends React.Component<SettingsButtonProps> {
   public render() {
-    const { isDarkTheme, isActive, onClick } = this.props;
-
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = {...lightStyles, ...darkStyles};
-    }
+    const { isActive, onClick } = this.props;
 
     return (
-      <button className={`${styles.container} ${isActive ? styles.active : ''}`} onClick={onClick}>
-        <div className={styles.icon}><SettingsIcon /></div>
+      <button className={`settings_button__container ${isActive ? 'settings_button__container--active' : ''}`} onClick={onClick}>
+        <div className={`settings_button__icon ${isActive ? 'settings_button__icon--active' : ''}`}>
+          <SettingsIcon />
+        </div>
       </button>
     );
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: SettingsButtonProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme
-  };
-};
-
-export default connect(mapStateToProps)(SettingsButton);
+export default SettingsButton;

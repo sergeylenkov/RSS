@@ -21,11 +21,12 @@ import React from 'react';
 import Settings from './components/settings/Settings';
 import SettingsButton from './components/settings/Button';
 import { connect } from 'react-redux';
-import darkStyles from './App.dark.module.css';
-import lightStyles from './App.module.css';
+
+import './App.scss';
 
 interface MapStateToProps {
   isDarkTheme: boolean;
+  isGrid: boolean;
   keepDays: number;
   entriesUpdating: (isUpdating: boolean) => void;
   updateUnviewedCount: () => void;
@@ -133,20 +134,14 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   public render() {
-    const { isDarkTheme } = this.props;
+    const { isGrid, isDarkTheme } = this.props;
     const { isSettingsVisible } = this.state;
-
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
 
     return (
       <BrowserRouter>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div className={styles.headerContent}>
+        <div className={`container ${isGrid && 'grid'} ${isDarkTheme && 'dark'}`}>
+          <div className='header'>
+            <div className='header__content'>
               <Menu
                 onUpdate={this.onUpdate}
               />
@@ -163,17 +158,24 @@ class App extends React.Component<AppProps, AppState> {
               </CSSTransition>
             </div>
           </div>
-          <div className={styles.content}>
+          {isGrid &&
+            <div className='feeds'>
+              <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
+            </div>
+          }
+          <div className='content'>
             <Switch>
               <Route path='/'>
-                <div className={styles.list}>
+                <div className='list'>
                   <EntriesList />
                 </div>
               </Route>
             </Switch>
-            <div className={styles.feeds}>
-              <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
-            </div>
+            {!isGrid &&
+              <div className='feeds'>
+                <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
+              </div>
+            }
           </div>
         </div>
       </BrowserRouter>
@@ -186,7 +188,8 @@ class App extends React.Component<AppProps, AppState> {
 const mapStateToProps = (state: MapStateToProps) => {
   return {
     isDarkTheme: state.isDarkTheme,
-    keepDays: state.keepDays
+    isGrid: state.isGrid,
+    keepDays: state.keepDays,
   };
 };
 

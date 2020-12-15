@@ -1,15 +1,10 @@
 import { CheckmarkIcon, TrashIcon } from '../Icons';
 
 import React from 'react';
-import { connect } from 'react-redux';
-import darkStyles from './Feed.dark.module.css';
-import lightStyles from './Feed.module.css';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-}
+import './Feed.scss';
 
-interface FeedProps extends MapStateToProps {
+interface FeedProps {
   id: number;
   icon: string;
   title: string;
@@ -42,53 +37,35 @@ class FeedItem extends React.Component<FeedProps> {
   }
 
   renderViewMode() {
-    const { icon, title, count, isDarkTheme, isSelected } = this.props;
-
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const { icon, title, count, isSelected } = this.props;
 
     return (
-      <button className={`${styles.button} ${isSelected ? styles.selected : ''}`} onClick={this.onSelect}>
-        <div className={styles.icon} style={{ backgroundImage: `url(${icon})` }} />
-        <div className={styles.label}>{title}</div>
-        <div className={styles.counter}>{count}</div>
+      <button className='feed__button' onClick={this.onSelect}>
+        <div className='feed__icon' style={{ backgroundImage: `url(${icon})` }} />
+        <div className={`feed__label ${isSelected ? 'feed__label--selected' : ''}`}>{title}</div>
+        <div className='feed__counter'>{count}</div>
       </button>
     )
   }
 
   renderEditMode() {
-    const { icon, title, isDarkTheme } = this.props;
-
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const { icon, title } = this.props;
 
     return (
-      <div className={styles.editPanel}>
-        <div className={styles.icon} style={{ backgroundImage: `url(${icon})` }} />
-        <input className={styles.titleField} defaultValue={title} type="text" ref={this.titleFieldRef} />
-        <button className={styles.editButton} onClick={this.onChange}><div className={styles.editButtonIcon}><CheckmarkIcon /></div></button>
-        <button className={styles.editButton} onClick={this.onDelete}><div className={styles.editButtonIcon}><TrashIcon /></div></button>
+      <div className='feed__edit_panel'>
+        <div className='feed__icon' style={{ backgroundImage: `url(${icon})` }} />
+        <input className='feed____title_field' defaultValue={title} type="text" ref={this.titleFieldRef} />
+        <button className='feed__edit_button' onClick={this.onChange}><div className='icon'><CheckmarkIcon /></div></button>
+        <button className='feed__edit_button' onClick={this.onDelete}><div className='icon'><TrashIcon /></div></button>
       </div>
     )
   }
 
   public render() {
-    const { isDarkTheme, isEditing } = this.props;
-
-    let styles =lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const { isEditing } = this.props;
 
     return (
-      <div className={styles.container}>
+      <div className='feed__container'>
         {
           isEditing ? this.renderEditMode() : this.renderViewMode()
         }
@@ -97,12 +74,4 @@ class FeedItem extends React.Component<FeedProps> {
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme
-  };
-};
-
-export default connect(mapStateToProps)(FeedItem);
+export default FeedItem;

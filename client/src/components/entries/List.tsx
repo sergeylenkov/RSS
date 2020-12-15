@@ -7,7 +7,8 @@ import EntryItem from './Entry';
 import React from 'react';
 import { connect } from 'react-redux';
 import { debounce } from '../../utils';
-import styles from './List.module.css';
+
+import './List.scss';
 
 interface MapStateToProps extends RouteComponentProps {
   entries: Entry[];
@@ -114,10 +115,9 @@ class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
   }
 
   public render() {
-    const { isCollapseLong, entries } = this.props;
-
+    const { entries, isCollapseLong } = this.props;
     return (
-      <div className={styles.container}>
+      <div className='list__container'>
         {
           entries.map((entry: Entry) => {
             return (

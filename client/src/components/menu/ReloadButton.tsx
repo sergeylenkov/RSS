@@ -1,12 +1,10 @@
 import MenuButton from './MenuButton';
 import React from 'react';
 import { ReloadIcon } from '../Icons';
-import { connect } from 'react-redux';
-import darkStyles from './ReloadButton.dark.module.css';
-import lightStyles from './ReloadButton.module.css';
+
+import './ReloadButton.scss';
 
 interface MapStateToProps {
-  isDarkTheme: boolean;
 }
 
 interface ReloadButtonProps extends MapStateToProps {
@@ -20,29 +18,15 @@ interface ReloadButtonProps extends MapStateToProps {
 
 class ReloadButton extends React.Component<ReloadButtonProps> {
   public render() {
-    const { isDarkTheme, isSelected, count, isActive, isError, onUpdate, onClick } = this.props;
-    let styles = lightStyles;
-
-    if (isDarkTheme) {
-      styles = { ...lightStyles, ...darkStyles };
-    }
+    const { isSelected, count, isActive, isError, onUpdate, onClick } = this.props;
 
     return (
-      <div className={`${styles.container} ${isActive ? styles.active : ''} ${isError ? styles.error : ''}`}>
-        <button className={styles.icon} onClick={onUpdate}><ReloadIcon /></button>
+      <div className={`reload_button__container ${isActive ? 'reload_button__container--active' : ''}`}>
+        <button className={`reload_button__icon ${isActive ? 'reload_button__icon--active' : ''} ${isError ? 'reload_button__icon--error' : ''}`} onClick={onUpdate}><ReloadIcon /></button>
         <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
       </div>
     );
   }
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme,
-  };
-};
-
-
-export default connect(mapStateToProps)(ReloadButton);
+export default ReloadButton;
