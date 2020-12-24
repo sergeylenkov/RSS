@@ -139,7 +139,7 @@ class App extends React.Component<AppProps, AppState> {
 
     return (
       <BrowserRouter>
-        <div className={`container ${isGrid && 'grid'} ${isDarkTheme && 'dark'}`}>
+        <div className={`container ${isGrid ? 'grid' : ''} ${isDarkTheme ? 'dark' : ''}`}>
           <div className='header'>
             <div className='header__content'>
               <Menu
