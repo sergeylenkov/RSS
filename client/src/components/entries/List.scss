@@ -13,3 +13,12 @@
 		grid-column-gap: 20px;
 	}
 }
+
+@media (min-width: 1100px) {
+	.grid .list {
+		&__container {
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+	}
+
+}
