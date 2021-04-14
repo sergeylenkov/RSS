@@ -6,6 +6,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - run: cd ./server
-      - run: npm install
-      - run: npm test
+      - name: Install dependenses
+        working-directory: ./server
+        run: npm install
+      - name: Run tests
+        working-directory: ./server
+        run: npm test
