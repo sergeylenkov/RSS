@@ -1,3 +1,5 @@
+import { config } from '../constants';
+
 export interface SetReadResponse {
   id: number;
   isRead: boolean;
@@ -44,15 +46,15 @@ export interface Entry {
 }
 
 class Data {
-  private url = '';
+  private _url: string;
 
   constructor(url: string) {
-    this.url = url;
+    this._url = url;
   }
 
-  public update() {
+  update() {
     return new Promise<any[]>((resolve, reject) => {
-      fetch(`${this.url}feeds/update`).then((response) => {
+      fetch(`${this._url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
         resolve(data);
@@ -62,9 +64,9 @@ class Data {
     });
   }
 
-  public getFeeds() {
+  getFeeds() {
     return new Promise<Feed[]>((resolve) => {
-      fetch(`${this.url}feeds`).then((response) => {
+      fetch(`${this._url}feeds`).then((response) => {
         return response.json();
       }).then((feeds: Feed[]) => {
         feeds.forEach((feed: Feed) => {
@@ -83,9 +85,9 @@ class Data {
     });
   }
 
-  public allEntries() {
+  allEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries`).then((response) => {
+      fetch(`${this._url}entries`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
         resolve(data);
@@ -93,9 +95,9 @@ class Data {
     });
   }
 
-  public readEntries() {
+  readEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/read`).then((response) => {
+      fetch(`${this._url}entries/read`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
         resolve(data);
@@ -103,9 +105,9 @@ class Data {
     });
   }
 
-  public getFavorites() {
+  getFavorites() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/favorites`).then((response) => {
+      fetch(`${this._url}entries/favorites`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
         resolve(data);
@@ -113,9 +115,9 @@ class Data {
     });
   }
 
-  public getUnviewed() {
+  getUnviewed() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/unviewed`).then((response) => {
+      fetch(`${this._url}entries/unviewed`).then((response) => {
         return response.json();
       }).then((data: Entry[]) => {
         resolve(data);
@@ -123,9 +125,9 @@ class Data {
     });
   }
 
-  public setViewed(ids: number[]) {
+  setViewed(ids: number[]) {
     return new Promise<SetViewedResponse>((resolve) => {
-      fetch(`${this.url}entries/view`, {
+      fetch(`${this._url}entries/view`, {
         method: 'POST',
         body: JSON.stringify({ ids: ids }),
         headers: {
@@ -139,11 +141,11 @@ class Data {
     });
   }
 
-  public setRead(id: number, isRead: boolean) {
+  setRead(id: number, isRead: boolean) {
     return new Promise<SetReadResponse>((resolve) => {
       const method = isRead ? 'PUT' : 'DELETE';
 
-      fetch(`${this.url}entries/${id}/read`, {
+      fetch(`${this._url}entries/${id}/read`, {
         method: method
       }).then((response) => {
         return response.json();
@@ -153,11 +155,11 @@ class Data {
     });
   }
 
-  public setFavorite(id: number, isFavorite: boolean) {
+  setFavorite(id: number, isFavorite: boolean) {
     return new Promise<SetFavoriteResponse>((resolve) => {
       const method = isFavorite ? 'PUT' : 'DELETE';
 
-      fetch(`${this.url}entries/${id}/favorite`, {
+      fetch(`${this._url}entries/${id}/favorite`, {
         method: method
       }).then((response) => {
         return response.json();
@@ -167,9 +169,9 @@ class Data {
     });
   }
 
-  public addFeed(link: string) {
+  addFeed(link: string) {
     return new Promise((resolve) => {
-      fetch(`${this.url}feeds`, {
+      fetch(`${this._url}feeds`, {
         method: 'POST',
         body: JSON.stringify({ link: link }),
         headers: {
@@ -183,9 +185,9 @@ class Data {
     });
   }
 
-  public updateFeed(id: number, data: any) {
+  updateFeed(id: number, data: any) {
     return new Promise<UpdateFeedResponse>((resolve) => {
-      fetch(`${this.url}feeds/${id}`, {
+      fetch(`${this._url}feeds/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
         headers: {
@@ -199,9 +201,9 @@ class Data {
     });
   }
 
-  public deleteFeed(id: number) {
+  deleteFeed(id: number) {
     return new Promise((resolve) => {
-      fetch(`${this.url}feeds/${id}`, {
+      fetch(`${this._url}feeds/${id}`, {
         method: 'DELETE'
       }).then((response) => {
         return response.json();
@@ -211,9 +213,9 @@ class Data {
     });
   }
 
-  public clearEntries(days: number) {
+  clearEntries(days: number) {
     return new Promise<ClearEntriesResponse>((resolve) => {
-      fetch(`${this.url}entries/clear/${days}`).then((response) => {
+      fetch(`${this._url}entries/clear/${days}`).then((response) => {
         return response.json();
       }).then((data) => {
         resolve(data);
@@ -222,4 +224,4 @@ class Data {
   }
 }
 
-export default new Data('http://localhost:8080/');
+export default new Data(config.urls.api);
