@@ -21,7 +21,7 @@ export interface ClearEntriesResponse {
 
 export interface UpdateFeedResponse {
   id: number;
-  data: any;
+  data: Feed;
 }
 
 export interface Feed {
@@ -53,7 +53,7 @@ class Data {
   }
 
   update() {
-    return new Promise<any[]>((resolve, reject) => {
+    return new Promise<Feed[]>((resolve, reject) => {
       fetch(`${this._url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
@@ -170,7 +170,7 @@ class Data {
   }
 
   addFeed(link: string) {
-    return new Promise((resolve) => {
+    return new Promise<Feed>((resolve) => {
       fetch(`${this._url}feeds`, {
         method: 'POST',
         body: JSON.stringify({ link: link }),

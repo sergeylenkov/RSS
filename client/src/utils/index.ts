@@ -1,13 +1,10 @@
 export function debounce(func: any, wait: number, immediate: boolean) {
 	let timeout: number | null;
 
-	return function() {
-		const context = this;
-		const args = arguments;
-
+	return (...args: any[]) => {
 		const later = function() {
 			timeout = null;
-			if (!immediate) func.apply(context, args);
+			if (!immediate) func.apply(this, args);
 		};
 
 		const callNow = immediate && !timeout;
@@ -16,7 +13,7 @@ export function debounce(func: any, wait: number, immediate: boolean) {
 
 		timeout = window.setTimeout(later, wait);
 
-		if (callNow) func.apply(context, args);
+		if (callNow) func.apply(this, args);
 	};
 }
 
@@ -24,12 +21,12 @@ export function throttled(func: any, delay: number) {
 	let lastCall = 0;
 
 	return function(...args: any[]) {
-	  	const now = (new Date()).getTime();
-	  	if (now - lastCall < delay) {
+		const now = (new Date()).getTime();
+			if (now - lastCall < delay) {
 			return;
 		}
 
-	  	lastCall = now;
-	  	return func(...args);
+		lastCall = now;
+		return func(...args);
 	}
 }

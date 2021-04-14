@@ -263,7 +263,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   return state;
-};
+}
 
 function filterEntries(selectedFeeds: number[], allEntries: any[]) {
   let entries = [];
