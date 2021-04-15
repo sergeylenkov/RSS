@@ -1,17 +1,37 @@
+class Bem {
+  private _block: string;
+  private _elementSeparator = '__';
+  private _modifierSeparator = '_';
+  private _modifiers: string[] = [];
 
-export function bem(block: string) {
-  const _block = block;
+  constructor(block: string) {
+    this._block = block;
+    this._modifiers = [];
+  }
 
-  return {
-    block: () => {
-      return _block;
-    },
-    element: (name: string, modifier?: string) => {
-      if (modifier) {
-        return `${_block}__${name}_${modifier}`;
-      }
+  getElement(name: string): Bem {
+    return new Bem(`${this._block}${this._elementSeparator}${name}`);
+  }
 
-      return `${_block}__${name}`;
+  addModifier(name?: string): Bem {
+    if (name) {
+      this._modifiers.push(name);
     }
+
+    return this;
+  }
+
+  build(): string {
+    const modifiers = this._modifiers.map(modifier => {
+      return `${this._modifierSeparator}${modifier}`;
+    });
+
+    const classes = modifiers.map(modifier => {
+      return `${this._block}${modifier}`;
+    })
+
+    return [this._block, ...classes].join(' ');
   }
 }
+
+export { Bem };

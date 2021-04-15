@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import { bem } from '../../utils/bem';
+import { Bem } from '../../utils/bem';
 
 import './MenuButton.scss';
 
-const b = bem('menu-button');
+const block = new Bem('menu-button');
 
 interface MenuButtonProps {
   isSelected: boolean;
@@ -12,17 +12,21 @@ interface MenuButtonProps {
   onClick: () => void;
 }
 
-function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps) {
+function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JSX.Element {
   const onClickHandle = useCallback(() => {
     if (!isSelected) {
       onClick();
     }
   }, [isSelected]);
 
+  const blockClass = block.build();
+  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').build();
+  const counterClass = block.getElement('counter').build();
+
   return (
-    <button className={b.block()} onClick={onClickHandle}>
-      <div className={`${b.element('label')} ${isSelected ? `${b.element('label', 'selected')}` : ''}`}>{title}</div>
-      {isSelected && <div className={b.element('counter')}>{count}</div>}
+    <button className={blockClass} onClick={onClickHandle}>
+      <div className={labelClass}>{title}</div>
+      {isSelected && <div className={counterClass}>{count}</div>}
     </button>
   )
 }

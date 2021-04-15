@@ -1,11 +1,11 @@
 import MenuButton from './MenuButton';
 import React from 'react';
 import { ReloadIcon } from '../Icons';
-import { bem } from '../../utils/bem';
+import { Bem } from '../../utils/bem';
 
 import './ReloadButton.scss';
 
-const b = bem('reload-button');
+const block = new Bem('reload-button');
 
 interface ReloadButtonProps {
   isSelected: boolean;
@@ -16,10 +16,13 @@ interface ReloadButtonProps {
   onUpdate: () => void;
 }
 
-function ReloadButton({ isSelected, count, isActive, isError, onUpdate, onClick } : ReloadButtonProps) {
+function ReloadButton({ isSelected, count, isActive, isError, onUpdate, onClick } : ReloadButtonProps): JSX.Element {
+  const blockClass = block.addModifier(isActive ? 'active' : undefined).build();
+  const buttonClass = block.getElement('icon').addModifier(isActive ? 'active' : undefined).addModifier(isError ? 'error' : undefined).build();
+
   return (
-    <div className={`${b.block()} ${isActive ? 'reload-button_active' : ''}`}>
-      <button className={`${b.element('icon')} ${isActive ? `${b.element('icon', 'active')}` : ''} ${isError ? `${b.element('icon', 'error')}` : ''}`} onClick={onUpdate}><ReloadIcon /></button>
+    <div className={blockClass}>
+      <button className={buttonClass} onClick={onUpdate}><ReloadIcon /></button>
       <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
     </div>
   );
