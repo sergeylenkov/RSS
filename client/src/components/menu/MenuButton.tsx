@@ -1,36 +1,30 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { bem } from '../../utils/bem';
 
 import './MenuButton.scss';
 
-interface MapStateToProps {
-}
+const b = bem('menu-button');
 
-interface MenuButtonProps extends MapStateToProps {
+interface MenuButtonProps {
   isSelected: boolean;
   count: number;
   title: string;
   onClick: () => void;
 }
 
-class MenuButton extends React.Component<MenuButtonProps> {
-  private onClick = () => {
-    const { isSelected, onClick } = this.props;
-
+function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps) {
+  const onClickHandle = useCallback(() => {
     if (!isSelected) {
       onClick();
     }
-  };
+  }, [isSelected]);
 
-  public render() {
-    const { isSelected, count, title } = this.props;
-
-    return (
-      <button className={`menu_button__container`} onClick={this.onClick}>
-        <div className={`menu_button__label ${isSelected ? 'menu_button__label--selected' : ''}`}>{title}</div>
-        {isSelected && <div className='menu_button__counter'>{count}</div>}
-      </button>
-    )
-  }
+  return (
+    <button className={b.block()} onClick={onClickHandle}>
+      <div className={`${b.element('label')} ${isSelected ? `${b.element('label', 'selected')}` : ''}`}>{title}</div>
+      {isSelected && <div className={b.element('counter')}>{count}</div>}
+    </button>
+  )
 }
 
 export default MenuButton;

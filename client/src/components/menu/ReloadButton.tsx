@@ -1,13 +1,13 @@
 import MenuButton from './MenuButton';
 import React from 'react';
 import { ReloadIcon } from '../Icons';
+import { bem } from '../../utils/bem';
 
 import './ReloadButton.scss';
 
-interface MapStateToProps {
-}
+const b = bem('reload-button');
 
-interface ReloadButtonProps extends MapStateToProps {
+interface ReloadButtonProps {
   isSelected: boolean;
   isActive: boolean;
   isError: boolean;
@@ -16,17 +16,13 @@ interface ReloadButtonProps extends MapStateToProps {
   onUpdate: () => void;
 }
 
-class ReloadButton extends React.Component<ReloadButtonProps> {
-  public render() {
-    const { isSelected, count, isActive, isError, onUpdate, onClick } = this.props;
-
-    return (
-      <div className={`reload_button__container ${isActive ? 'reload_button__container--active' : ''}`}>
-        <button className={`reload_button__icon ${isActive ? 'reload_button__icon--active' : ''} ${isError ? 'reload_button__icon--error' : ''}`} onClick={onUpdate}><ReloadIcon /></button>
-        <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
-      </div>
-    );
-  }
+function ReloadButton({ isSelected, count, isActive, isError, onUpdate, onClick } : ReloadButtonProps) {
+  return (
+    <div className={`${b.block()} ${isActive ? 'reload-button_active' : ''}`}>
+      <button className={`${b.element('icon')} ${isActive ? `${b.element('icon', 'active')}` : ''} ${isError ? `${b.element('icon', 'error')}` : ''}`} onClick={onUpdate}><ReloadIcon /></button>
+      <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
+    </div>
+  );
 }
 
 export default ReloadButton;

@@ -1,17 +1,15 @@
-.reload_button {
-	&__container {
-		display: flex;
-		flex-direction: row;
-		flex-shrink: 0;
-		overflow: hidden;
-		margin: 0;
-		opacity: 1;
-		transition: opacity 0.2s ease-in-out;
+.reload-button {
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	overflow: hidden;
+	margin: 0;
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
 
-		&--active {
-			opacity: 0.6;
-			pointer-events: none;
-		}
+	&_active {
+		opacity: 0.6;
+		pointer-events: none;
 	}
 
 	&__icon {
@@ -23,11 +21,11 @@
 		fill: none;
 		cursor: pointer;
 
-		&--active {
+		&_active {
 			animation: spin 2s linear infinite;
 		}
 
-		&--error {
+		&_error {
 			stroke: #ff0000;
 		}
 	}
@@ -42,7 +40,7 @@
 * theme
 */
 
-.dark .reload_button {
+.dark .reload-button {
 	&__icon {
 		stroke: #f3f3f3;
 	}

@@ -1,19 +1,17 @@
-.menu_button {
-	&__container {
-		display: flex;
-		flex-direction: row;
-		flex-shrink: 0;
-		height: 100%;
-		margin: 0 20px 0 0;
-		cursor: pointer;
-	}
+.menu-button {
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	height: 100%;
+	margin: 0 20px 0 0;
+	cursor: pointer;
 
 	&__label {
 		margin: auto 0;
 		font-size: 14px;
 		color: #000000;
 
-		&--selected {
+		&_-selected {
 			font-weight: bold;
 		}
 	}
@@ -32,11 +30,11 @@
 * theme
 */
 
-.dark .menu_button {
+.dark .menu-button {
 	&__label {
 		color: #bfbfbf;
 
-		&--selected {
+		&_selected {
 			color: #f3f3f3;
 		}
 	}

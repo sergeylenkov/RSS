@@ -53,7 +53,7 @@ class Data {
   }
 
   update() {
-    return new Promise<Feed[]>((resolve, reject) => {
+    return new Promise<Entry[]>((resolve, reject) => {
       fetch(`${this._url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
