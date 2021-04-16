@@ -13,13 +13,13 @@ import {
 } from './store/actions';
 
 import { CSSTransition } from 'react-transition-group';
-import { Dispatch } from "redux";
-import EntriesList from './components/entries/List';
-import FeedsList from './components/feeds/Feeds';
+import { Dispatch } from 'redux';
+import EntriesList from './components/entries/EntriesList';
+import FeedsList from './components/feeds/FeedsList';
 import Menu from './components/menu/Menu';
 import React from 'react';
 import Settings from './components/settings/Settings';
-import SettingsButton from './components/settings/Button';
+import SettingsButton from './components/settings/SettingsButton';
 import { connect } from 'react-redux';
 
 import './App.scss';
@@ -39,8 +39,7 @@ interface MapStateToProps {
   feedsAdd: (feed: any) => void;
 }
 
-interface AppProps extends MapStateToProps {
-}
+type AppProps = MapStateToProps;
 
 interface AppState {
   isSettingsVisible: boolean;
@@ -58,9 +57,7 @@ class App extends React.Component<AppProps, AppState> {
       feedsUpdated(feeds);
     });
 
-    Data.clearEntries(keepDays).then(days => {
-
-    });
+    Data.clearEntries(keepDays);
   }
 
   private onUpdate = () => {
@@ -84,7 +81,7 @@ class App extends React.Component<AppProps, AppState> {
   private onAddFeed = (link: string) => {
     const { feedsAdd, feedsEditing } = this.props;
 
-    Data.addFeed(link).then((feed: any) => {
+    Data.addFeed(link).then((feed: Feed) => {
       feedsAdd(feed);
       feedsEditing(false);
     }).catch((error: any) => {
@@ -104,7 +101,7 @@ class App extends React.Component<AppProps, AppState> {
   private onDeleteFeed = (id: number) => {
     const { feedsDelete, feedsEditing } = this.props;
 
-    Data.deleteFeed(id).then((data: any) => {
+    Data.deleteFeed(id).then(() => {
       feedsDelete(id);
       feedsEditing(false);
     });

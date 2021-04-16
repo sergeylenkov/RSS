@@ -4,3 +4,4 @@ database.sqlite
 .DS_Store
 client/build
 .idea
+client/.scannerwork

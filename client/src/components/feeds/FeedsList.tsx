@@ -1,13 +1,13 @@
 import { feedsEditing, feedsSelect } from '../../store/actions';
 
-import { Dispatch } from "redux";
+import { Dispatch } from 'redux';
 import { Feed } from '../../data';
-import FeedEdit from './Edit';
-import FeedItem from './Feed';
+import FeedEdit from './FeedEdit';
+import FeedItem from './FeedItem';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import './Feeds.scss';
+import './FeedsList.scss';
 
 interface MapStateToProps {
   isFeedsEditing: boolean;

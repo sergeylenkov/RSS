@@ -12,9 +12,7 @@
     height: 50px;
     background: #d9f5ff;
     z-index: 10;
-}
 
-.header {
     &__content {
         position: relative;
         display: flex;
@@ -90,9 +88,7 @@
     .header {
         box-sizing: border-box;
         padding: 0 0 0 20px;
-    }
 
-    .header {
         &__content {
             width: 100%;
             max-width: 100%;

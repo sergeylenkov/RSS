@@ -3,12 +3,12 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { entriesUpdated, updateEntriesCount, updateFavorite, updateRead, updateUnviewedCount, updateViewed } from '../../store/actions';
 
 import { Dispatch } from 'redux';
-import EntryItem from './Entry';
+import EntryItem from './EntryItem';
 import React from 'react';
 import { connect } from 'react-redux';
 import { debounce } from '../../utils';
 
-import './List.scss';
+import './EntriesList.scss';
 
 interface MapStateToProps extends RouteComponentProps {
   entries: Entry[];
@@ -22,13 +22,9 @@ interface MapStateToProps extends RouteComponentProps {
   updateRead: (id: number, isRead: boolean) => void;
 }
 
-interface EntriesListProps extends MapStateToProps {
-}
+type EntriesListProps = MapStateToProps
 
-interface EntriesListState {
-}
-
-class EntriesList extends React.Component<EntriesListProps, EntriesListState> {
+class EntriesList extends React.Component<EntriesListProps> {
   private viewedIds: { [key: number] : boolean } = {};
 
   public componentDidMount() {

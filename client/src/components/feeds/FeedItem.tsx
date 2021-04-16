@@ -1,8 +1,7 @@
+import React from 'react';
 import { CheckmarkIcon, TrashIcon } from '../Icons';
 
-import React from 'react';
-
-import './Feed.scss';
+import './FeedItem.scss';
 
 interface FeedProps {
   id: number;
@@ -19,24 +18,26 @@ interface FeedProps {
 class FeedItem extends React.Component<FeedProps> {
   private titleFieldRef = React.createRef<HTMLInputElement>();
 
-  onSelect = () => {
+  onSelect = (): void => {
     const { id, onSelect } = this.props;
     onSelect(id);
   };
 
-  onDelete = () => {
+  onDelete = (): void => {
     const { id, onDelete } = this.props;
     onDelete(id);
   };
 
-  onChange = () => {
-    const { id, onChange } = this.props;
-    const value = this.titleFieldRef.current!.value;
+  onChange = (): void => {
+    if (this.titleFieldRef && this.titleFieldRef.current) {
+      const { id, onChange } = this.props;
+      const value = this.titleFieldRef.current.value;
 
-    onChange(id, value);
+      onChange(id, value);
+    }
   }
 
-  renderViewMode() {
+  renderViewMode(): JSX.Element {
     const { icon, title, count, isSelected } = this.props;
 
     return (
@@ -48,7 +49,7 @@ class FeedItem extends React.Component<FeedProps> {
     )
   }
 
-  renderEditMode() {
+  renderEditMode(): JSX.Element {
     const { icon, title } = this.props;
 
     return (
@@ -61,7 +62,7 @@ class FeedItem extends React.Component<FeedProps> {
     )
   }
 
-  public render() {
+  public render(): JSX.Element {
     const { isEditing } = this.props;
 
     return (

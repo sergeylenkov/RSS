@@ -35,10 +35,12 @@ class Settings extends React.Component<SettingsProps> {
   };
 
   onChangeDays = () => {
-    const { updateKeepDays } = this.props;
-    const days = parseInt(this.daysFieldRef.current!.value);
+    if (this.daysFieldRef && this.daysFieldRef.current) {
+      const { updateKeepDays } = this.props;
+      const days = parseInt(this.daysFieldRef.current.value);
 
-    updateKeepDays(days);
+      updateKeepDays(days);
+    }
   };
 
   onToggleTheme = () => {

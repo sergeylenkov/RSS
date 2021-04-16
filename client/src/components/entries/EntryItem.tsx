@@ -1,15 +1,12 @@
 import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 
-import { Entry } from "../../data";
+import { Entry } from '../../data';
 import React from 'react';
 import { debounce } from '../../utils';
 
-import './Entry.scss';
+import './EntryItem.scss';
 
-interface MapStateToProps {
-}
-
-interface EntryProps extends MapStateToProps {
+interface EntryProps {
   entry: Entry;
   isCollapseLong: boolean;
   onView: (id: number) => void;
@@ -40,14 +37,14 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     }
   };
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     if (!this.props.entry.isViewed) {
       window.addEventListener('scroll', this.onScrollDebounce);
       window.addEventListener('mousemove', this.onMouseMove);
     }
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.removeEventListener('scroll', this.onScrollDebounce);
     window.removeEventListener('mousemove', this.onMouseMove);
   }
@@ -57,26 +54,24 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   }, 500, false)
 
   private removeSelfLinks(description: string, link: string) {
-    let el = document.createElement('div');
+    const el = document.createElement('div');
     el.innerHTML = description;
 
-    let items = Array.from(el.getElementsByTagName('a'));
+    const items = Array.from(el.getElementsByTagName('a'));
 
-    let links = items.filter((item) => {
-      let href = item.getAttribute('href');
+    const links = items.filter((item) => {
+      const href = item.getAttribute('href');
 
       return !!(href && href.indexOf(link) !== -1);
     });
 
-    for (let i = 0; i < links.length; i++) {
-      links[i].remove();
-    }
+    links.forEach(link => link.remove());
 
     return el.innerHTML;
   }
 
-  static isLong(description: string) {
-    let el = document.createElement('div');
+  static isLong(description: string): boolean {
+    const el = document.createElement('div');
     el.innerHTML = description;
 
     if (el.getElementsByTagName('img').length > 3) {
@@ -89,8 +84,8 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   private onScroll() {
     const { entry, onView } = this.props;
 
-    if (!entry.isViewed) {
-      const rect = this.itemElement!.getBoundingClientRect();
+    if (!entry.isViewed && this.itemElement) {
+      const rect = this.itemElement.getBoundingClientRect();
       const height = window.innerHeight / 2;
 
       let isViewed = false;
@@ -100,9 +95,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
         scrollEnd = true;
       }
 
-      if (scrollEnd && rect.top > 0) {
-        isViewed = true;
-      } else if (rect.top < height) {
+      if ((scrollEnd && rect.top > 0) || (rect.top < height)) {
         isViewed = true;
       }
 
@@ -115,8 +108,8 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   private onMouseMove = () => {
     const { entry, onView } = this.props;
 
-    if (!entry.isViewed) {
-      const rect = this.itemElement!.getBoundingClientRect();
+    if (!entry.isViewed && this.itemElement) {
+      const rect = this.itemElement.getBoundingClientRect();
       const height = rect.top + rect.height;
 
       if (height < window.innerHeight) {
@@ -153,7 +146,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     onSetFavorite(entry.id, !entry.isFavorite);
   };
 
-  public render() {
+  public render(): JSX.Element {
     const { entry, isCollapseLong } = this.props;
     const { isExpanded } = this.state;
 
@@ -169,7 +162,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     let expandButton = null;
 
     if (isCollapseLong && !isExpanded && EntryItem.isLong(description)) {
-      className += ` collapsed`;
+      className += ' collapsed';
       expandButton = <button className='entry__expandButton' onClick={this.onExpand} />
     }
 
