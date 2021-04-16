@@ -1,15 +1,13 @@
 .entry {
-	&__container {
-		position: relative;
+	position: relative;
 		flex-shrink: 0;
 		width: 100%;
   	margin: 0 0 20px 0;
   	padding: 20px;
   	box-sizing: border-box;
 		background: #ffffff;
-	}
 
-	&__container.read {
+	&_read {
 		opacity: 0.8;
 	}
 
@@ -34,7 +32,7 @@
 		overflow: hidden;
 	}
 
-	.collapsed &__description {
+	&_collapsed &__description {
 		max-height: 800px;
 	}
 
@@ -139,9 +137,7 @@
 */
 
 .dark .entry {
-	&__container {
-		background-color: #1d1d1d;
-	}
+	background-color: #1d1d1d;
 
 	&__title a {
 		color: #bfbfbf;

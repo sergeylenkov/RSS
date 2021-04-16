@@ -65,7 +65,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
       return !!(href && href.indexOf(link) !== -1);
     });
 
-    links.forEach(link => link.remove());
+    links.forEach(el => el.remove());
 
     return el.innerHTML;
   }
@@ -158,11 +158,11 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
       readIcon = <div className='entry__info__item' onClick={this.onUnread}><div className='entry__info__icon'><ReadIcon /></div></div>;
     }
 
-    let className = 'entry__container';
+    let className = 'entry';
     let expandButton = null;
 
     if (isCollapseLong && !isExpanded && EntryItem.isLong(description)) {
-      className += ' collapsed';
+      className += '_collapsed';
       expandButton = <button className='entry__expandButton' onClick={this.onExpand} />
     }
 

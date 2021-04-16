@@ -5,3 +5,4 @@ database.sqlite
 client/build
 .idea
 client/.scannerwork
+client/tests/sonar-reporter.xml

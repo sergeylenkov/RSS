@@ -1,4 +1,4 @@
-import { Bem } from './bem';
+import { Bem } from '../src/utils/bem';
 
 const b = new Bem('test-block');
 

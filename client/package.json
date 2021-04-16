@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/react-transition-group": "^4.2.4",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
     "node-sass": "^4.14.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
@@ -20,6 +21,7 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.3",
+    "@types/react-transition-group": "^4.2.4",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "css-module-types": "^0.2.2",
@@ -41,7 +43,13 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter",
+    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
+  },
+  "jestSonar": {
+    "reportPath": "tests",
+    "reportFile": "sonar-reporter.xml",
+    "indent": 4
   },
   "browserslist": [
     ">0.2%",
