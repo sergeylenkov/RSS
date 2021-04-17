@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Data, { Entry, Feed, UpdateFeedResponse } from './data';
 import {
@@ -17,7 +18,6 @@ import { Dispatch } from 'redux';
 import EntriesList from './components/entries/EntriesList';
 import FeedsList from './components/feeds/FeedsList';
 import Menu from './components/menu/Menu';
-import React from 'react';
 import Settings from './components/settings/Settings';
 import SettingsButton from './components/settings/SettingsButton';
 import { connect } from 'react-redux';

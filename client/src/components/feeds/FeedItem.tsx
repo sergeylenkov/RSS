@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { Bem } from '../../utils/bem';
 import { CheckmarkIcon, TrashIcon } from '../Icons';
 
 import './FeedItem.scss';
+
+const block = new Bem('feed-item');
 
 interface FeedProps {
   id: number;
@@ -15,64 +18,34 @@ interface FeedProps {
   onChange: (id: number, title: string) => void;
 }
 
-class FeedItem extends React.Component<FeedProps> {
-  private titleFieldRef = React.createRef<HTMLInputElement>();
+function FeedItem({ id, icon, title, count, isEditing, isSelected, onSelect, onDelete, onChange }: FeedProps): JSX.Element {
+  const titleFieldRef = useRef<HTMLInputElement>(null);
 
-  onSelect = (): void => {
-    const { id, onSelect } = this.props;
-    onSelect(id);
-  };
-
-  onDelete = (): void => {
-    const { id, onDelete } = this.props;
-    onDelete(id);
-  };
-
-  onChange = (): void => {
-    if (this.titleFieldRef && this.titleFieldRef.current) {
-      const { id, onChange } = this.props;
-      const value = this.titleFieldRef.current.value;
-
-      onChange(id, value);
+  const onChangeTitle = (): void => {
+    if (titleFieldRef && titleFieldRef.current) {
+      onChange(id, titleFieldRef.current.value.trim());
     }
   }
 
-  renderViewMode(): JSX.Element {
-    const { icon, title, count, isSelected } = this.props;
-
-    return (
-      <button className='feed__button' onClick={this.onSelect}>
-        <div className='feed__icon' style={{ backgroundImage: `url(${icon})` }} />
-        <div className={`feed__label ${isSelected ? 'feed__label--selected' : ''}`}>{title}</div>
-        <div className='feed__counter'>{count}</div>
-      </button>
-    )
-  }
-
-  renderEditMode(): JSX.Element {
-    const { icon, title } = this.props;
-
-    return (
-      <div className='feed__edit_panel'>
-        <div className='feed__icon' style={{ backgroundImage: `url(${icon})` }} />
-        <input className='feed____title_field' defaultValue={title} type="text" ref={this.titleFieldRef} />
-        <button className='feed__edit_button' onClick={this.onChange}><div className='icon'><CheckmarkIcon /></div></button>
-        <button className='feed__edit_button' onClick={this.onDelete}><div className='icon'><TrashIcon /></div></button>
-      </div>
-    )
-  }
-
-  public render(): JSX.Element {
-    const { isEditing } = this.props;
-
-    return (
-      <div className='feed__container'>
-        {
-          isEditing ? this.renderEditMode() : this.renderViewMode()
-        }
-      </div>
-    );
-  }
+  return (
+    <div className={block.build()}>
+      {
+        isEditing ?
+        <div className='feed-item__edit_panel'>
+          <div className='feed-item__icon' style={{ backgroundImage: `url(${icon})` }} />
+          <input ref={titleFieldRef} className='feed-item__title_field' defaultValue={title} type="text" />
+          <button className='feed-item__edit_button' onClick={onChangeTitle}><div className='icon'><CheckmarkIcon /></div></button>
+          <button className='feed-item__edit_button' onClick={() => onDelete(id)}><div className='icon'><TrashIcon /></div></button>
+        </div>
+        :
+        <button className='feed-item__button' onClick={() => onSelect(id)}>
+          <div className='feed-item__icon' style={{ backgroundImage: `url(${icon})` }} />
+          <div className={`feed-item__label ${isSelected ? 'feed-item__label_selected' : ''}`}>{title}</div>
+          <div className='feed-item__counter'>{count}</div>
+        </button>
+      }
+    </div>
+  );
 }
 
 export default FeedItem;

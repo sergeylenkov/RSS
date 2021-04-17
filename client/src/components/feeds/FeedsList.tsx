@@ -45,7 +45,7 @@ class FeedsList extends React.Component<FeedsListProps, FeedsListState> {
     } = this.props;
 
     return (
-      <div className='feeds__container'>
+      <div className='feeds-list'>
         {
           feeds.map((feed: Feed) => {
             const isSelected = selectedFeeds.includes(feed.id);

@@ -1,10 +1,8 @@
-.feed {
-  &__container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 30px;
-  }
+.feed-item {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 30px;
 
   &__button {
     display: flex;
@@ -32,7 +30,7 @@
     text-overflow: ellipsis;
     color: #000000;
 
-    &--selected {
+    &_selected {
       font-weight: bold;
     }
   }
@@ -83,19 +81,17 @@
 * grid
 */
 
-.grid .feed {
-  &__container {
-    width: auto;
-    height: 30px;
-    margin: auto 20px auto 0;
-  }
+.grid .feed-item {
+  width: auto;
+  height: 30px;
+  margin: auto 20px auto 0;
 }
 
 /*
 * theme
 */
 
-.dark .feed {
+.dark .feed-item {
   &__icon {
     background-color: #bfbfbf;
   }
@@ -117,11 +113,9 @@
 }
 
 @media (max-width: 768px) {
-  .feed {
-    &__container {
-      flex-shrink: 0;
-      width: auto;
-      margin-right: 20px;
-    }
+  .feed-item {
+    flex-shrink: 0;
+    width: auto;
+    margin-right: 20px;
   }
 }
