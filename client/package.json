@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.10",
-    "@testing-library/react": "^11.2.6",
     "node-sass": "^4.14.1",
-    "react": "^16.8.1",
+    "react": "^16.14.0",
     "react-dom": "^16.8.1",
     "react-redux": "^7.1.3",
     "react-router-dom": "^5.1.2",
@@ -15,6 +13,8 @@
     "redux": "^4.0.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
     "@types/react": "^16.9.23",
@@ -24,10 +24,13 @@
     "@types/react-transition-group": "^4.2.4",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
+    "@types/react-test-renderer": "^17.0.1",
     "css-module-types": "^0.2.2",
     "eslint": "^7.24.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
     "jest-sonar-reporter": "^2.0.0",
+    "react-test-renderer": "^17.0.2",
     "ts-jest": "^26.5.4",
     "typescript": "^3.8.3"
   },
@@ -42,9 +45,26 @@
     "extends": "react-app"
   },
   "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest-setup.ts"
+    ],
     "preset": "ts-jest",
     "testResultsProcessor": "jest-sonar-reporter",
-    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "identity-obj-proxy"
+    }
   },
   "jestSonar": {
     "reportPath": "tests",

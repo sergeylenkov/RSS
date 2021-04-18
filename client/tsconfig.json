@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "esnext",
     "allowJs": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
@@ -27,6 +27,6 @@
   "include": [
     "src",
     "global.d.ts",
-    "tests"
+    "__tests__"
   ]
 }

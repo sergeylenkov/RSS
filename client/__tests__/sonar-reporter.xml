@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Projects\RSS\client\tests\bem.test.ts">
+        <testCase name="bem block" duration="2"/>
+        <testCase name="bem block with modifier" duration="0"/>
+        <testCase name="bem block element" duration="0"/>
+        <testCase name="bem block element with modifier" duration="1"/>
+    </file>
+    <file path="D:\Projects\RSS\client\tests\SettingsButton.test.tsx">
+    </file>
+</testExecutions>
