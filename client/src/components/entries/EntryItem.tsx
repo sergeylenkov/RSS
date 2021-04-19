@@ -1,8 +1,8 @@
-import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
-
-import { Entry } from '../../data';
 import React from 'react';
+import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
+import { Entry } from '../../data';
 import { debounce } from '../../utils';
+import { isLong, removeSelfLinks } from '../../utils/entry';
 
 import './EntryItem.scss';
 
@@ -52,34 +52,6 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   private onScrollDebounce = debounce(() => {
     this.onScroll();
   }, 500, false)
-
-  private removeSelfLinks(description: string, link: string) {
-    const element = document.createElement('div');
-    element.innerHTML = description;
-
-    const items = Array.from(element.getElementsByTagName('a'));
-
-    const links = items.filter((item) => {
-      const href = item.getAttribute('href');
-
-      return !!(href && href.indexOf(link) !== -1);
-    });
-
-    links.forEach(el => el.remove());
-
-    return element.innerHTML;
-  }
-
-  static isLong(description: string): boolean {
-    const element = document.createElement('div');
-    element.innerHTML = description;
-
-    if (element.getElementsByTagName('img').length > 3) {
-      return true;
-    }
-
-    return element.innerText.length > 1500;
-  }
 
   private onScroll() {
     const { entry, onView } = this.props;
@@ -150,7 +122,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     const { entry, isCollapseLong } = this.props;
     const { isExpanded } = this.state;
 
-    const description = this.removeSelfLinks(entry.description, entry.link);
+    const description = removeSelfLinks(entry.description, entry.link);
 
     let readIcon = null;
 
@@ -161,7 +133,7 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     let className = 'entry';
     let expandButton = null;
 
-    if (isCollapseLong && !isExpanded && EntryItem.isLong(description)) {
+    if (isCollapseLong && !isExpanded && isLong(description)) {
       className += '_collapsed';
       expandButton = <button className='entry__expandButton' onClick={this.onExpand} />
     }
