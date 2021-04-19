@@ -7,7 +7,7 @@ describe('GET /feeds', function() {
     request(app).get('/feeds')
       .expect(200)
       .end((err, res) => {
-        assert(res.body.items.length > 0, 'must be more then 0');
+        assert(res.body.length > 0, 'must be more then 0');
         done();
       });
   });
@@ -18,7 +18,7 @@ describe('GET /entries', function() {
     request(app).get('/entries')
       .expect(200)
       .end((err, res) => {
-        assert(res.body.items.length > 0, 'must be more then 0');
+        assert(res.body.length > 0, 'must be more then 0');
         done();
       });
   });
@@ -29,7 +29,7 @@ describe('GET /entries/unviewed', function() {
     request(app).get('/entries/unviewed')
       .expect(200)
       .end((err, res) => {
-        assert(res.body.items.length > 0, 'must be more then 0');
+        assert(res.body.length > 0, 'must be more then 0');
         done();
       });
   });
@@ -42,18 +42,19 @@ describe('GET /feeds/update', function() {
     request(app).get('/feeds/update')
       .expect(200)
       .end((err, res) => {
-        assert(res.body.items.length > 0, 'must be more then 0');
+        assert(res.body.length > 0, 'must be more then 0');
         done();
       });
   });
 });
 
-describe('GET /entries/1/favorite', function() {
-  it('should set entru as favroite', (done) => {
+describe('PUT /entries/1/favorite', function() {
+  it('should set entry as favorite', (done) => {
     request(app).put('/entries/1/favorite')
       .expect(200)
       .end((err, res) => {
-        assert(res.body.item.isFavorite === true, 'must be true');
+        assert(parseInt(res.body.id) === 1, 'id must be 1');
+        assert(res.body.isFavorite === true, 'must be true');
         done();
       });
   });
