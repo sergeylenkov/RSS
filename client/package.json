@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,6 +49,7 @@
       "<rootDir>/jest-setup.ts"
     ],
     "preset": "ts-jest",
+    "collectCoverage": true,
     "testResultsProcessor": "jest-sonar-reporter",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     "transform": {

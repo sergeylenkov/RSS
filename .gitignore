@@ -6,3 +6,5 @@ client/build
 .idea
 client/.scannerwork
 client/tests/sonar-reporter.xml
+client/coverage
+client/__tests__/sonar-reporter.xml
