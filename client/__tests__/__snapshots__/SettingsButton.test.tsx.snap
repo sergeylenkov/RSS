@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SettingsButton contains correct text 1`] = `
+exports[`SettingsButton correct rendering 1`] = `
 <button
   className="menu-button menu-button_active"
   onClick={[Function]}

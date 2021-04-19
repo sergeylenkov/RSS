@@ -54,10 +54,10 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
   }, 500, false)
 
   private removeSelfLinks(description: string, link: string) {
-    const el = document.createElement('div');
-    el.innerHTML = description;
+    const element = document.createElement('div');
+    element.innerHTML = description;
 
-    const items = Array.from(el.getElementsByTagName('a'));
+    const items = Array.from(element.getElementsByTagName('a'));
 
     const links = items.filter((item) => {
       const href = item.getAttribute('href');
@@ -67,18 +67,18 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
 
     links.forEach(el => el.remove());
 
-    return el.innerHTML;
+    return element.innerHTML;
   }
 
   static isLong(description: string): boolean {
-    const el = document.createElement('div');
-    el.innerHTML = description;
+    const element = document.createElement('div');
+    element.innerHTML = description;
 
-    if (el.getElementsByTagName('img').length > 3) {
+    if (element.getElementsByTagName('img').length > 3) {
       return true;
     }
 
-    return el.innerText.length > 1500;
+    return element.innerText.length > 1500;
   }
 
   private onScroll() {
