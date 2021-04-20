@@ -3,8 +3,13 @@ import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 import { Entry } from '../../data';
 import { debounce } from '../../utils';
 import { isLong, removeSelfLinks } from '../../utils/entry';
+import { Bem } from '../../utils/bem';
 
 import './EntryItem.scss';
+
+const block = new Bem('entry-item');
+const feedBlock = new Bem('entry-item-feed');
+const infoBlock = new Bem('entry-item-info');
 
 interface EntryProps {
   entry: Entry;
@@ -123,41 +128,33 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     const { isExpanded } = this.state;
 
     const description = removeSelfLinks(entry.description, entry.link);
-
-    let readIcon = null;
-
-    if (entry.isRead) {
-      readIcon = <div className='entry__info__item' onClick={this.onUnread}><div className='entry__info__icon'><ReadIcon /></div></div>;
-    }
-
-    let className = 'entry';
-    let expandButton = null;
-
-    if (isCollapseLong && !isExpanded && isLong(description)) {
-      className += '_collapsed';
-      expandButton = <button className='entry__expandButton' onClick={this.onExpand} />
-    }
+    const isCollapsed = isCollapseLong && !isExpanded && isLong(description);
+    const blockClass = block.addModifier(isCollapsed ? 'collapsed' : undefined).build();
 
     return (
-      <div className={className} ref={this.itemRefCallback}>
+      <div className={blockClass} ref={this.itemRefCallback}>
         <div
-          className='entry__title'
+          className={block.getElement('title').build()}
           ref={this.titleRefCallback}>
           <a href={entry.link}>{entry.title}</a>
         </div>
-        <div className='entry__feed'>
-          <div className='entry__feed__icon' style={{ backgroundImage: `url(${entry.feed.icon})` }} />
-          <div className='entry__feed__title'>{entry.feed.title}</div>
+        <div className={feedBlock.build()}>
+          <div className={feedBlock.getElement('icon').build()} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
+          <div className={feedBlock.getElement('title').build()}>{entry.feed.title}</div>
         </div>
-        <div className='entry__description' dangerouslySetInnerHTML={{ __html: description }} />
-        {expandButton}
-        <div className='entry__info'>
-          <div className='entry__info__item'>
-            <div className='entry__info__icon' onClick={this.onSetFavorite}>
+        <div className={block.getElement('description').build()} dangerouslySetInnerHTML={{ __html: description }} />
+        { isCollapsed && <button className='entry__expandButton' onClick={this.onExpand} />}
+        <div className={infoBlock.build()}>
+          <div className={infoBlock.getElement('item').build()}>
+            <div className={infoBlock.getElement('icon').build()} onClick={this.onSetFavorite}>
               {entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
             </div>
           </div>
-          {readIcon}
+          { entry.isRead &&
+            <div className={infoBlock.getElement('item').build()} onClick={this.onUnread}>
+              <div className={infoBlock.getElement('icon').build()}><ReadIcon /></div>
+            </div>
+          }
         </div>
       </div>
     );

@@ -1,4 +1,4 @@
-export function debounce(func: any, wait: number, immediate: boolean) {
+export function debounce(func: (...args: any[]) => void, wait: number, immediate: boolean): () => void {
 	let timeout: number | null;
 
 	return (...args: any[]) => {
@@ -15,18 +15,4 @@ export function debounce(func: any, wait: number, immediate: boolean) {
 
 		if (callNow) func.apply(this, args);
 	};
-}
-
-export function throttled(func: any, delay: number) {
-	let lastCall = 0;
-
-	return function(...args: any[]) {
-		const now = (new Date()).getTime();
-			if (now - lastCall < delay) {
-			return;
-		}
-
-		lastCall = now;
-		return func(...args);
-	}
 }

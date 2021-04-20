@@ -32,6 +32,10 @@ class Bem {
 
     return [this._block, ...classes].join(' ');
   }
+
+  toString(): string {
+    return this.build();
+  }
 }
 
 export { Bem };

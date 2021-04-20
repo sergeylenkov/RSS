@@ -1,11 +1,13 @@
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import MenuButton from './MenuButton';
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import MenuButton from './MenuButton';
 import ReloadButton from './ReloadButton';
 import { connect } from 'react-redux';
+import { Bem } from '../../utils/bem';
 
 import './Menu.scss';
+
+const block = new Bem('menu');
 
 interface MapStateToProps extends RouteComponentProps {
   isUpdating: boolean;
@@ -36,7 +38,7 @@ class Menu extends React.Component<MenuProps> {
     } = this.props;
 
     return (
-      <div className='menu__container'>
+      <div className={block.build()}>
         <ReloadButton
           isActive={isUpdating}
           isSelected={pathname === '/'}

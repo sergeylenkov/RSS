@@ -6,6 +6,10 @@ test('bem block', () => {
   expect(b.build()).toBe('test-block');
 });
 
+test('bem toString', () => {
+  expect(`${b}`).toBe('test-block');
+});
+
 test('bem block with modifier', () => {
   b.addModifier('selected');
 

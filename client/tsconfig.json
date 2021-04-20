@@ -21,8 +21,10 @@
     "noEmit": true,
     "noImplicitThis": false,
     "plugins": [
-      { "name": "css-module-types" }
-    ],
+      {
+        "name": "css-module-types"
+      }
+    ]
   },
   "include": [
     "src",

@@ -113,7 +113,7 @@ class EntriesList extends React.Component<EntriesListProps> {
   public render() {
     const { entries, isCollapseLong } = this.props;
     return (
-      <div className='list__container'>
+      <div className='entries-list'>
         {
           entries.map((entry: Entry) => {
             return (
