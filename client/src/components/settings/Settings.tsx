@@ -1,115 +1,87 @@
-import React, { MouseEvent } from 'react';
-import { connect } from 'react-redux';
+import React, { MouseEvent, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme, toggleCollapseLong, updateKeepDays, toggleGrid } from '../../store/actions';
-import { Dispatch } from 'redux';
+import { State } from '../../store/reducers';
+import { Bem } from '../../utils/bem';
 
 import './Settings.scss';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-  isCollapseLong: boolean;
-  keepDays: number;
-  isGrid: boolean;
-  toggleTheme: (isDarkTheme: boolean) => void;
-  toggleCollapseLong: (isCollapseLong: boolean) => void;
-  updateKeepDays: (days: number) => void;
-  toggleGrid: (isGrid: boolean) => void;
-}
+const block = new Bem('settings');
 
-interface SettingsProps extends MapStateToProps {
+interface SettingsProps {
   isVisible: boolean;
 }
 
-class Settings extends React.Component<SettingsProps> {
-  private collapseId = '0';
-  private themeId = '1';
-  private gridId = '2';
-  private collapseFieldRef = React.createRef<HTMLInputElement>();
-  private daysFieldRef = React.createRef<HTMLInputElement>();
-  private themeFieldRef = React.createRef<HTMLInputElement>();
-  private gridFieldRef = React.createRef<HTMLInputElement>();
+function Settings({ isVisible }: SettingsProps): JSX.Element | null {
+  const collapseFieldRef = useRef<HTMLInputElement>(null);
+  const daysFieldRef = useRef<HTMLInputElement>(null);
+  const themeFieldRef = useRef<HTMLInputElement>(null);
+  const gridFieldRef = useRef<HTMLInputElement>(null);
+  const isDarkTheme = useSelector<State, boolean>(state => state.isDarkTheme);
+  const isCollapseLong = useSelector<State, boolean>(state => state.isCollapseLong);
+  const isGrid = useSelector<State, boolean>(state => state.isGrid);
+  const keepDays = useSelector<State, number>(state => state.keepDays);
+  const dispatch = useDispatch();
+  const collapseId = '0';
+  const themeId = '1';
+  const gridId = '2';
 
-  onToggleCollapse = () => {
-    const { isCollapseLong, toggleCollapseLong } = this.props;
-    toggleCollapseLong(!isCollapseLong);
+  const onToggleCollapse = () => {
+    dispatch(toggleCollapseLong(!isCollapseLong));
   };
 
-  onChangeDays = () => {
-    if (this.daysFieldRef && this.daysFieldRef.current) {
-      const { updateKeepDays } = this.props;
-      const days = parseInt(this.daysFieldRef.current.value);
-
-      updateKeepDays(days);
+  const onChangeDays = () => {
+    if (daysFieldRef && daysFieldRef.current) {
+      const days = parseInt(daysFieldRef.current.value);
+      dispatch(updateKeepDays(days));
     }
   };
 
-  onToggleTheme = () => {
-    const { isDarkTheme, toggleTheme } = this.props;
-    toggleTheme(!isDarkTheme);
+  const onToggleTheme = () => {
+    dispatch(toggleTheme(!isDarkTheme));
   };
 
-  onToggleGrid = () => {
-    const { isGrid, toggleGrid } = this.props;
-    toggleGrid(!isGrid);
+  const onToggleGrid = () => {
+    dispatch(toggleGrid(!isGrid));
   };
 
-  onClick = (e: MouseEvent<HTMLDivElement>) => {
+  const onClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
   };
 
-  render() {
-    const { isVisible, isDarkTheme, isCollapseLong, keepDays, isGrid } = this.props;
+  if (!isVisible) {
+    return null;
+  }
 
-    if (!isVisible) {
-      return null;
-    }
+  const itemClass = block.getElement('item').build();
+  const labelClass = block.getElement('label').build();
+  const checkboxClass = block.getElement('checkbox').build();
 
-    return (
-      <div className='settings__container' onClick={this.onClick}>
-        <div className='settings__item'>
-          <input id={this.themeId} className='settings__checkbox' ref={this.themeFieldRef} type="checkbox" checked={isDarkTheme} onChange={this.onToggleTheme} />
-          <label className='settings__label' htmlFor={this.themeId}>Темная тема</label>
-        </div>
+  return (
+    <div className={block.build()} onClick={onClick}>
+      <div className={itemClass}>
+        <input ref={themeFieldRef} id={themeId} className={checkboxClass} type="checkbox" checked={isDarkTheme} onChange={onToggleTheme} />
+        <label className={labelClass} htmlFor={themeId}>Темная тема</label>
+      </div>
 
-        <div className='settings__item'>
-          <input id={this.collapseId} className='settings__checkbox' ref={this.collapseFieldRef} type="checkbox" checked={isCollapseLong} onChange={this.onToggleCollapse} />
-          <label className='settings__label' htmlFor={this.collapseId}>Сворачивать длинные посты</label>
-        </div>
+      <div className={itemClass}>
+        <input ref={collapseFieldRef} id={collapseId} className={checkboxClass} type="checkbox" checked={isCollapseLong} onChange={onToggleCollapse} />
+        <label className={labelClass} htmlFor={collapseId}>Сворачивать длинные посты</label>
+      </div>
 
-        <div className='settings__item'>
-          <input id={this.gridId} className='settings__checkbox' ref={this.gridFieldRef} type="checkbox" checked={!isGrid} onChange={this.onToggleGrid} />
-          <label className='settings__label' htmlFor={this.gridId}>Показывать лентой</label>
-        </div>
+      <div className={itemClass}>
+        <input ref={gridFieldRef} id={gridId} className={checkboxClass} type="checkbox" checked={!isGrid} onChange={onToggleGrid} />
+        <label className={labelClass} htmlFor={gridId}>Показывать лентой</label>
+      </div>
 
-        <div className='settings__item'>
-          <div className='settings__label'>
-            Удалять посты старше <input className='settings__days' ref={this.daysFieldRef} type="text" value={keepDays} onChange={this.onChangeDays}/> дней
-          </div>
+      <div className={itemClass}>
+        <div className={labelClass}>
+          Удалять посты старше <input className={block.getElement('days').build()} ref={daysFieldRef} type="text" value={keepDays} onChange={onChangeDays}/> дней
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme,
-    isCollapseLong: state.isCollapseLong,
-    keepDays: state.keepDays,
-    isGrid: state.isGrid
-  };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    toggleTheme: (isDarkTheme: boolean) => dispatch(toggleTheme(isDarkTheme)),
-    toggleCollapseLong: (isCollapse: boolean) => dispatch(toggleCollapseLong(isCollapse)),
-    updateKeepDays: (days: number) => dispatch(updateKeepDays(days)),
-    toggleGrid: (isGrid: boolean) => dispatch(toggleGrid(isGrid))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default Settings;

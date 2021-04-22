@@ -118,7 +118,7 @@ function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: 
         <div className={feedBlock.getElement('title').build()}>{entry.feed.title}</div>
       </div>
       <div className={block.getElement('description').build()} dangerouslySetInnerHTML={{ __html: description }} />
-      { isCollapsed && <button className='entry__expandButton' onClick={onExpand} />}
+      { isCollapsed && <button className='entry-item-expand-button' onClick={onExpand} />}
       <div className={infoBlock.build()}>
         <div className={infoBlock.getElement('item').build()}>
           <div className={infoBlock.getElement('icon').build()} onClick={onClickFavorite}>

@@ -75,17 +75,17 @@
 	&__description pre {
 		white-space: pre-wrap;
 	}
+}
 
-	&__expandButton {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 58px;
-		height: 60px;
-		width: 100%;
-		background: rgba(255, 255, 255, 0.8);
-		cursor: pointer;
-	}
+.entry-item-expand-button {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 58px;
+	height: 60px;
+	width: 100%;
+	background: rgba(255, 255, 255, 0.8);
+	cursor: pointer;
 }
 
 .entry-item-feed {
