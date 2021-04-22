@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Data, { Entry, Feed, UpdateFeedResponse } from './data';
 import {
@@ -12,196 +12,132 @@ import {
   feedsUpdated,
   updateUnviewedCount
 } from './store/actions';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from './store/reducers';
 import { CSSTransition } from 'react-transition-group';
-import { Dispatch } from 'redux';
 import EntriesList from './components/entries/EntriesList';
 import FeedsList from './components/feeds/FeedsList';
 import Menu from './components/menu/Menu';
 import Settings from './components/settings/Settings';
 import SettingsButton from './components/settings/SettingsButton';
-import { connect } from 'react-redux';
 
 import './App.scss';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-  isGrid: boolean;
-  keepDays: number;
-  entriesUpdating: (isUpdating: boolean) => void;
-  updateUnviewedCount: () => void;
-  entriesUpdated: (entries: Entry[]) => void;
-  feedsUpdated: (feeds: Feed[]) => void;
-  entriesUpdateError: () => void;
-  feedsDelete: (id: number) => void;
-  feedsUpdate: (id: number, data: any) => void;
-  feedsEditing: (isEditing: boolean) => void;
-  feedsAdd: (feed: any) => void;
-}
+function App(): JSX.Element {
+  const [isSettingsVisible, setSettingsVisible] = useState(false);
+  const isGrid = useSelector<State, boolean>(state => state.isGrid);
+  const isDarkTheme = useSelector<State, boolean>(state => state.isDarkTheme);
+  const keepDays = useSelector<State, number>(state => state.keepDays);
+  const dispatch = useDispatch();
 
-type AppProps = MapStateToProps;
-
-interface AppState {
-  isSettingsVisible: boolean;
-}
-
-class App extends React.Component<AppProps, AppState> {
-  public state: AppState = {
-    isSettingsVisible: false
-  };
-
-  public componentDidMount() {
-    const { feedsUpdated, keepDays } = this.props;
-
-    Data.getFeeds().then((feeds: Feed[]) => {
-      feedsUpdated(feeds);
-    });
-
-    Data.clearEntries(keepDays);
-  }
-
-  private onUpdate = () => {
-    const { entriesUpdated, entriesUpdating, updateUnviewedCount, entriesUpdateError } = this.props;
-
-    entriesUpdating(true);
+  const onUpdate = () => {
+    dispatch(entriesUpdating(true));
 
     Data.update().then((entries: Entry[]) => {
       const unviewed = entries.filter((entry: Entry) => {
         return !entry.isViewed;
       });
 
-      entriesUpdated(unviewed);
-      updateUnviewedCount();
+      dispatch(entriesUpdated(unviewed));
+      dispatch(updateUnviewedCount());
     }).catch((error: any) => {
       console.log(error);
-      entriesUpdateError();
+      dispatch(entriesUpdateError());
     });
   };
 
-  private onAddFeed = (link: string) => {
-    const { feedsAdd, feedsEditing } = this.props;
-
+  const onAddFeed = (link: string) => {
     Data.addFeed(link).then((feed: Feed) => {
-      feedsAdd(feed);
-      feedsEditing(false);
+      dispatch(feedsAdd(feed));
+      dispatch(feedsEditing(false));
     }).catch((error: any) => {
       console.log(error);
     });
   };
 
-  private onChangeFeed = (id: number, data: any) => {
-    const { feedsUpdate, feedsEditing } = this.props;
-
+  const onChangeFeed = (id: number, data: string) => {
     Data.updateFeed(id, data).then((data: UpdateFeedResponse) => {
-      feedsUpdate(id, data.data);
-      feedsEditing(false);
+      dispatch(feedsUpdate(id, data.data));
+      dispatch(feedsEditing(false));
     });
   };
 
-  private onDeleteFeed = (id: number) => {
-    const { feedsDelete, feedsEditing } = this.props;
-
+  const onDeleteFeed = (id: number) => {
     Data.deleteFeed(id).then(() => {
-      feedsDelete(id);
-      feedsEditing(false);
+      dispatch(feedsDelete(id));
+      dispatch(feedsEditing(false));
     });
   };
 
-  private onToggleSettings = () => {
-    const { isSettingsVisible } = this.state;
+  const hideSettings = () => {
+    if (isSettingsVisible) {
+      onToggleSettings();
+    }
+  };
+
+  const onToggleSettings = () => {
     const visible = !isSettingsVisible;
 
     if (visible) {
-      document.addEventListener('click', this.hideSettings);
+      document.addEventListener('click', hideSettings);
     } else {
-      document.removeEventListener('click', this.hideSettings);
+      document.removeEventListener('click', hideSettings);
     }
 
-    this.setState({
-      isSettingsVisible: visible
+    setSettingsVisible(visible);
+  };
+
+  useEffect(() => {
+    Data.getFeeds().then((feeds: Feed[]) => {
+      dispatch(feedsUpdated(feeds));
     });
-  };
 
-  private hideSettings = () => {
-    const { isSettingsVisible } = this.state;
+    Data.clearEntries(keepDays);
+  }, []);
 
-    if (isSettingsVisible) {
-      this.onToggleSettings();
-    }
-  };
+  return (
+    <BrowserRouter>
+      <div className={`container ${isGrid ? 'grid' : ''} ${isDarkTheme ? 'dark' : ''}`}>
+        <div className='header'>
+          <div className='header__content'>
+            <Menu
+              onUpdate={onUpdate}
+            />
+            <SettingsButton isActive={isSettingsVisible} onClick={onToggleSettings} />
 
-  public render() {
-    const { isGrid, isDarkTheme } = this.props;
-    const { isSettingsVisible } = this.state;
-
-    return (
-      <BrowserRouter>
-        <div className={`container ${isGrid ? 'grid' : ''} ${isDarkTheme ? 'dark' : ''}`}>
-          <div className='header'>
-            <div className='header__content'>
-              <Menu
-                onUpdate={this.onUpdate}
-              />
-              <SettingsButton isActive={isSettingsVisible} onClick={this.onToggleSettings} />
-
-              <CSSTransition
-                in={isSettingsVisible}
-                timeout={200}
-                classNames="fade"
-                unmountOnExit
-                mountOnEnter
-              >
-                <Settings isVisible={isSettingsVisible} />
-              </CSSTransition>
-            </div>
-          </div>
-          {isGrid &&
-            <div className='feeds'>
-              <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
-            </div>
-          }
-          <div className='content'>
-            <Switch>
-              <Route path='/'>
-                <div className='list'>
-                  <EntriesList />
-                </div>
-              </Route>
-            </Switch>
-            {!isGrid &&
-              <div className='feeds'>
-                <FeedsList onAddFeed={this.onAddFeed} onChangeFeed={this.onChangeFeed} onDeleteFeed={this.onDeleteFeed} />
-              </div>
-            }
+            <CSSTransition
+              in={isSettingsVisible}
+              timeout={200}
+              classNames="fade"
+              unmountOnExit
+              mountOnEnter
+            >
+              <Settings isVisible={isSettingsVisible} />
+            </CSSTransition>
           </div>
         </div>
-      </BrowserRouter>
-    );
-  }
+        {isGrid &&
+          <div className='feeds'>
+            <FeedsList onAddFeed={onAddFeed} onChangeFeed={onChangeFeed} onDeleteFeed={onDeleteFeed} />
+          </div>
+        }
+        <div className='content'>
+          <Switch>
+            <Route path='/'>
+              <div className='list'>
+                <EntriesList />
+              </div>
+            </Route>
+          </Switch>
+          {!isGrid &&
+            <div className='feeds'>
+              <FeedsList onAddFeed={onAddFeed} onChangeFeed={onChangeFeed} onDeleteFeed={onDeleteFeed} />
+            </div>
+          }
+        </div>
+      </div>
+    </BrowserRouter>
+  );
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme,
-    isGrid: state.isGrid,
-    keepDays: state.keepDays,
-  };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    feedsUpdated: (feeds: Feed[]) => dispatch(feedsUpdated(feeds)),
-    entriesUpdating: (isUpdating: boolean) => dispatch(entriesUpdating(isUpdating)),
-    entriesUpdated: (entries: Entry[]) => dispatch(entriesUpdated(entries)),
-    updateUnviewedCount: () => dispatch(updateUnviewedCount()),
-    feedsAdd: (feed: Feed) => dispatch(feedsAdd(feed)),
-    feedsDelete: (id: number) => dispatch(feedsDelete(id)),
-    feedsUpdate: (id: number, data: any) => dispatch(feedsUpdate(id, data)),
-    feedsEditing: (isEditing: boolean) => dispatch(feedsEditing(isEditing)),
-    entriesUpdateError: () => dispatch(entriesUpdateError())
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App;

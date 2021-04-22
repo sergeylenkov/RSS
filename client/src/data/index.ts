@@ -190,7 +190,7 @@ class Data {
     });
   }
 
-  updateFeed(id: number, data: Feed) {
+  updateFeed(id: number, data: string) {
     return new Promise<UpdateFeedResponse>((resolve) => {
       fetch(`${this._url}feeds/${id}`, {
         method: 'PATCH',
