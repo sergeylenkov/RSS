@@ -8,3 +8,4 @@ client/.scannerwork
 client/tests/sonar-reporter.xml
 client/coverage
 client/__tests__/sonar-reporter.xml
+client/eslint-report.json

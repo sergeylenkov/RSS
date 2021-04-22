@@ -9,6 +9,10 @@ jobs:
         with:
           working-directory: client
 
-      - name: Client tests
+      - name: Build client
+        run: npm build
+        working-directory: client
+
+      - name: Test client
         run: npm run test
         working-directory: client

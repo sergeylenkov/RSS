@@ -24,6 +24,11 @@ export interface UpdateFeedResponse {
   data: Feed;
 }
 
+export interface DeleteFeedResponse {
+  id: number;
+  isDeleted: boolean;
+}
+
 export interface Feed {
   id: number;
   title: string;
@@ -89,8 +94,8 @@ class Data {
     return new Promise<Entry[]>((resolve) => {
       fetch(`${this._url}entries`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
@@ -99,8 +104,8 @@ class Data {
     return new Promise<Entry[]>((resolve) => {
       fetch(`${this._url}entries/read`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
@@ -109,8 +114,8 @@ class Data {
     return new Promise<Entry[]>((resolve) => {
       fetch(`${this._url}entries/favorites`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
@@ -119,8 +124,8 @@ class Data {
     return new Promise<Entry[]>((resolve) => {
       fetch(`${this._url}entries/unviewed`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
@@ -135,8 +140,8 @@ class Data {
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetViewedResponse) => {
+        resolve(response);
       });
     });
   }
@@ -149,8 +154,8 @@ class Data {
         method: method
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetReadResponse) => {
+        resolve(response);
       });
     });
   }
@@ -163,8 +168,8 @@ class Data {
         method: method
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetFavoriteResponse) => {
+        resolve(response);
       });
     });
   }
@@ -179,13 +184,13 @@ class Data {
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((feed: Feed) => {
+        resolve(feed);
       });
     });
   }
 
-  updateFeed(id: number, data: any) {
+  updateFeed(id: number, data: Feed) {
     return new Promise<UpdateFeedResponse>((resolve) => {
       fetch(`${this._url}feeds/${id}`, {
         method: 'PATCH',
@@ -195,20 +200,20 @@ class Data {
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: UpdateFeedResponse) => {
+        resolve(response);
       });
     });
   }
 
   deleteFeed(id: number) {
-    return new Promise((resolve) => {
+    return new Promise<DeleteFeedResponse>((resolve) => {
       fetch(`${this._url}feeds/${id}`, {
         method: 'DELETE'
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: DeleteFeedResponse) => {
+        resolve(response);
       });
     });
   }
@@ -217,8 +222,8 @@ class Data {
     return new Promise<ClearEntriesResponse>((resolve) => {
       fetch(`${this._url}entries/clear/${days}`).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: ClearEntriesResponse) => {
+        resolve(response);
       });
     });
   }

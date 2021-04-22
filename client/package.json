@@ -39,7 +39,10 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts",
-    "test": "jest --coverage"
+    "lint:json": "eslint src/** --ext .ts --format json --output-file eslint-report.json",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "scan": "npm run test:coverage && npm run lint:json"
   },
   "eslintConfig": {
     "extends": "react-app"
