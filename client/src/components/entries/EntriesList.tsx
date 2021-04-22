@@ -1,156 +1,104 @@
-import Data, { Entry } from '../../data';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { entriesUpdated, updateEntriesCount, updateFavorite, updateRead, updateUnviewedCount, updateViewed } from '../../store/actions';
-
-import { Dispatch } from 'redux';
-import EntryItem from './EntryItem';
-import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Data, { Entry } from '../../data';
 import { debounce } from '../../utils';
+import { State } from '../../store/reducers';
+import EntryItem from './EntryItem';
 
 import './EntriesList.scss';
 
-interface MapStateToProps extends RouteComponentProps {
-  entries: Entry[];
-  isCollapseLong: boolean;
-  isInitialized: boolean;
-  entriesUpdated: (entries: Entry[]) => void;
-  updateUnviewedCount: () => void;
-  updateEntriesCount: () => void;
-  updateViewed: (ids: number[]) => void;
-  updateFavorite: (id: number, isFavorite: boolean) => void;
-  updateRead: (id: number, isRead: boolean) => void;
-}
+function EntriesList(): JSX.Element {
+  const { pathname } = useLocation();
+  const isInitialized = useSelector<State, boolean>(state => state.isInitialized);
+  const isCollapseLong = useSelector<State, boolean>(state => state.isCollapseLong);
+  const entries = useSelector<State, Entry[]>(state => state.entries);
+  const dispatch = useDispatch();
 
-type EntriesListProps = MapStateToProps
+  const viewedIds = useRef<Set<number>>(new Set()).current;
 
-class EntriesList extends React.Component<EntriesListProps> {
-  private viewedIds: { [key: number] : boolean } = {};
+  const OnViewDebonce = debounce(() => {
+    Data.setViewed([...viewedIds]).then(() => {
+      dispatch(updateViewed([...viewedIds]));
+      dispatch(updateUnviewedCount());
 
-  public componentDidMount() {
-    this.getEntries(this.props.location.pathname);
-  }
-
-  public componentDidUpdate(prevProps: EntriesListProps) {
-    if (prevProps.isInitialized !== this.props.isInitialized || prevProps.location.pathname !== this.props.location.pathname) {
-      this.getEntries(this.props.location.pathname);
-    }
-  }
-
-  private OnViewDebonce = debounce(() => {
-    const { updateViewed, updateUnviewedCount } = this.props;
-
-    const ids = Object.keys(this.viewedIds).map(Number);
-
-    Data.setViewed(ids).then(() => {
-      updateViewed(ids);
-      updateUnviewedCount();
-
-      ids.forEach(id => {
-        delete this.viewedIds[id];
-      });
+      viewedIds.clear();
     });
   }, 1000, false);
 
-  private onView = (id: number) => {
-    this.viewedIds[id] = true;
-
-    this.OnViewDebonce();
+  const onView = (id: number) => {
+    viewedIds.add(id);
+    OnViewDebonce();
   };
 
-  private onSetRead = (id: number, isRead: boolean) => {
-    const { updateRead } = this.props;
-
+  const onSetRead = (id: number, isRead: boolean) => {
     Data.setRead(id, isRead).then(() => {
-      updateRead(id, isRead);
+      dispatch(updateRead(id, isRead));
     });
   };
 
-  private onSetFavorite = (id: number, isFavorite: boolean) => {
-    const { updateFavorite } = this.props;
-
+  const onSetFavorite = (id: number, isFavorite: boolean) => {
     Data.setFavorite(id, isFavorite).then(() => {
-      updateFavorite(id, isFavorite);
+      dispatch(updateFavorite(id, isFavorite));
     });
   };
 
-  private getEntries(path: string) {
-    const { isInitialized, entriesUpdated, updateUnviewedCount, updateEntriesCount } = this.props;
-
+  const getEntries = (path: string) => {
     if (!isInitialized) {
       return;
     }
 
     if (path === '/') {
       Data.getUnviewed().then((entries: Entry[]) => {
-        entriesUpdated(entries);
-        updateUnviewedCount();
+        dispatch(entriesUpdated(entries));
+        dispatch(updateUnviewedCount());
       });
     }
 
     if (path === '/all') {
-     Data.allEntries().then((entries: Entry[]) => {
-        entriesUpdated(entries);
-        updateEntriesCount();
+      Data.allEntries().then((entries: Entry[]) => {
+        dispatch(entriesUpdated(entries));
+        dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/read') {
       Data.readEntries().then((entries: Entry[]) => {
-        entriesUpdated(entries);
-        updateEntriesCount();
+        dispatch(entriesUpdated(entries));
+        dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/favorites') {
       Data.getFavorites().then((entries: Entry[]) => {
-        entriesUpdated(entries);
-        updateEntriesCount();
+        dispatch( entriesUpdated(entries));
+        dispatch(updateEntriesCount());
       });
     }
   }
 
-  public render() {
-    const { entries, isCollapseLong } = this.props;
-    return (
-      <div className='entries-list'>
-        {
-          entries.map((entry: Entry) => {
-            return (
-              <EntryItem
-                key={entry.id}
-                entry={entry}
-                isCollapseLong={isCollapseLong}
-                onView={this.onView}
-                onSetRead={this.onSetRead}
-                onSetFavorite={this.onSetFavorite} />
-            )
-          })
-        }
-      </div>
-    );
-  }
+  useEffect(() => {
+    getEntries(pathname);
+  }, [pathname]);
+
+  return (
+    <div className='entries-list'>
+      {
+        entries.map((entry: Entry) => {
+          return (
+            <EntryItem
+              key={entry.id}
+              entry={entry}
+              isCollapseLong={isCollapseLong}
+              onView={onView}
+              onSetRead={onSetRead}
+              onSetFavorite={onSetFavorite} />
+          )
+        })
+      }
+    </div>
+  );
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    entries: state.entries,
-    isCollapseLong: state.isCollapseLong,
-    isInitialized: state.isInitialized
-  };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    entriesUpdated: (entries: Entry[]) => dispatch(entriesUpdated(entries)),
-    updateUnviewedCount: () => dispatch(updateUnviewedCount()),
-    updateEntriesCount: () => dispatch(updateEntriesCount()),
-    updateViewed: (ids: number[]) => dispatch(updateViewed(ids)),
-    updateRead: (id: number, isRead: boolean) => dispatch(updateRead(id, isRead)),
-    updateFavorite: (id: number, isFavorite: boolean) => dispatch(updateFavorite(id, isFavorite)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EntriesList));
+export default EntriesList;
