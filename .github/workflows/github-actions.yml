@@ -1,7 +1,7 @@
 name: github-actions
 on: [push]
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -10,7 +10,7 @@ jobs:
           working-directory: client
 
       - name: Build client
-        run: npm build
+        run: npm run build
         working-directory: client
 
       - name: Test client
