@@ -21,7 +21,7 @@ export interface ClearEntriesResponse {
 
 export interface UpdateFeedResponse {
   id: number;
-  data: Feed;
+  feed: Feed;
 }
 
 export interface DeleteFeedResponse {
@@ -190,11 +190,11 @@ class Data {
     });
   }
 
-  updateFeed(id: number, data: string) {
+  updateFeed(feed: Feed) {
     return new Promise<UpdateFeedResponse>((resolve) => {
-      fetch(`${this._url}feeds/${id}`, {
+      fetch(`${this._url}feeds/${feed.id}`, {
         method: 'PATCH',
-        body: JSON.stringify(data),
+        body: JSON.stringify(feed),
         headers: {
           'Content-Type': 'application/json'
         }

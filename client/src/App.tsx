@@ -12,6 +12,7 @@ import {
   feedsUpdated,
   updateUnviewedCount
 } from './store/actions';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from './store/reducers';
 import { CSSTransition } from 'react-transition-group';
@@ -40,8 +41,7 @@ function App(): JSX.Element {
 
       dispatch(entriesUpdated(unviewed));
       dispatch(updateUnviewedCount());
-    }).catch((error: any) => {
-      console.log(error);
+    }).catch(() => {
       dispatch(entriesUpdateError());
     });
   };
@@ -50,14 +50,12 @@ function App(): JSX.Element {
     Data.addFeed(link).then((feed: Feed) => {
       dispatch(feedsAdd(feed));
       dispatch(feedsEditing(false));
-    }).catch((error: any) => {
-      console.log(error);
-    });
+    })
   };
 
-  const onChangeFeed = (id: number, data: string) => {
-    Data.updateFeed(id, data).then((data: UpdateFeedResponse) => {
-      dispatch(feedsUpdate(id, data.data));
+  const onChangeFeed = (feed: Feed) => {
+    Data.updateFeed(feed).then((response: UpdateFeedResponse) => {
+      dispatch(feedsUpdate(response.id, response.feed));
       dispatch(feedsEditing(false));
     });
   };

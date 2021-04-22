@@ -10,7 +10,7 @@ import './FeedsList.scss';
 
 interface FeedsListProps {
   onAddFeed: (link: string) => void;
-  onChangeFeed: (id: number, title: string) => void;
+  onChangeFeed: (feed: Feed) => void;
   onDeleteFeed: (id: number) => void;
 }
 
@@ -19,6 +19,15 @@ function FeedsList({ onAddFeed, onChangeFeed, onDeleteFeed }: FeedsListProps): J
   const isFeedsEditing = useSelector<State, boolean>(state => state.isFeedsEditing);
   const feeds = useSelector<State, Feed[]>(state => state.feeds);
   const selectedFeeds = useSelector<State, number[]>(state => state.selectedFeeds);
+
+  const onChange = (id: number, title: string) => {
+    const feed = feeds.find(feed => feed.id === id);
+
+    if (feed) {
+      feed.title = title;
+      onChangeFeed(feed);
+    }
+  }
 
   return (
     <div className='feeds-list'>
@@ -36,7 +45,7 @@ function FeedsList({ onAddFeed, onChangeFeed, onDeleteFeed }: FeedsListProps): J
               isSelected={isSelected}
               isEditing={isFeedsEditing}
               onDelete={onDeleteFeed}
-              onChange={onChangeFeed}
+              onChange={onChange}
               onSelect={(id: number) => dispatch(feedsSelect(id))}
             />
           )

@@ -50,29 +50,29 @@ function EntriesList(): JSX.Element {
     }
 
     if (path === '/') {
-      Data.getUnviewed().then((entries: Entry[]) => {
-        dispatch(entriesUpdated(entries));
+      Data.getUnviewed().then((response: Entry[]) => {
+        dispatch(entriesUpdated(response));
         dispatch(updateUnviewedCount());
       });
     }
 
     if (path === '/all') {
-      Data.allEntries().then((entries: Entry[]) => {
-        dispatch(entriesUpdated(entries));
+      Data.allEntries().then((response: Entry[]) => {
+        dispatch(entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/read') {
-      Data.readEntries().then((entries: Entry[]) => {
-        dispatch(entriesUpdated(entries));
+      Data.readEntries().then((response: Entry[]) => {
+        dispatch(entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/favorites') {
-      Data.getFavorites().then((entries: Entry[]) => {
-        dispatch( entriesUpdated(entries));
+      Data.getFavorites().then((response: Entry[]) => {
+        dispatch( entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
     }
