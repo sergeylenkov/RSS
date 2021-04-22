@@ -1,7 +1,11 @@
 import React, { useRef, useState } from 'react';
+import { Bem } from '../../utils/bem';
 import { CheckmarkIcon, CloseIcon, AddIcon, EditIcon } from '../Icons';
 
 import './FeedEdit.scss';
+
+const block = new Bem('feed-edit');
+const fromBlock = new Bem('feed-edit-form');
 
 interface FeedEditProps {
   isEditing: boolean;
@@ -25,23 +29,35 @@ function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEdi
     }
   };
 
-  const className = `edit ${isDisabled ? 'edit_disabled' : ''} ${isScrolled ? 'edit_scrolled' : ''}`;
+  const blockClass = block.addModifier(isDisabled ? 'disabled' : undefined).addModifier(isScrolled ? 'scrolled' : undefined).build();
+  const iconClass = block.getElement('icon').build();
+  const editIconClass = block.getElement('icon').addModifier(isEditing ? 'editing' : undefined).build();
+  const buttonClass = block.getElement('button').build();
+  const formButtonClass = fromBlock.getElement('button').build();
 
   if (isFormVisible) {
     return (
-      <div className={className}>
-        <div className='edit__form'>
-          <input ref={linkFieldRef} className='edit__form__link_field' placeholder="ссылка на канал" type="text" />
-          <button className='edit__form-button' onClick={onAddClick}><div className='edit__icon'><CheckmarkIcon /></div></button>
-            <button className='edit__form-button' onClick={() => setFormVisible(false)}><div className='edit__icon'><CloseIcon /></div></button>
-          </div>
+      <div className={blockClass}>
+        <div className={fromBlock.build()}>
+          <input ref={linkFieldRef} className={fromBlock.getElement('field').build()} placeholder="ссылка на канал" type="text" />
+          <button className={formButtonClass} onClick={onAddClick}>
+            <div className={iconClass}><CheckmarkIcon /></div>
+          </button>
+          <button className={formButtonClass} onClick={() => setFormVisible(false)}>
+            <div className={iconClass}><CloseIcon /></div>
+          </button>
         </div>
-      );
+      </div>
+    );
   } else {
     return (
-      <div className={className}>
-        <button className='edit__button' onClick={() => setFormVisible(true)}><div className='edit__icon'><AddIcon /></div></button>
-        <button className='edit__button' onClick={onEdit}><div className={`edit__icon ${isEditing ? 'edit__icon_editing' : ''}`}><EditIcon /></div></button>
+      <div className={blockClass}>
+        <button className={buttonClass} onClick={() => setFormVisible(true)}>
+          <div className={iconClass}><AddIcon /></div>
+        </button>
+        <button className={buttonClass} onClick={onEdit}>
+          <div className={editIconClass}><EditIcon /></div>
+        </button>
       </div>
     );
   }

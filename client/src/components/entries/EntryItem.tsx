@@ -51,8 +51,8 @@ function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: 
   }, 500, false)
 
   const onMouseMove = () => {
-    if (!entry.isViewed && this.itemElement) {
-      const rect = this.itemElement.getBoundingClientRect();
+    if (!entry.isViewed && itemRef && itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
       const height = rect.top + rect.height;
 
       if (height < window.innerHeight) {

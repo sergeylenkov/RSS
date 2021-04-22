@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeedsList correct rendering 1`] = `
+<div
+  className="feeds-list"
+>
+  <div
+    className="feed-edit"
+  >
+    <button
+      className="feed-edit__button"
+      onClick={[Function]}
+    >
+      <div
+        className="feed-edit__icon"
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <g
+            fill="none"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="5"
+              y2="19"
+            />
+            <line
+              x1="5"
+              x2="19"
+              y1="12"
+              y2="12"
+            />
+          </g>
+        </svg>
+      </div>
+    </button>
+    <button
+      className="feed-edit__button"
+      onClick={[Function]}
+    >
+      <div
+        className="feed-edit__icon"
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <polygon
+            fill="none"
+            points="16 3 21 8 8 21 3 21 3 16 16 3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    </button>
+  </div>
+</div>
+`;

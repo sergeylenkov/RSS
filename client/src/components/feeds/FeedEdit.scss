@@ -1,4 +1,4 @@
-.edit {
+.feed-edit {
 	display: flex;
 	height: 30px;
 	margin: 30px 0 0 0;
@@ -23,13 +23,6 @@
 		cursor: pointer;
 	}
 
-	&__form-button {
-		display: flex;
-		padding: 0;
-		margin: auto 0 auto 10px;
-		cursor: pointer;
-	}
-
 	&__icon {
 		width: 16px;
 		height: 16px;
@@ -46,13 +39,21 @@
 			height: 100%;
 		}
 	}
+}
 
-	&__form {
+.feed-edit-form {
+	display: flex;
+	width: 100%;
+
+
+	&__button {
 		display: flex;
-		width: 100%;
+		padding: 0;
+		margin: auto 0 auto 10px;
+		cursor: pointer;
 	}
 
-	&__link_field {
+	&__field {
 		flex-grow: 1;
 		margin: auto 0;
 		font-size: 14px;
@@ -63,7 +64,7 @@
 * grid
 */
 
-.grid .edit {
+.grid .feed-edit {
 	margin: auto 0 auto auto;
 }
 
@@ -71,7 +72,7 @@
 * theme
 */
 
-.dark .edit {
+.dark .feed-edit {
 	&__icon {
 		stroke: #a5a5a5;
 		fill: #a5a5a5;
@@ -79,7 +80,7 @@
 }
 
 @media (max-width: 768px) {
-	.edit {
+	.feed-edit {
 		margin: 0;
 	}
 }

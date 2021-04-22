@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeedItem correct rendering 1`] = `
+<div
+  className="feed-item"
+>
+  <button
+    className="feed-item__button"
+    onClick={[Function]}
+  >
+    <div
+      className="feed-item__icon"
+      style={
+        Object {
+          "backgroundImage": "url()",
+        }
+      }
+    />
+    <div
+      className="feed-item__label feed-item__label_selected"
+    >
+      Test
+    </div>
+    <div
+      className="feed-item__counter"
+    >
+      0
+    </div>
+  </button>
+</div>
+`;
