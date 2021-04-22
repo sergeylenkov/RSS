@@ -1,9 +1,8 @@
 import React from 'react';
 import renderer  from 'react-test-renderer';
-import EntryItem from '../src/components/entries/EntryItem';
 import { Feed, Entry } from '../src/data';
-
-const action = () => { return };
+import { action } from '../src/utils/tests';
+import EntryItem from '../src/components/entries/EntryItem';
 
 const feed: Feed = {
   id: 1,
