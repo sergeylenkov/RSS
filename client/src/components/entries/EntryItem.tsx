@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 import { Entry } from '../../data';
 import { debounce } from '../../utils';
@@ -19,50 +19,14 @@ interface EntryProps {
   onSetFavorite: (id: number, isRead: boolean) => void;
 }
 
-interface EntryState {
-  isExpanded: boolean;
-}
+function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: EntryProps): JSX.Element {
+  const [isExpanded, setExpanded] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
 
-class EntryItem extends React.Component<EntryProps, EntryState> {
-  public state: EntryState = {
-    isExpanded: false
-  };
-
-  private itemElement: HTMLDivElement | null = null;
-  private titleElement: HTMLDivElement | null = null;
-
-  private itemRefCallback = (element: HTMLDivElement) => {
-    if (element) this.itemElement = element;
-  };
-
-  private titleRefCallback = (element: HTMLDivElement) => {
-    if (element) {
-      this.titleElement = element;
-      this.titleElement.addEventListener('mouseup', this.onRead);
-    }
-  };
-
-  public componentDidMount(): void {
-    if (!this.props.entry.isViewed) {
-      window.addEventListener('scroll', this.onScrollDebounce);
-      window.addEventListener('mousemove', this.onMouseMove);
-    }
-  }
-
-  public componentWillUnmount(): void {
-    window.removeEventListener('scroll', this.onScrollDebounce);
-    window.removeEventListener('mousemove', this.onMouseMove);
-  }
-
-  private onScrollDebounce = debounce(() => {
-    this.onScroll();
-  }, 500, false)
-
-  private onScroll() {
-    const { entry, onView } = this.props;
-
-    if (!entry.isViewed && this.itemElement) {
-      const rect = this.itemElement.getBoundingClientRect();
+  const onScroll = () => {
+    if (!entry.isViewed && itemRef && itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
       const height = window.innerHeight / 2;
 
       let isViewed = false;
@@ -82,9 +46,11 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
     }
   }
 
-  private onMouseMove = () => {
-    const { entry, onView } = this.props;
+  const onScrollDebounce = debounce(() => {
+    onScroll();
+  }, 500, false)
 
+  const onMouseMove = () => {
     if (!entry.isViewed && this.itemElement) {
       const rect = this.itemElement.getBoundingClientRect();
       const height = rect.top + rect.height;
@@ -93,72 +59,80 @@ class EntryItem extends React.Component<EntryProps, EntryState> {
         onView(entry.id);
       }
 
-      window.removeEventListener('mousemove', this.onMouseMove);
+      window.removeEventListener('mousemove', onMouseMove);
     }
   }
 
-  private onExpand = () => {
-    this.setState({
-      isExpanded: true
-    });
-
-    this.onRead();
+  const onExpand = () => {
+    setExpanded(true);
+    onRead();
   };
 
-  private onRead = () => {
-    const { onSetRead, entry } = this.props;
-
+  const onRead = () => {
     if (!entry.isRead) {
       onSetRead(entry.id, true);
     }
   };
 
-  private onUnread = () => {
-    const { onSetRead, entry } = this.props;
+  const onUnread = () => {
     onSetRead(entry.id, false);
   };
 
-  private onSetFavorite = () => {
-    const { onSetFavorite, entry } = this.props;
+  const onClickFavorite = () => {
     onSetFavorite(entry.id, !entry.isFavorite);
   };
 
-  public render(): JSX.Element {
-    const { entry, isCollapseLong } = this.props;
-    const { isExpanded } = this.state;
+  useEffect(() => {
+    const element = titleRef.current;
 
-    const description = removeSelfLinks(entry.description, entry.link);
-    const isCollapsed = isCollapseLong && !isExpanded && isLong(description);
-    const blockClass = block.addModifier(isCollapsed ? 'collapsed' : undefined).build();
+    if (!entry.isViewed) {
+      window.addEventListener('scroll', onScrollDebounce);
+      window.addEventListener('mousemove', onMouseMove);
+    }
 
-    return (
-      <div className={blockClass} ref={this.itemRefCallback}>
-        <div
-          className={block.getElement('title').build()}
-          ref={this.titleRefCallback}>
-          <a href={entry.link}>{entry.title}</a>
-        </div>
-        <div className={feedBlock.build()}>
-          <div className={feedBlock.getElement('icon').build()} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
-          <div className={feedBlock.getElement('title').build()}>{entry.feed.title}</div>
-        </div>
-        <div className={block.getElement('description').build()} dangerouslySetInnerHTML={{ __html: description }} />
-        { isCollapsed && <button className='entry__expandButton' onClick={this.onExpand} />}
-        <div className={infoBlock.build()}>
-          <div className={infoBlock.getElement('item').build()}>
-            <div className={infoBlock.getElement('icon').build()} onClick={this.onSetFavorite}>
-              {entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
-            </div>
-          </div>
-          { entry.isRead &&
-            <div className={infoBlock.getElement('item').build()} onClick={this.onUnread}>
-              <div className={infoBlock.getElement('icon').build()}><ReadIcon /></div>
-            </div>
-          }
-        </div>
+    if (element) {
+      element.addEventListener('mouseup', onRead);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', onScrollDebounce);
+      window.removeEventListener('mousemove', onMouseMove);
+
+      if (element) {
+        element.removeEventListener('mouseup', onRead);
+      }
+    }
+  }, [entry.isViewed]);
+
+  const description = removeSelfLinks(entry.description, entry.link);
+  const isCollapsed = isCollapseLong && !isExpanded && isLong(description);
+  const blockClass = block.addModifier(isCollapsed ? 'collapsed' : undefined).build();
+
+  return (
+    <div ref={itemRef} className={blockClass}>
+      <div ref={titleRef} className={block.getElement('title').build()}>
+        <a href={entry.link}>{entry.title}</a>
       </div>
-    );
-  }
+      <div className={feedBlock.build()}>
+        <div className={feedBlock.getElement('icon').build()} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
+        <div className={feedBlock.getElement('title').build()}>{entry.feed.title}</div>
+      </div>
+      <div className={block.getElement('description').build()} dangerouslySetInnerHTML={{ __html: description }} />
+      { isCollapsed && <button className='entry__expandButton' onClick={onExpand} />}
+      <div className={infoBlock.build()}>
+        <div className={infoBlock.getElement('item').build()}>
+          <div className={infoBlock.getElement('icon').build()} onClick={onClickFavorite}>
+            {entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
+          </div>
+        </div>
+        { entry.isRead &&
+          <div className={infoBlock.getElement('item').build()} onClick={onUnread}>
+            <div className={infoBlock.getElement('icon').build()}><ReadIcon /></div>
+          </div>
+        }
+      </div>
+    </div>
+  );
 }
 
 export default EntryItem;

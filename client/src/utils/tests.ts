@@ -1,1 +1,1 @@
-export const action = () => { return };
+export const action = (): void => { return };
