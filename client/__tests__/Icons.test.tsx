@@ -2,52 +2,52 @@ import React from 'react';
 import renderer  from 'react-test-renderer';
 import { AddIcon, CheckmarkIcon, CloseIcon, EditIcon, FavoriteIcon, FavoriteSelectedIcon, ReadIcon, ReloadIcon, SettingsIcon, TrashIcon } from '../src/components/Icons';
 
-test('ReloadIcon correct rendering', () => {
+test('ReloadIcon', () => {
   const render = renderer.create(<ReloadIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('AddIcon correct rendering', () => {
+test('AddIcon', () => {
   const render = renderer.create(<AddIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('EditIcon correct rendering', () => {
+test('EditIcon', () => {
   const render = renderer.create(<EditIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('CloseIcon correct rendering', () => {
+test('CloseIcon', () => {
   const render = renderer.create(<CloseIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('TrashIcon correct rendering', () => {
+test('TrashIcon', () => {
   const render = renderer.create(<TrashIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('SettingsIcon correct rendering', () => {
+test('SettingsIcon', () => {
   const render = renderer.create(<SettingsIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('ReadIcon correct rendering', () => {
+test('ReadIcon', () => {
   const render = renderer.create(<ReadIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('FavoriteIcon correct rendering', () => {
+test('FavoriteIcon', () => {
   const render = renderer.create(<FavoriteIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('FavoriteSelectedIcon correct rendering', () => {
+test('FavoriteSelectedIcon', () => {
   const render = renderer.create(<FavoriteSelectedIcon />);
   expect(render).toMatchSnapshot();
 });
 
-test('CheckmarkIcon correct rendering', () => {
+test('CheckmarkIcon', () => {
   const render = renderer.create(<CheckmarkIcon />);
   expect(render).toMatchSnapshot();
 });

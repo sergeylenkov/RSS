@@ -29,17 +29,17 @@ function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEdi
     }
   };
 
-  const blockClass = block.addModifier(isDisabled ? 'disabled' : undefined).addModifier(isScrolled ? 'scrolled' : undefined).build();
-  const iconClass = block.getElement('icon').build();
-  const editIconClass = block.getElement('icon').addModifier(isEditing ? 'editing' : undefined).build();
-  const buttonClass = block.getElement('button').build();
-  const formButtonClass = fromBlock.getElement('button').build();
+  const blockClass = block.addModifier(isDisabled ? 'disabled' : '').addModifier(isScrolled ? 'scrolled' : '').toString();
+  const iconClass = block.getElement('icon').toString();
+  const editIconClass = block.getElement('icon').addModifier(isEditing ? 'editing' : '').toString();
+  const buttonClass = block.getElement('button').toString();
+  const formButtonClass = fromBlock.getElement('button').toString();
 
   if (isFormVisible) {
     return (
       <div className={blockClass}>
-        <div className={fromBlock.build()}>
-          <input ref={linkFieldRef} className={fromBlock.getElement('field').build()} placeholder="ссылка на канал" type="text" />
+        <div className={fromBlock.toString()}>
+          <input ref={linkFieldRef} className={fromBlock.getElement('field').toString()} placeholder="ссылка на канал" type="text" />
           <button className={formButtonClass} onClick={onAddClick}>
             <div className={iconClass}><CheckmarkIcon /></div>
           </button>

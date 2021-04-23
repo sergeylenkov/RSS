@@ -25,7 +25,12 @@ const entry: Entry = {
   feedId: 0
 }
 
-test('EntryItem correct rendering', () => {
+test('EntryItem isCollapseLong = true', () => {
   const render = renderer.create(<EntryItem entry={entry} isCollapseLong onView={action} onSetRead={action} onSetFavorite={action} />);
+  expect(render).toMatchSnapshot();
+});
+
+test('EntryItem isCollapseLong = false', () => {
+  const render = renderer.create(<EntryItem entry={entry} isCollapseLong={false} onView={action} onSetRead={action} onSetFavorite={action} />);
   expect(render).toMatchSnapshot();
 });

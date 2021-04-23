@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FeedsList correct rendering 1`] = `
+exports[`FeedsList 1`] = `
 <div
   className="feeds-list"
 >

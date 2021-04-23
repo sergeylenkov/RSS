@@ -106,28 +106,28 @@ function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: 
 
   const description = removeSelfLinks(entry.description, entry.link);
   const isCollapsed = isCollapseLong && !isExpanded && isLong(description);
-  const blockClass = block.addModifier(isCollapsed ? 'collapsed' : undefined).build();
+  const blockClass = block.addModifier(isCollapsed ? 'collapsed' : '').toString();
 
   return (
     <div ref={itemRef} className={blockClass}>
-      <div ref={titleRef} className={block.getElement('title').build()}>
+      <div ref={titleRef} className={block.getElement('title').toString()}>
         <a href={entry.link}>{entry.title}</a>
       </div>
-      <div className={feedBlock.build()}>
-        <div className={feedBlock.getElement('icon').build()} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
-        <div className={feedBlock.getElement('title').build()}>{entry.feed.title}</div>
+      <div className={feedBlock.toString()}>
+        <div className={feedBlock.getElement('icon').toString()} style={{ backgroundImage: `url(${entry.feed.icon})` }} />
+        <div className={feedBlock.getElement('title').toString()}>{entry.feed.title}</div>
       </div>
-      <div className={block.getElement('description').build()} dangerouslySetInnerHTML={{ __html: description }} />
+      <div className={block.getElement('description').toString()} dangerouslySetInnerHTML={{ __html: description }} />
       { isCollapsed && <button className='entry-item-expand-button' onClick={onExpand} />}
-      <div className={infoBlock.build()}>
-        <div className={infoBlock.getElement('item').build()}>
-          <div className={infoBlock.getElement('icon').build()} onClick={onClickFavorite}>
+      <div className={infoBlock.toString()}>
+        <div className={infoBlock.getElement('item').toString()}>
+          <div className={infoBlock.getElement('icon').toString()} onClick={onClickFavorite}>
             {entry.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon /> }
           </div>
         </div>
         { entry.isRead &&
-          <div className={infoBlock.getElement('item').build()} onClick={onUnread}>
-            <div className={infoBlock.getElement('icon').build()}><ReadIcon /></div>
+          <div className={infoBlock.getElement('item').toString()} onClick={onUnread}>
+            <div className={infoBlock.getElement('icon').toString()}><ReadIcon /></div>
           </div>
         }
       </div>

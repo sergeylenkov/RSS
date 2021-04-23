@@ -27,7 +27,7 @@ function Menu({ onUpdate }: MenuProps): JSX.Element {
   }
 
   return (
-    <div className={block.build()}>
+    <div className={block.toString()}>
       <ReloadButton
         isActive={isUpdating}
         isSelected={pathname === '/'}

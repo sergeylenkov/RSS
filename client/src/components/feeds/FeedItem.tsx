@@ -27,12 +27,12 @@ function FeedItem({ id, icon, title, count, isEditing, isSelected, onSelect, onD
     }
   }
 
-  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : undefined).build();
-  const counterClass = block.getElement('counter').build();
-  const iconClass = block.getElement('icon').build();
+  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').toString();
+  const counterClass = block.getElement('counter').toString();
+  const iconClass = block.getElement('icon').toString();
 
   return (
-    <div className={block.build()}>
+    <div className={block.toString()}>
       {
         isEditing ?
         <div className='feed-item__edit_panel'>
@@ -42,7 +42,7 @@ function FeedItem({ id, icon, title, count, isEditing, isSelected, onSelect, onD
           <button className='feed-item__edit_button' onClick={() => onDelete(id)}><div className='icon'><TrashIcon /></div></button>
         </div>
         :
-        <button className='feed-item__button' onClick={() => onSelect(id)}>
+        <button className={block.getElement('button').toString()} onClick={() => onSelect(id)}>
           <div className={iconClass} style={{ backgroundImage: `url(${icon})` }} />
           <div className={labelClass}>{title}</div>
           <div className={counterClass}>{count}</div>

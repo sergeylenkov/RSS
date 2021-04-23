@@ -17,8 +17,8 @@ interface ReloadButtonProps {
 }
 
 function ReloadButton({ isSelected, count, isActive, isError, onUpdate, onClick } : ReloadButtonProps): JSX.Element {
-  const blockClass = block.addModifier(isActive ? 'active' : undefined).build();
-  const buttonClass = block.getElement('icon').addModifier(isActive ? 'active' : undefined).addModifier(isError ? 'error' : undefined).build();
+  const blockClass = block.addModifier(isActive ? 'active' : '').toString();
+  const buttonClass = block.getElement('icon').addModifier(isActive ? 'active' : '').addModifier(isError ? 'error' : '').toString();
 
   return (
     <div className={blockClass}>

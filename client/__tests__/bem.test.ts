@@ -3,7 +3,7 @@ import { Bem } from '../src/utils/bem';
 const b = new Bem('test-block');
 
 test('bem block', () => {
-  expect(b.build()).toBe('test-block');
+  expect(b.toString()).toBe('test-block');
 });
 
 test('bem in template litarals', () => {
@@ -17,17 +17,17 @@ test('bem toString', () => {
 test('bem block with modifier', () => {
   b.addModifier('selected');
 
-  expect(b.build()).toBe('test-block test-block_selected');
+  expect(b.toString()).toBe('test-block test-block_selected');
 });
 
 test('bem block element', () => {
   const element = b.getElement('icon');
 
-  expect(element.build()).toBe('test-block__icon');
+  expect(element.toString()).toBe('test-block__icon');
 });
 
 test('bem block element with modifier', () => {
   const element = b.getElement('icon').addModifier('selected');
 
-  expect(element.build()).toBe('test-block__icon test-block__icon_selected');
+  expect(element.toString()).toBe('test-block__icon test-block__icon_selected');
 });

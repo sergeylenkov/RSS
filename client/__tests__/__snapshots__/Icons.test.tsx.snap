@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AddIcon correct rendering 1`] = `
+exports[`AddIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -23,7 +23,7 @@ exports[`AddIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`CheckmarkIcon correct rendering 1`] = `
+exports[`CheckmarkIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -34,7 +34,7 @@ exports[`CheckmarkIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`CloseIcon correct rendering 1`] = `
+exports[`CloseIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -55,7 +55,7 @@ exports[`CloseIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`EditIcon correct rendering 1`] = `
+exports[`EditIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -68,7 +68,7 @@ exports[`EditIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`FavoriteIcon correct rendering 1`] = `
+exports[`FavoriteIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -78,7 +78,7 @@ exports[`FavoriteIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`FavoriteSelectedIcon correct rendering 1`] = `
+exports[`FavoriteSelectedIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -88,7 +88,7 @@ exports[`FavoriteSelectedIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`ReadIcon correct rendering 1`] = `
+exports[`ReadIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -98,7 +98,7 @@ exports[`ReadIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`ReloadIcon correct rendering 1`] = `
+exports[`ReloadIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -116,7 +116,7 @@ exports[`ReloadIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`SettingsIcon correct rendering 1`] = `
+exports[`SettingsIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >
@@ -127,7 +127,7 @@ exports[`SettingsIcon correct rendering 1`] = `
 </svg>
 `;
 
-exports[`TrashIcon correct rendering 1`] = `
+exports[`TrashIcon 1`] = `
 <svg
   viewBox="0 0 24 24"
 >

@@ -10,6 +10,7 @@ class Bem {
   }
 
   getElement(name: string): Bem {
+    this._modifiers = [];
     return new Bem(`${this._block}${this._elementSeparator}${name}`);
   }
 
@@ -21,7 +22,11 @@ class Bem {
     return this;
   }
 
-  build(): string {
+  toString(): string {
+    return this._build();
+  }
+
+  _build(): string {
     const modifiers = this._modifiers.map(modifier => {
       return `${this._modifierSeparator}${modifier}`;
     });
@@ -31,10 +36,6 @@ class Bem {
     })
 
     return [this._block, ...classes].join(' ');
-  }
-
-  toString(): string {
-    return this.build();
   }
 }
 

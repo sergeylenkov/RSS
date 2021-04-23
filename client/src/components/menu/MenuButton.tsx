@@ -19,9 +19,9 @@ function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JS
     }
   }, [isSelected]);
 
-  const blockClass = block.build();
-  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').build();
-  const counterClass = block.getElement('counter').build();
+  const blockClass = block.toString();
+  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').toString();
+  const counterClass = block.getElement('counter').toString();
 
   return (
     <button className={blockClass} onClick={onClickHandle}>

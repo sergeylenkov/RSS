@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer';
 import store from '../src/store';
 import EntriesList from '../src/components/entries/EntriesList';
 
-test('EntriesList correct rendering', () => {
+test('EntriesList', () => {
   const render = renderer.create(
     <Provider store={store}>
       <BrowserRouter><EntriesList /></BrowserRouter>

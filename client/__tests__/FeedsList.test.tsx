@@ -5,7 +5,7 @@ import store from '../src/store';
 import { action } from '../src/utils/tests';
 import FeedsList from '../src/components/feeds/FeedsList';
 
-test('FeedsList correct rendering', () => {
+test('FeedsList', () => {
   const render = renderer.create(
     <Provider store={store}>
       <FeedsList onAddFeed={action} onChangeFeed={action} onDeleteFeed={action} />

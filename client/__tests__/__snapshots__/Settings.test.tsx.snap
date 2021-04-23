@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Settings correct rendering 1`] = `
+exports[`Settings isVisible = false 1`] = `null`;
+
+exports[`Settings isVisible = true 1`] = `
 <div
   className="settings"
   onClick={[Function]}

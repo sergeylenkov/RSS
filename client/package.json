@@ -42,6 +42,7 @@
     "lint:json": "eslint src/** --ext .ts --format json --output-file eslint-report.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "test:update": "npm test -- -u",
     "scan": "npm run test:coverage && npm run lint:json"
   },
   "eslintConfig": {

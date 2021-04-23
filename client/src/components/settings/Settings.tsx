@@ -54,12 +54,12 @@ function Settings({ isVisible }: SettingsProps): JSX.Element | null {
     return null;
   }
 
-  const itemClass = block.getElement('item').build();
-  const labelClass = block.getElement('label').build();
-  const checkboxClass = block.getElement('checkbox').build();
+  const itemClass = block.getElement('item').toString();
+  const labelClass = block.getElement('label').toString();
+  const checkboxClass = block.getElement('checkbox').toString();
 
   return (
-    <div className={block.build()} onClick={onClick}>
+    <div className={block.toString()} onClick={onClick}>
       <div className={itemClass}>
         <input ref={themeFieldRef} id={themeId} className={checkboxClass} type="checkbox" checked={isDarkTheme} onChange={onToggleTheme} />
         <label className={labelClass} htmlFor={themeId}>Темная тема</label>
@@ -77,7 +77,7 @@ function Settings({ isVisible }: SettingsProps): JSX.Element | null {
 
       <div className={itemClass}>
         <div className={labelClass}>
-          Удалять посты старше <input className={block.getElement('days').build()} ref={daysFieldRef} type="text" value={keepDays} onChange={onChangeDays}/> дней
+          Удалять посты старше <input className={block.getElement('days').toString()} ref={daysFieldRef} type="text" value={keepDays} onChange={onChangeDays}/> дней
         </div>
       </div>
     </div>

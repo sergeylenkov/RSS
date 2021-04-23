@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 import App from '../src/App';
 import store from '../src/store';
 
-test('App correct rendering', () => {
+test('App', () => {
   const render = renderer.create(
     <Provider store={store}>
       <App />
