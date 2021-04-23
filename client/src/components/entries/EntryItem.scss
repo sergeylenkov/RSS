@@ -132,7 +132,7 @@
 * theme
 */
 
-.dark .entry {
+.dark .entry-item {
 	background-color: #1d1d1d;
 
 	&__title a {
@@ -146,8 +146,8 @@
 	&__description font {
 		color: #bfbfbf !important;
 	}
+}
 
-	&__expandButton {
-		background-color: rgba(29, 29, 29, 0.8);
-	}
+.dark .entry-item-expand-button {
+	background-color: rgba(29, 29, 29, 0.8);
 }

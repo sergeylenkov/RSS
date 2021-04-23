@@ -1,6 +1,6 @@
 import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
-import { Actions } from '../actions';
+import { Actions } from '../actions/type';
 
 export interface State {
   isInitialized: boolean,

@@ -4,7 +4,7 @@ import { SettingsIcon } from '../Icons';
 
 import './SettingsButton.scss';
 
-const block = new Bem('menu-button');
+const block = new Bem('settings-button');
 
 interface SettingsButtonProps {
   isActive: boolean;
