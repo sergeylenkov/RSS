@@ -2,11 +2,11 @@
 
 exports[`SettingsButton isActive = false 1`] = `
 <button
-  className="menu-button"
+  className="settings-button"
   onClick={[Function]}
 >
   <div
-    className="menu-button__icon"
+    className="settings-button__icon"
   >
     <svg
       viewBox="0 0 24 24"
@@ -22,11 +22,11 @@ exports[`SettingsButton isActive = false 1`] = `
 
 exports[`SettingsButton isActive = true 1`] = `
 <button
-  className="menu-button menu-button_active"
+  className="settings-button settings-button_active"
   onClick={[Function]}
 >
   <div
-    className="menu-button__icon menu-button__icon_active"
+    className="settings-button__icon settings-button__icon_active"
   >
     <svg
       viewBox="0 0 24 24"

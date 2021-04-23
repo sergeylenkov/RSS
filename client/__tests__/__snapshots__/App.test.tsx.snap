@@ -84,11 +84,11 @@ exports[`App 1`] = `
         </button>
       </div>
       <button
-        className="menu-button"
+        className="settings-button"
         onClick={[Function]}
       >
         <div
-          className="menu-button__icon"
+          className="settings-button__icon"
         >
           <svg
             viewBox="0 0 24 24"
