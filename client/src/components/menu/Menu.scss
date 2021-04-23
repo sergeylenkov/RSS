@@ -1,0 +1,12 @@
+.menu {
+	display: flex;
+	height: 100%;
+	margin: 0 auto 0 0;
+}
+
+
+@media (max-width: 768px) {
+	.menu {
+		overflow: auto;
+	}
+}

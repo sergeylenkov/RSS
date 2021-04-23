@@ -1,3 +1,5 @@
+import { config } from '../constants';
+
 export interface SetReadResponse {
   id: number;
   isRead: boolean;
@@ -19,7 +21,12 @@ export interface ClearEntriesResponse {
 
 export interface UpdateFeedResponse {
   id: number;
-  data: any;
+  feed: Feed;
+}
+
+export interface DeleteFeedResponse {
+  id: number;
+  isDeleted: boolean;
 }
 
 export interface Feed {
@@ -44,15 +51,15 @@ export interface Entry {
 }
 
 class Data {
-  private url = '';
+  private _url: string;
 
   constructor(url: string) {
-    this.url = url;
+    this._url = url;
   }
 
-  public update() {
-    return new Promise<any[]>((resolve, reject) => {
-      fetch(`${this.url}feeds/update`).then((response) => {
+  update() {
+    return new Promise<Entry[]>((resolve, reject) => {
+      fetch(`${this._url}feeds/update`).then((response) => {
         return response.json();
       }).then((data) => {
         resolve(data);
@@ -62,9 +69,9 @@ class Data {
     });
   }
 
-  public getFeeds() {
+  getFeeds() {
     return new Promise<Feed[]>((resolve) => {
-      fetch(`${this.url}feeds`).then((response) => {
+      fetch(`${this._url}feeds`).then((response) => {
         return response.json();
       }).then((feeds: Feed[]) => {
         feeds.forEach((feed: Feed) => {
@@ -83,49 +90,49 @@ class Data {
     });
   }
 
-  public allEntries() {
+  allEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries`).then((response) => {
+      fetch(`${this._url}entries`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
 
-  public readEntries() {
+  readEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/read`).then((response) => {
+      fetch(`${this._url}entries/read`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
 
-  public getFavorites() {
+  getFavorites() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/favorites`).then((response) => {
+      fetch(`${this._url}entries/favorites`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
 
-  public getUnviewed() {
+  getUnviewed() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this.url}entries/unviewed`).then((response) => {
+      fetch(`${this._url}entries/unviewed`).then((response) => {
         return response.json();
-      }).then((data: Entry[]) => {
-        resolve(data);
+      }).then((entries: Entry[]) => {
+        resolve(entries);
       });
     });
   }
 
-  public setViewed(ids: number[]) {
+  setViewed(ids: number[]) {
     return new Promise<SetViewedResponse>((resolve) => {
-      fetch(`${this.url}entries/view`, {
+      fetch(`${this._url}entries/view`, {
         method: 'POST',
         body: JSON.stringify({ ids: ids }),
         headers: {
@@ -133,43 +140,43 @@ class Data {
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetViewedResponse) => {
+        resolve(response);
       });
     });
   }
 
-  public setRead(id: number, isRead: boolean) {
+  setRead(id: number, isRead: boolean) {
     return new Promise<SetReadResponse>((resolve) => {
       const method = isRead ? 'PUT' : 'DELETE';
 
-      fetch(`${this.url}entries/${id}/read`, {
+      fetch(`${this._url}entries/${id}/read`, {
         method: method
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetReadResponse) => {
+        resolve(response);
       });
     });
   }
 
-  public setFavorite(id: number, isFavorite: boolean) {
+  setFavorite(id: number, isFavorite: boolean) {
     return new Promise<SetFavoriteResponse>((resolve) => {
       const method = isFavorite ? 'PUT' : 'DELETE';
 
-      fetch(`${this.url}entries/${id}/favorite`, {
+      fetch(`${this._url}entries/${id}/favorite`, {
         method: method
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: SetFavoriteResponse) => {
+        resolve(response);
       });
     });
   }
 
-  public addFeed(link: string) {
-    return new Promise((resolve) => {
-      fetch(`${this.url}feeds`, {
+  addFeed(link: string) {
+    return new Promise<Feed>((resolve) => {
+      fetch(`${this._url}feeds`, {
         method: 'POST',
         body: JSON.stringify({ link: link }),
         headers: {
@@ -177,49 +184,49 @@ class Data {
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((feed: Feed) => {
+        resolve(feed);
       });
     });
   }
 
-  public updateFeed(id: number, data: any) {
+  updateFeed(feed: Feed) {
     return new Promise<UpdateFeedResponse>((resolve) => {
-      fetch(`${this.url}feeds/${id}`, {
+      fetch(`${this._url}feeds/${feed.id}`, {
         method: 'PATCH',
-        body: JSON.stringify(data),
+        body: JSON.stringify(feed),
         headers: {
           'Content-Type': 'application/json'
         }
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: UpdateFeedResponse) => {
+        resolve(response);
       });
     });
   }
 
-  public deleteFeed(id: number) {
-    return new Promise((resolve) => {
-      fetch(`${this.url}feeds/${id}`, {
+  deleteFeed(id: number) {
+    return new Promise<DeleteFeedResponse>((resolve) => {
+      fetch(`${this._url}feeds/${id}`, {
         method: 'DELETE'
       }).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: DeleteFeedResponse) => {
+        resolve(response);
       });
     });
   }
 
-  public clearEntries(days: number) {
+  clearEntries(days: number) {
     return new Promise<ClearEntriesResponse>((resolve) => {
-      fetch(`${this.url}entries/clear/${days}`).then((response) => {
+      fetch(`${this._url}entries/clear/${days}`).then((response) => {
         return response.json();
-      }).then((data) => {
-        resolve(data);
+      }).then((response: ClearEntriesResponse) => {
+        resolve(response);
       });
     });
   }
 }
 
-export default new Data('http://localhost:8080/');
+export default new Data(config.urls.api);

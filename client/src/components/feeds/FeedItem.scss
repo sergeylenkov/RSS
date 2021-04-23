@@ -1,0 +1,121 @@
+.feed-item {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 30px;
+
+  &__button {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin: auto 10px auto 0;
+    background-image: "";
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #ebebeb;
+  }
+
+  &__label {
+    margin: auto 0;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000000;
+
+    &_selected {
+      font-weight: bold;
+    }
+  }
+
+  &__counter {
+    margin: auto 0 auto 10px;
+    padding: 2px 5px;
+    font-size: 11px;
+    color: #ffffff;
+    border-radius: 2px;
+    background-color: #4da0da;
+  }
+
+  &__edit_panel {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  &__edit_button {
+    padding: 0;
+    margin: auto 0 auto 10px;
+    display: flex;
+    cursor: pointer;
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      stroke: #000000;
+      stroke-width: 2px;
+      fill: #000000;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  &__title_field {
+    margin: auto 10px auto 0;
+    font-size: 13px;
+    flex-grow: 1;
+  }
+}
+
+/*
+* grid
+*/
+
+.grid .feed-item {
+  width: auto;
+  height: 30px;
+  margin: auto 20px auto 0;
+}
+
+/*
+* theme
+*/
+
+.dark .feed-item {
+  &__icon {
+    background-color: #bfbfbf;
+  }
+
+  &__label {
+    color: #bfbfbf;
+
+    &--selected {
+      color: #f3f3f3;
+    }
+  }
+
+  &__edit_button {
+    .icon {
+      stroke: #a5a5a5;
+      fill: #a5a5a5;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .feed-item {
+    flex-shrink: 0;
+    width: auto;
+    margin-right: 20px;
+  }
+}

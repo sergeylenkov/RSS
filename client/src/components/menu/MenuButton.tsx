@@ -1,54 +1,34 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback } from 'react';
+import { Bem } from '../../utils/bem';
 
-import lightStyles from './MenuButton.module.css';
-import darkStyles from './MenuButton.dark.module.css';
+import './MenuButton.scss';
 
-interface MapStateToProps {
-  isDarkTheme: boolean;
-}
+const block = new Bem('menu-button');
 
-interface MenuButtonProps extends MapStateToProps {
+interface MenuButtonProps {
   isSelected: boolean;
   count: number;
   title: string;
   onClick: () => void;
 }
 
-class MenuButton extends React.Component<MenuButtonProps> {
-  private onClick = () => {
-    const { isSelected, onClick } = this.props;
-
+function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JSX.Element {
+  const onClickHandle = useCallback(() => {
     if (!isSelected) {
       onClick();
     }
-  };
+  }, [isSelected]);
 
-  public render() {
-    const { isDarkTheme, isSelected, count, title } = this.props;
-    const styles = isDarkTheme ? darkStyles : lightStyles;
+  const blockClass = block.toString();
+  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').toString();
+  const counterClass = block.getElement('counter').toString();
 
-    let counter;
-
-    if (isSelected) {
-      counter = <div className={styles.counter}>{count}</div>
-    }
-
-    return (
-      <button className={`${styles.container} ${isSelected ? styles.selected : ''}`} onClick={this.onClick}>
-        <div className={styles.label}>{title}</div>
-        {counter}
-      </button>
-    )
-  }
+  return (
+    <button className={blockClass} onClick={onClickHandle}>
+      <div className={labelClass}>{title}</div>
+      {isSelected && <div className={counterClass}>{count}</div>}
+    </button>
+  )
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isDarkTheme: state.isDarkTheme
-  };
-};
-
-export default connect(mapStateToProps)(MenuButton);
+export default MenuButton;

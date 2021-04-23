@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuButton count = 0 1`] = `
+<button
+  className="menu-button"
+  onClick={[Function]}
+>
+  <div
+    className="menu-button__label menu-button__label_selected"
+  >
+    Test
+  </div>
+  <div
+    className="menu-button__counter"
+  >
+    0
+  </div>
+</button>
+`;
+
+exports[`MenuButton isSelected = false 1`] = `
+<button
+  className="menu-button"
+  onClick={[Function]}
+>
+  <div
+    className="menu-button__label"
+  >
+    Test
+  </div>
+</button>
+`;
+
+exports[`MenuButton isSelected = true 1`] = `
+<button
+  className="menu-button"
+  onClick={[Function]}
+>
+  <div
+    className="menu-button__label menu-button__label_selected"
+  >
+    Test
+  </div>
+  <div
+    className="menu-button__counter"
+  >
+    10
+  </div>
+</button>
+`;

@@ -1,69 +1,75 @@
+import { Entry, Feed } from '../../data';
 import { ActionTypes } from '../constants';
+import { EntriesLoadedAction, EntriesUpdateErrorAction, EntriesUpdatingAction, FeedsAddAction, FeedsDeleteAction, FeedsEditingAction, FeedsSelectAction, FeedsUpdateAction, FeedsUpdatedAction, ToggleCollapseLongAction, ToggleGridAction, ToggleThemeAction, UpdateEntriesCountAction, UpdateFavoriteAction, UpdateKeepDaysAction, UpdateReadAction, UpdateUnviewedCountAction, UpdateViewedAction } from './type';
 
-export function feedsUpdated(feeds: any[]) {
-  return { type: ActionTypes.FEEDS_UPDATED, feeds }
+export function feedsUpdated(feeds: Feed[]): FeedsUpdatedAction   {
+  return { type: ActionTypes.FEEDS_UPDATED, feeds };
 }
 
-export function feedsAdd(feed: any) {
+export function feedsAdd(feed: Feed): FeedsAddAction {
   return { type: ActionTypes.FEEDS_ADD, feed }
 }
 
-export function feedsDelete(id: number) {
+export function feedsDelete(id: number): FeedsDeleteAction {
   return { type: ActionTypes.FEEDS_DELETE, id }
 }
 
-export function feedsEditing(isEditing: boolean) {
+export function feedsEditing(isEditing: boolean): FeedsEditingAction {
   return { type: ActionTypes.FEEDS_EDITING, isEditing }
 }
 
-export function feedsSelect(id: number) {
+export function feedsSelect(id: number): FeedsSelectAction {
   return { type: ActionTypes.FEEDS_SELECT, id }
 }
 
-export function entriesUpdating(isUpdating: boolean) {
-  return { type: ActionTypes.ENTRIES_UPDATING, isUpdating: isUpdating }
+export function feedsUpdate(id: number, feed: Feed): FeedsUpdateAction {
+  return { type: ActionTypes.FEEDS_UPDATE, id, feed }
 }
 
-export function entriesUpdated(entries: any[]) {
+export function entriesUpdating(isUpdating: boolean): EntriesUpdatingAction {
+  return { type: ActionTypes.ENTRIES_UPDATING, isUpdating }
+}
+
+export function entriesUpdated(entries: Entry[]): EntriesLoadedAction {
   return { type: ActionTypes.ENTRIES_LOADED, entries }
 }
 
-export function updateUnviewedCount() {
+export function updateUnviewedCount(): UpdateUnviewedCountAction {
   return { type: ActionTypes.UPDATE_UNVIEWED_COUNT }
 }
 
-export function updateViewed(ids: number[]) {
+export function updateViewed(ids: number[]): UpdateViewedAction {
   return { type: ActionTypes.UPDATE_VIEWED, ids }
 }
 
-export function updateFavorite(id: number, isFavorite: boolean) {
-  return { type: ActionTypes.UPDATE_FAVORITE, id: id, isFavorite: isFavorite }
+export function updateFavorite(id: number, isFavorite: boolean): UpdateFavoriteAction {
+  return { type: ActionTypes.UPDATE_FAVORITE, id, isFavorite }
 }
 
-export function updateRead(id: number, isRead: boolean) {
-  return { type: ActionTypes.UPDATE_READ, id: id, isRead: isRead }
+export function updateRead(id: number, isRead: boolean): UpdateReadAction {
+  return { type: ActionTypes.UPDATE_READ, id, isRead }
 }
 
-export function updateEntriesCount() {
+export function updateEntriesCount(): UpdateEntriesCountAction {
   return { type: ActionTypes.UPDATE_ENTRIES_COUNT }
 }
 
-export function feedsUpdate(id: number, data: any) {
-  return { type: ActionTypes.FEEDS_UPDATE, id: id, data: data }
-}
-
-export function toggleTheme(isDarkTheme: boolean) {
-  return { type: ActionTypes.TOGGLE_THEME, isDarkTheme: isDarkTheme }
-}
-
-export function entriesUpdateError() {
+export function entriesUpdateError(): EntriesUpdateErrorAction {
   return { type: ActionTypes.ENTRIES_UPDATE_ERROR }
 }
 
-export function toggleCollapseLong(isCollapse: boolean) {
-  return { type: ActionTypes.TOGGLE_COLLAPSE_LONG, isCollapse: isCollapse }
+export function toggleTheme(isDarkTheme: boolean): ToggleThemeAction {
+  return { type: ActionTypes.TOGGLE_THEME, isDarkTheme }
 }
 
-export function updateKeepDays(days: number) {
-  return { type: ActionTypes.UPDATE_KEEP_DAYS, days: days};
+export function toggleCollapseLong(isCollapse: boolean): ToggleCollapseLongAction {
+  return { type: ActionTypes.TOGGLE_COLLAPSE_LONG, isCollapse }
+}
+
+export function updateKeepDays(days: number): UpdateKeepDaysAction {
+  return { type: ActionTypes.UPDATE_KEEP_DAYS, days };
+}
+
+export function toggleGrid(isGrid: boolean): ToggleGridAction {
+  return { type: ActionTypes.TOGGLE_GRID, isGrid };
 }

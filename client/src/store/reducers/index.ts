@@ -1,7 +1,8 @@
 import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
+import { Actions } from '../actions/type';
 
-interface State {
+export interface State {
   isInitialized: boolean,
   isUpdating: boolean,
   isFeedsEditing: boolean,
@@ -9,15 +10,16 @@ interface State {
   isDarkTheme: boolean,
   isCollapseLong: boolean,
   keepDays: number,
+  isGrid: boolean,
   entriesCount: number,
   unviewedCount: number,
   feeds: Feed[],
   allEntries: Entry[],
   entries: Entry[],
-  selectedFeeds: any[]
+  selectedFeeds: number[]
 }
 
-const initialState: State = {
+export const initialState: State = {
   isInitialized: false,
   isUpdating: false,
   isFeedsEditing: false,
@@ -25,6 +27,7 @@ const initialState: State = {
   isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : false,
   isCollapseLong: localStorage.getItem('collapseLong') ? JSON.parse(<string>localStorage.getItem('collapseLong')) : true,
   keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
+  isGrid: localStorage.getItem('grid') ? JSON.parse(<string>localStorage.getItem('grid')) : false,
   entriesCount: 0,
   unviewedCount: 0,
   feeds: [],
@@ -35,12 +38,9 @@ const initialState: State = {
 
 const feedsDict: { [key: string]: Feed } = {};
 
-function rootReducer(state = initialState, action: any) {
-  if (action.type === ActionTypes.FEEDS_UPDATING) {
-    return {
-      ...state,
-      isUpdating: true
-    }
+function rootReducer(state: State | undefined, action: Actions): State {
+  if (!state) {
+    return {...initialState};
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATED) {
@@ -68,8 +68,8 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATE) {
-    const feeds = state.feeds.map((feed: any) => {
-      return feed.id === action.id ? { ...feed, ...action.data } : feed
+    const feeds = state.feeds.map((feed: Feed) => {
+      return feed.id === action.id ? { ...feed, ...action.feed } : feed
     });
 
     return {
@@ -79,7 +79,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.FEEDS_DELETE) {
-    const feeds = state.feeds.filter((feed: any) => {
+    const feeds = state.feeds.filter((feed: Feed) => {
       return feed.id !== action.id
     });
 
@@ -122,8 +122,8 @@ function rootReducer(state = initialState, action: any) {
     const feeds = [...state.feeds];
     let totalCount = 0;
 
-    feeds.forEach((feed: any) => {
-      const count = state.entries.filter((entry: any) => {
+    feeds.forEach((feed: Feed) => {
+      const count = state.entries.filter((entry: Entry) => {
         return entry.feedId === feed.id && !entry.isViewed
       }).length;
 
@@ -139,7 +139,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.UPDATE_VIEWED) {
-    let entries = state.entries.map((entry: any) => {
+    let entries = state.entries.map((entry: Entry) => {
       if (action.ids.indexOf(entry.id) !== -1) {
         return { ...entry, isViewed: true }
       }
@@ -156,7 +156,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.UPDATE_FAVORITE) {
-    let entries = state.entries.map((entry: any) => {
+    let entries = state.entries.map((entry: Entry) => {
       return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
     });
 
@@ -169,7 +169,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.UPDATE_READ) {
-    let entries = state.entries.map((entry: any) => {
+    let entries = state.entries.map((entry: Entry) => {
       return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
     });
 
@@ -184,8 +184,8 @@ function rootReducer(state = initialState, action: any) {
   if (action.type === ActionTypes.UPDATE_ENTRIES_COUNT) {
     const feeds = [...state.feeds];
 
-    feeds.forEach((feed: any) => {
-      feed.count = state.entries.filter((entry: any) => {
+    feeds.forEach((feed: Feed) => {
+      feed.count = state.entries.filter((entry: Entry) => {
         return entry.feedId === feed.id
       }).length;
     });
@@ -217,7 +217,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.TOGGLE_THEME) {
-    localStorage.setItem('darkTheme', action.isDarkTheme);
+    localStorage.setItem('darkTheme', String(action.isDarkTheme));
 
     return {
       ...state,
@@ -234,7 +234,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.TOGGLE_COLLAPSE_LONG) {
-    localStorage.setItem('collapseLong', action.isCollapse);
+    localStorage.setItem('collapseLong', String(action.isCollapse));
 
     return {
       ...state,
@@ -243,7 +243,7 @@ function rootReducer(state = initialState, action: any) {
   }
 
   if (action.type === ActionTypes.UPDATE_KEEP_DAYS) {
-    localStorage.setItem('keepDays', action.days);
+    localStorage.setItem('keepDays', String(action.days));
 
     return {
       ...state,
@@ -251,14 +251,23 @@ function rootReducer(state = initialState, action: any) {
     }
   }
 
-  return state;
-};
+  if (action.type === ActionTypes.TOGGLE_GRID) {
+    localStorage.setItem('grid', String(action.isGrid));
 
-function filterEntries(selectedFeeds: number[], allEntries: any[]) {
-  let entries = [];
+    return {
+      ...state,
+      isGrid: action.isGrid
+    }
+  }
+
+  return state;
+}
+
+function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
+  let entries: Entry[] = [];
 
   if (selectedFeeds.length > 0) {
-    entries = allEntries.filter((entry: any) => {
+    entries = allEntries.filter((entry: Entry) => {
       return selectedFeeds.includes(entry.feedId)
     });
   } else {
@@ -268,11 +277,11 @@ function filterEntries(selectedFeeds: number[], allEntries: any[]) {
   return entries;
 }
 
-function getFeedById(id: number) : Feed {
+function getFeedById(id: number): Feed {
   return feedsDict[id];
 }
 
-function updateFeedsInEntries(entries: Entry[]) {
+function updateFeedsInEntries(entries: Entry[]): void {
   entries.forEach(entry => {
     entry.feed = getFeedById(entry.feedId);
   });

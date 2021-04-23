@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EntryItem isCollapseLong = false 1`] = `
+<div
+  className="entry-item"
+>
+  <div
+    className="entry-item__title"
+  >
+    <a
+      href="https://www.test.com/1"
+    >
+      Mock entry
+    </a>
+  </div>
+  <div
+    className="entry-item-feed"
+  >
+    <div
+      className="entry-item-feed__icon"
+      style={
+        Object {
+          "backgroundImage": "url()",
+        }
+      }
+    />
+    <div
+      className="entry-item-feed__title"
+    >
+      Mock feed
+    </div>
+  </div>
+  <div
+    className="entry-item__description"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "",
+      }
+    }
+  />
+  <div
+    className="entry-item-info"
+  >
+    <div
+      className="entry-item-info__item"
+    >
+      <div
+        className="entry-item-info__icon"
+        onClick={[Function]}
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M17,18L12,15.82L7,18V5H17M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`EntryItem isCollapseLong = true 1`] = `
+<div
+  className="entry-item"
+>
+  <div
+    className="entry-item__title"
+  >
+    <a
+      href="https://www.test.com/1"
+    >
+      Mock entry
+    </a>
+  </div>
+  <div
+    className="entry-item-feed"
+  >
+    <div
+      className="entry-item-feed__icon"
+      style={
+        Object {
+          "backgroundImage": "url()",
+        }
+      }
+    />
+    <div
+      className="entry-item-feed__title"
+    >
+      Mock feed
+    </div>
+  </div>
+  <div
+    className="entry-item__description"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "",
+      }
+    }
+  />
+  <div
+    className="entry-item-info"
+  >
+    <div
+      className="entry-item-info__item"
+    >
+      <div
+        className="entry-item-info__icon"
+        onClick={[Function]}
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M17,18L12,15.82L7,18V5H17M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;

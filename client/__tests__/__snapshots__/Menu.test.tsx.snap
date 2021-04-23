@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Menu 1`] = `
+<div
+  className="menu"
+>
+  <div
+    className="reload-button"
+  >
+    <button
+      className="reload-button__icon"
+      onClick={[Function]}
+    >
+      <svg
+        viewBox="0 0 24 24"
+      >
+        <g>
+          <polyline
+            points="23 4 23 10 17 10"
+          />
+          <polyline
+            points="1 20 1 14 7 14"
+          />
+          <path
+            d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+          />
+        </g>
+      </svg>
+    </button>
+    <button
+      className="menu-button"
+      onClick={[Function]}
+    >
+      <div
+        className="menu-button__label menu-button__label_selected"
+      >
+        Свежее
+      </div>
+      <div
+        className="menu-button__counter"
+      >
+        0
+      </div>
+    </button>
+  </div>
+  <button
+    className="menu-button"
+    onClick={[Function]}
+  >
+    <div
+      className="menu-button__label"
+    >
+      Все
+    </div>
+  </button>
+  <button
+    className="menu-button"
+    onClick={[Function]}
+  >
+    <div
+      className="menu-button__label"
+    >
+      Прочитанное
+    </div>
+  </button>
+  <button
+    className="menu-button"
+    onClick={[Function]}
+  >
+    <div
+      className="menu-button__label"
+    >
+      Избранное
+    </div>
+  </button>
+</div>
+`;

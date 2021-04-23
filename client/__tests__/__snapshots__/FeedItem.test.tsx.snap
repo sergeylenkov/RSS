@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeedItem isEditing = true 1`] = `
+<div
+  className="feed-item"
+>
+  <div
+    className="feed-item__edit_panel"
+  >
+    <div
+      className="feed-item__icon"
+      style={
+        Object {
+          "backgroundImage": "url()",
+        }
+      }
+    />
+    <input
+      className="feed-item__title_field"
+      defaultValue="Test"
+      type="text"
+    />
+    <button
+      className="feed-item__edit_button"
+      onClick={[Function]}
+    >
+      <div
+        className="icon"
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+            stroke="none"
+          />
+        </svg>
+      </div>
+    </button>
+    <button
+      className="feed-item__edit_button"
+      onClick={[Function]}
+    >
+      <div
+        className="icon"
+      >
+        <svg
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z"
+            stroke="none"
+          />
+        </svg>
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`FeedItem isSelected = true 1`] = `
+<div
+  className="feed-item"
+>
+  <button
+    className="feed-item__button"
+    onClick={[Function]}
+  >
+    <div
+      className="feed-item__icon"
+      style={
+        Object {
+          "backgroundImage": "url()",
+        }
+      }
+    />
+    <div
+      className="feed-item__label feed-item__label_selected"
+    >
+      Test
+    </div>
+    <div
+      className="feed-item__counter"
+    >
+      0
+    </div>
+  </button>
+</div>
+`;

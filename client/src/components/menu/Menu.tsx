@@ -1,66 +1,46 @@
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import MenuButton from './MenuButton';
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux'
+import MenuButton from './MenuButton';
 import ReloadButton from './ReloadButton';
-import { connect } from 'react-redux';
-import styles from './Menu.module.css';
+import { Bem } from '../../utils/bem';
+import { State } from '../../store/reducers';
 
-interface MapStateToProps extends RouteComponentProps {
-  isUpdating: boolean;
-  isUpdateError: boolean;
-  unviewedCount: number;
-  entriesCount: number;
-}
+import './Menu.scss';
 
-interface MenuProps extends MapStateToProps {
+const block = new Bem('menu');
+
+interface MenuProps {
   onUpdate: () => void;
 }
 
-class Menu extends React.Component<MenuProps> {
-  private onClick = (path: string) => {
-    const { history } = this.props;
+function Menu({ onUpdate }: MenuProps): JSX.Element {
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const isUpdating = useSelector<State, boolean>(state => state.isUpdating);
+  const isUpdateError = useSelector<State, boolean>(state => state.isUpdateError);
+  const unviewedCount = useSelector<State, number>(state => state.unviewedCount);
+  const entriesCount = useSelector<State, number>(state => state.entriesCount);
 
+  const onClick = (path: string) => {
     history.push(path);
   }
 
-  public render() {
-    const {
-      isUpdating,
-      isUpdateError,
-      unviewedCount,
-      entriesCount,
-      onUpdate,
-      location: { pathname }
-    } = this.props;
-
-    return (
-      <div className={styles.container}>
-        <ReloadButton
-          isActive={isUpdating}
-          isSelected={pathname === '/'}
-          isError={isUpdateError}
-          count={unviewedCount}
-          onUpdate={onUpdate}
-          onClick={() => this.onClick('/')}
-        />
-        <MenuButton title={'Все'} isSelected={pathname === '/all'} count={entriesCount} onClick={() => this.onClick('/all')} />
-        <MenuButton title={'Прочитанное'} isSelected={pathname === '/read'} count={entriesCount} onClick={() => this.onClick('/read')} />
-        <MenuButton title={'Избранное'} isSelected={pathname === '/favorites'} count={entriesCount} onClick={() => this.onClick('/favorites')} />
-      </div>
-    );
-  }
+  return (
+    <div className={block.toString()}>
+      <ReloadButton
+        isActive={isUpdating}
+        isSelected={pathname === '/'}
+        isError={isUpdateError}
+        count={unviewedCount}
+        onUpdate={onUpdate}
+        onClick={() => onClick('/')}
+      />
+      <MenuButton title={'Все'} isSelected={pathname === '/all'} count={entriesCount} onClick={() => onClick('/all')} />
+      <MenuButton title={'Прочитанное'} isSelected={pathname === '/read'} count={entriesCount} onClick={() => onClick('/read')} />
+      <MenuButton title={'Избранное'} isSelected={pathname === '/favorites'} count={entriesCount} onClick={() => onClick('/favorites')} />
+    </div>
+  );
 }
 
-/* Redux */
-
-const mapStateToProps = (state: MapStateToProps) => {
-  return {
-    isUpdating: state.isUpdating,
-    isUpdateError: state.isUpdateError,
-    unviewedCount: state.unviewedCount,
-    entriesCount: state.entriesCount,
-  };
-};
-
-export default connect(mapStateToProps)(withRouter(Menu));
+export default Menu;
