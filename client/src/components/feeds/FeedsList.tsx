@@ -21,7 +21,7 @@ function FeedsList({ onAddFeed, onChangeFeed, onDeleteFeed }: FeedsListProps): J
   const selectedFeeds = useSelector<State, number[]>(state => state.selectedFeeds);
 
   const onChange = (id: number, title: string) => {
-    const feed = feeds.find(feed => feed.id === id);
+    const feed = feeds.find(el => el.id === id);
 
     if (feed) {
       feed.title = title;

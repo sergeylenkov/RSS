@@ -1,5 +1,6 @@
 import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
+import { Actions } from '../actions';
 
 export interface State {
   isInitialized: boolean,
@@ -18,7 +19,7 @@ export interface State {
   selectedFeeds: number[]
 }
 
-const initialState: State = {
+export const initialState: State = {
   isInitialized: false,
   isUpdating: false,
   isFeedsEditing: false,
@@ -37,12 +38,9 @@ const initialState: State = {
 
 const feedsDict: { [key: string]: Feed } = {};
 
-function rootReducer(state = initialState, action: any): State {
-  if (action.type === ActionTypes.FEEDS_UPDATING) {
-    return {
-      ...state,
-      isUpdating: true
-    }
+function rootReducer(state: State | undefined, action: Actions): State {
+  if (!state) {
+    return {...initialState};
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATED) {
@@ -71,7 +69,7 @@ function rootReducer(state = initialState, action: any): State {
 
   if (action.type === ActionTypes.FEEDS_UPDATE) {
     const feeds = state.feeds.map((feed: Feed) => {
-      return feed.id === action.id ? { ...feed, ...action.data } : feed
+      return feed.id === action.id ? { ...feed, ...action.feed } : feed
     });
 
     return {
@@ -219,7 +217,7 @@ function rootReducer(state = initialState, action: any): State {
   }
 
   if (action.type === ActionTypes.TOGGLE_THEME) {
-    localStorage.setItem('darkTheme', action.isDarkTheme);
+    localStorage.setItem('darkTheme', String(action.isDarkTheme));
 
     return {
       ...state,
@@ -236,7 +234,7 @@ function rootReducer(state = initialState, action: any): State {
   }
 
   if (action.type === ActionTypes.TOGGLE_COLLAPSE_LONG) {
-    localStorage.setItem('collapseLong', action.isCollapse);
+    localStorage.setItem('collapseLong', String(action.isCollapse));
 
     return {
       ...state,
@@ -245,7 +243,7 @@ function rootReducer(state = initialState, action: any): State {
   }
 
   if (action.type === ActionTypes.UPDATE_KEEP_DAYS) {
-    localStorage.setItem('keepDays', action.days);
+    localStorage.setItem('keepDays', String(action.days));
 
     return {
       ...state,
@@ -254,7 +252,7 @@ function rootReducer(state = initialState, action: any): State {
   }
 
   if (action.type === ActionTypes.TOGGLE_GRID) {
-    localStorage.setItem('grid', action.isGrid);
+    localStorage.setItem('grid', String(action.isGrid));
 
     return {
       ...state,
@@ -265,8 +263,8 @@ function rootReducer(state = initialState, action: any): State {
   return state;
 }
 
-function filterEntries(selectedFeeds: number[], allEntries: Entry[]) {
-  let entries = [];
+function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
+  let entries: Entry[] = [];
 
   if (selectedFeeds.length > 0) {
     entries = allEntries.filter((entry: Entry) => {
@@ -279,11 +277,11 @@ function filterEntries(selectedFeeds: number[], allEntries: Entry[]) {
   return entries;
 }
 
-function getFeedById(id: number) : Feed {
+function getFeedById(id: number): Feed {
   return feedsDict[id];
 }
 
-function updateFeedsInEntries(entries: Entry[]) {
+function updateFeedsInEntries(entries: Entry[]): void {
   entries.forEach(entry => {
     entry.feed = getFeedById(entry.feedId);
   });
