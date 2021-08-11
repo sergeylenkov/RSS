@@ -7,7 +7,7 @@ const entries = require('./routes/entries');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, './web')));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH");
@@ -21,7 +21,7 @@ app.use('/feeds', feeds);
 app.use('/entries', entries);
 
 app.get('*', (req, res) =>{
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+    res.sendFile(path.join(__dirname, './web/index.html'));
 });
 
 const args = require('minimist')(process.argv.slice(2));

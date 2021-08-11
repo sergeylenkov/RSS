@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "esnext",
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
