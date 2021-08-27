@@ -46,7 +46,7 @@
     "scan": "npm run test:coverage && npm run lint:json"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": ["react-app", "react-app/jest"]
   },
   "jest": {
     "setupFilesAfterEnv": [
