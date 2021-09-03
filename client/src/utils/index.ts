@@ -16,3 +16,7 @@ export function debounce(func: (...args: any[]) => void, wait: number, immediate
 		if (callNow) func.apply(this, args);
 	};
 }
+
+export function isSystemDarkTheme(): boolean {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}

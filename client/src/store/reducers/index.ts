@@ -1,6 +1,7 @@
 import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
 import { Actions } from '../actions/type';
+import { isSystemDarkTheme } from '../../utils';
 
 export interface State {
   isInitialized: boolean,
@@ -24,7 +25,7 @@ export const initialState: State = {
   isUpdating: false,
   isFeedsEditing: false,
   isUpdateError: false,
-  isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : false,
+  isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : isSystemDarkTheme(),
   isCollapseLong: localStorage.getItem('collapseLong') ? JSON.parse(<string>localStorage.getItem('collapseLong')) : true,
   keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
   isGrid: localStorage.getItem('grid') ? JSON.parse(<string>localStorage.getItem('grid')) : false,
