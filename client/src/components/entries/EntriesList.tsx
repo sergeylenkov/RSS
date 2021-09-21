@@ -15,8 +15,9 @@ function EntriesList(): JSX.Element {
   const isCollapseLong = useSelector<State, boolean>(state => state.isCollapseLong);
   const entries = useSelector<State, Entry[]>(state => state.entries);
   const dispatch = useDispatch();
-
+  const entryItems = useRef<Map<number, HTMLDivElement>>(new Map()).current;
   const viewedIds = useRef<Set<number>>(new Set()).current;
+  const observer = useRef<IntersectionObserver>();
 
   const OnViewDebonce = debounce(() => {
     Data.setViewed([...viewedIds]).then(() => {
@@ -82,16 +83,41 @@ function EntriesList(): JSX.Element {
     getEntries(pathname);
   }, [pathname]);
 
+  useEffect(() => {
+    observer.current = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          for (const [key, value] of entryItems) {
+            if (value === el.target) {
+              onView(key);
+            }
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    }
+  }, [])
+
   return (
     <div className='entries-list'>
       {
         entries.map((entry: Entry) => {
           return (
             <EntryItem
+              ref={(ref) => {
+                if (ref && observer.current && !entry.isViewed) {
+                  entryItems.set(entry.id, ref);
+                  observer.current.observe(ref);
+                }
+              }}
               key={entry.id}
               entry={entry}
               isCollapseLong={isCollapseLong}
-              onView={onView}
               onSetRead={onSetRead}
               onSetFavorite={onSetFavorite} />
           )
