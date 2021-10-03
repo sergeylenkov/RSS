@@ -1,29 +1,29 @@
 .menu-button {
-	display: flex;
-	flex-direction: row;
-	flex-shrink: 0;
-	height: 100%;
-	margin: 0 20px 0 0;
-	cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  height: 100%;
+  margin: 0 20px 0 0;
+  cursor: pointer;
 
-	&__label {
-		margin: auto 0;
-		font-size: 14px;
-		color: #000000;
+  &__label {
+    margin: auto 0;
+    font-size: 14px;
+    color: #000000;
 
-		&_-selected {
-			font-weight: bold;
-		}
-	}
+    &-selected {
+      font-weight: bold;
+    }
+  }
 
-	&__counter {
-		margin: auto 0 auto 10px;
-		padding: 2px 5px;
-		font-size: 11px;
-		border-radius: 2px;
-		color: #ffffff;
+  &__counter {
+    margin: auto 0 auto 10px;
+    padding: 2px 5px;
+    font-size: 11px;
+    border-radius: 2px;
+    color: #ffffff;
     background-color: #4da0da;
-	}
+  }
 }
 
 /*
@@ -31,16 +31,16 @@
 */
 
 .dark .menu-button {
-	&__label {
-		color: #bfbfbf;
+  &__label {
+    color: #bfbfbf;
 
-		&_selected {
-			color: #f3f3f3;
-		}
-	}
+    &_selected {
+      color: #f3f3f3;
+    }
+  }
 
-	&__counter {
-		color: #ffffff;
-		background-color: #4da0da;
-	}
+  &__counter {
+    color: #ffffff;
+    background-color: #4da0da;
+  }
 }
