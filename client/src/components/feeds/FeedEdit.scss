@@ -18,17 +18,17 @@
 
   &__button {
     display: flex;
-    padding: 0;
     margin: auto 10px auto 0;
+    padding: 0;
     cursor: pointer;
   }
 
   &__icon {
     width: 16px;
     height: 16px;
+    fill: #000000;
     stroke: #000000;
     stroke-width: 2px;
-    fill: #000000;
 
     &_editing {
       stroke: #2f74f1;
@@ -48,8 +48,8 @@
 
   &__button {
     display: flex;
-    padding: 0;
     margin: auto 0 auto 10px;
+    padding: 0;
     cursor: pointer;
   }
 
@@ -74,8 +74,8 @@
 
 .dark .feed-edit {
   &__icon {
-    stroke: #a5a5a5;
     fill: #a5a5a5;
+    stroke: #a5a5a5;
   }
 }
 

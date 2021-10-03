@@ -8,10 +8,10 @@
 
 .header {
   position: fixed;
+  z-index: 10;
   width: 100%;
   height: 50px;
   background: #d9f5ff;
-  z-index: 10;
 
   &__content {
     position: relative;
@@ -58,10 +58,10 @@
 
 .grid .feeds {
   position: fixed;
-  width: 100%;
   top: 50px;
-  margin: 0;
   z-index: 1;
+  width: 100%;
+  margin: 0;
 }
 
 /*
@@ -96,8 +96,8 @@
   }
 
   .content {
-    width: 100%;
     flex-direction: column-reverse;
+    width: 100%;
     padding: 120px 0 0 0;
   }
 
@@ -105,8 +105,8 @@
     position: fixed;
     top: 50px;
     left: 0;
-    margin: 0;
     width: 100%;
     max-width: 100%;
+    margin: 0;
   }
 }

@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
-  overflow: hidden;
   margin: 0;
+  overflow: hidden;
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
 
@@ -16,10 +16,10 @@
     width: 16px;
     height: 16px;
     margin: auto 10px auto 0;
+    cursor: pointer;
+    fill: none;
     stroke: #000000;
     stroke-width: 2px;
-    fill: none;
-    cursor: pointer;
 
     &_active {
       animation: spin 2s linear infinite;

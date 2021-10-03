@@ -8,8 +8,8 @@
 
   &__label {
     margin: auto 0;
-    font-size: 14px;
     color: #000000;
+    font-size: 14px;
 
     &-selected {
       font-weight: bold;
@@ -19,10 +19,10 @@
   &__counter {
     margin: auto 0 auto 10px;
     padding: 2px 5px;
-    font-size: 11px;
-    border-radius: 2px;
     color: #ffffff;
+    font-size: 11px;
     background-color: #4da0da;
+    border-radius: 2px;
   }
 }
 
