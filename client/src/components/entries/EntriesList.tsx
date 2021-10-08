@@ -84,8 +84,8 @@ function EntriesList(): JSX.Element {
   }, [pathname]);
 
   useEffect(() => {
-    observer.current = new IntersectionObserver((entries) => {
-      entries.forEach(el => {
+    observer.current = new IntersectionObserver((elements) => {
+      elements.forEach(el => {
         if (el.isIntersecting) {
           for (const [key, value] of entryItems) {
             if (value === el.target) {
