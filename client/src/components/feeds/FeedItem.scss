@@ -16,19 +16,19 @@
     width: 16px;
     height: 16px;
     margin: auto 10px auto 0;
-    background-image: "";
+    background-color: #ebebeb;
+    background-image: '';
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: #ebebeb;
   }
 
   &__label {
     margin: auto 0;
+    overflow: hidden;
+    color: #000000;
     font-size: 13px;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
-    color: #000000;
 
     &_selected {
       font-weight: bold;
@@ -38,10 +38,10 @@
   &__counter {
     margin: auto 0 auto 10px;
     padding: 2px 5px;
-    font-size: 11px;
     color: #ffffff;
-    border-radius: 2px;
+    font-size: 11px;
     background-color: #4da0da;
+    border-radius: 2px;
   }
 
   &__edit_panel {
@@ -51,17 +51,17 @@
   }
 
   &__edit_button {
-    padding: 0;
-    margin: auto 0 auto 10px;
     display: flex;
+    margin: auto 0 auto 10px;
+    padding: 0;
     cursor: pointer;
 
     .icon {
       width: 16px;
       height: 16px;
+      fill: #000000;
       stroke: #000000;
       stroke-width: 2px;
-      fill: #000000;
 
       svg {
         width: 100%;
@@ -71,9 +71,9 @@
   }
 
   &__title_field {
+    flex-grow: 1;
     margin: auto 10px auto 0;
     font-size: 13px;
-    flex-grow: 1;
   }
 }
 
@@ -106,8 +106,8 @@
 
   &__edit_button {
     .icon {
-      stroke: #a5a5a5;
       fill: #a5a5a5;
+      stroke: #a5a5a5;
     }
   }
 }

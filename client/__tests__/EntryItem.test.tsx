@@ -26,11 +26,11 @@ const entry: Entry = {
 }
 
 test('EntryItem isCollapseLong = true', () => {
-  const render = renderer.create(<EntryItem entry={entry} isCollapseLong onView={action} onSetRead={action} onSetFavorite={action} />);
+  const render = renderer.create(<EntryItem entry={entry} isCollapseLong onSetRead={action} onSetFavorite={action} />);
   expect(render).toMatchSnapshot();
 });
 
 test('EntryItem isCollapseLong = false', () => {
-  const render = renderer.create(<EntryItem entry={entry} isCollapseLong={false} onView={action} onSetRead={action} onSetFavorite={action} />);
+  const render = renderer.create(<EntryItem entry={entry} isCollapseLong={false} onSetRead={action} onSetFavorite={action} />);
   expect(render).toMatchSnapshot();
 });

@@ -13,6 +13,14 @@ jobs:
         run: npm build
         working-directory: client
 
+      - name: Run ESLlint
+        run: npm run lint
+        working-directory: client
+      
+      - name: Run Stylelint
+        run: npm run lint:styles
+        working-directory: client        
+        
       - name: Test client
         run: npm run test
         working-directory: client

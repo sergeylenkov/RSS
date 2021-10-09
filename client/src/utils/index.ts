@@ -1,7 +1,7 @@
-export function debounce(func: (...args: any[]) => void, wait: number, immediate: boolean): () => void {
+export function debounce(func: (...args: unknown[]) => void, wait: number, immediate: boolean): () => void {
 	let timeout: number | null;
 
-	return (...args: any[]) => {
+	return (...args: unknown[]) => {
 		const later = function() {
 			timeout = null;
 			if (!immediate) func.apply(this, args);

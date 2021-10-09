@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react';
 import { FavoriteIcon, FavoriteSelectedIcon, ReadIcon } from '../Icons';
 import { Entry } from '../../data';
-import { debounce } from '../../utils';
 import { isLong, removeSelfLinks } from '../../utils/entry';
 import { Bem } from '../../utils/bem';
 
@@ -14,54 +13,13 @@ const infoBlock = new Bem('entry-item-info');
 interface EntryProps {
   entry: Entry;
   isCollapseLong: boolean;
-  onView: (id: number) => void;
   onSetRead: (id: number, isRead: boolean) => void;
   onSetFavorite: (id: number, isRead: boolean) => void;
 }
 
-function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: EntryProps): JSX.Element {
+function EntryItem({ entry, isCollapseLong, onSetRead, onSetFavorite }: EntryProps, ref: Ref<HTMLDivElement>): JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
-  const itemRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-
-  const onScroll = () => {
-    if (!entry.isViewed && itemRef && itemRef.current) {
-      const rect = itemRef.current.getBoundingClientRect();
-      const height = window.innerHeight / 2;
-
-      let isViewed = false;
-      let scrollEnd = false;
-
-      if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-        scrollEnd = true;
-      }
-
-      if ((scrollEnd && rect.top > 0) || (rect.top < height)) {
-        isViewed = true;
-      }
-
-      if (isViewed) {
-        onView(entry.id);
-      }
-    }
-  }
-
-  const onScrollDebounce = debounce(() => {
-    onScroll();
-  }, 500, false)
-
-  const onMouseMove = () => {
-    if (!entry.isViewed && itemRef && itemRef.current) {
-      const rect = itemRef.current.getBoundingClientRect();
-      const height = rect.top + rect.height;
-
-      if (height < window.innerHeight) {
-        onView(entry.id);
-      }
-
-      window.removeEventListener('mousemove', onMouseMove);
-    }
-  }
 
   const onExpand = () => {
     setExpanded(true);
@@ -85,31 +43,24 @@ function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: 
   useEffect(() => {
     const element = titleRef.current;
 
-    if (!entry.isViewed) {
-      window.addEventListener('scroll', onScrollDebounce);
-      window.addEventListener('mousemove', onMouseMove);
-    }
-
-    if (element) {
-      element.addEventListener('mouseup', onRead);
-    }
-
-    return () => {
-      window.removeEventListener('scroll', onScrollDebounce);
-      window.removeEventListener('mousemove', onMouseMove);
-
+    if (!entry.isRead) {
       if (element) {
-        element.removeEventListener('mouseup', onRead);
+        element.addEventListener('mouseup', onRead);
       }
     }
-  }, [entry.isViewed]);
+
+
+    return () => {
+      element && element.removeEventListener('mouseup', onRead);
+    }
+  }, [entry.isRead]);
 
   const description = removeSelfLinks(entry.description, entry.link);
   const isCollapsed = isCollapseLong && !isExpanded && isLong(description);
   const blockClass = block.addModifier(isCollapsed ? 'collapsed' : '').toString();
 
   return (
-    <div ref={itemRef} className={blockClass}>
+    <div ref={ref} className={blockClass}>
       <div ref={titleRef} className={block.getElement('title').toString()}>
         <a href={entry.link}>{entry.title}</a>
       </div>
@@ -135,4 +86,4 @@ function EntryItem({ entry, isCollapseLong, onView, onSetRead, onSetFavorite }: 
   );
 }
 
-export default EntryItem;
+export default forwardRef(EntryItem);

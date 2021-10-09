@@ -2,3 +2,6 @@ build
 node_modules
 coverage
 .scannerwork
+*.css
+*.scss
+*.svg

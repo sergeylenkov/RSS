@@ -2,8 +2,8 @@
   flex-shrink: 0;
   margin: 0;
   padding: 0 12px;
-  transition: background-color 200ms ease-in;
   cursor: pointer;
+  transition: background-color 200ms ease-in;
 
   &_active {
     background-color: #ffffff;
