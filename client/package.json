@@ -46,7 +46,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .ts,.js,.tsx src/",
     "lint:json": "eslint --ext .ts,.js,.tsx --format json --output-file eslint-report.json src/",
-    "lint:style": "stylelint **/*.scss",
+    "lint:styles": "stylelint **/*.scss",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:update": "npm test -- -u",
