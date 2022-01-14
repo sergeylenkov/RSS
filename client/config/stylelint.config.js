@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
   plugins: ['stylelint-order', 'stylelint-config-rational-order/plugin'],
   extends: [
     'stylelint-config-sass-guidelines',

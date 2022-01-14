@@ -63,14 +63,16 @@ exports[`Settings isVisible = true 1`] = `
     <div
       className="settings__label"
     >
-      Удалять посты старше 
+      Удалять посты старше
+       
       <input
         className="settings__days"
         onChange={[Function]}
         type="text"
         value={30}
       />
-       дней
+       
+      дней
     </div>
   </div>
 </div>
