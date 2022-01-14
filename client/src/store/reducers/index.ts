@@ -2,6 +2,7 @@ import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
 import { Actions } from '../actions/type';
 import { isSystemDarkTheme } from '../../utils';
+import { addFeed, removeFeed, selectFeed, updateEntries, updateEntriesCount, updateFavorite, updateFeed, updateFeeds, updateRead, updateUnviewedCount, updateViewed } from './utils';
 
 export interface State {
   isInitialized: boolean;
@@ -45,57 +46,47 @@ export const initialState: State = {
   selectedFeeds: [],
 };
 
-const feedsDict: { [key: string]: Feed } = {};
-
 function rootReducer(state: State | undefined, action: Actions): State {
   if (!state) {
     return { ...initialState };
   }
 
-  if (action.type === ActionTypes.FEEDS_UPDATED) {
-    action.feeds.forEach((feed: Feed) => {
-      feedsDict[feed.id] = feed;
-    });
+  switch (action.type) {
+    case ActionTypes.FEEDS_UPDATED:
+      return updateFeeds(state, action.feeds);
 
-    return {
-      ...state,
-      isUpdating: false,
-      isInitialized: true,
-      feeds: [...action.feeds],
-    };
-  }
+    case ActionTypes.FEEDS_ADD:
+      return addFeed(state, action.feed);
 
-  if (action.type === ActionTypes.FEEDS_ADD) {
-    const feeds = [...state.feeds];
+    case ActionTypes.FEEDS_UPDATE:
+      return updateFeed(state, action.id, action.feed);
 
-    feeds.push(action.feed);
+    case ActionTypes.FEEDS_DELETE:
+      return removeFeed(state, action.id)
 
-    return {
-      ...state,
-      feeds: feeds,
-    };
-  }
+    case ActionTypes.FEEDS_SELECT:
+      return selectFeed(state, action.id);
 
-  if (action.type === ActionTypes.FEEDS_UPDATE) {
-    const feeds = state.feeds.map((feed: Feed) => {
-      return feed.id === action.id ? { ...feed, ...action.feed } : feed;
-    });
+    case ActionTypes.UPDATE_UNVIEWED_COUNT:
+      return updateUnviewedCount(state);
 
-    return {
-      ...state,
-      feeds: feeds,
-    };
-  }
+    case ActionTypes.UPDATE_VIEWED:
+      return updateViewed(state, action.ids);
 
-  if (action.type === ActionTypes.FEEDS_DELETE) {
-    const feeds = state.feeds.filter((feed: Feed) => {
-      return feed.id !== action.id;
-    });
+    case ActionTypes.UPDATE_FAVORITE:
+      return updateFavorite(state, action.id, action.isFavorite);
 
-    return {
-      ...state,
-      feeds: feeds,
-    };
+    case ActionTypes.UPDATE_READ:
+      return updateRead(state, action.id, action.isRead)
+
+    case ActionTypes.UPDATE_ENTRIES_COUNT:
+      return updateEntriesCount(state);
+
+    case ActionTypes.ENTRIES_LOADED:
+      return updateEntries(state, action.entries)
+
+    default:
+      break;
   }
 
   if (action.type === ActionTypes.FEEDS_EDITING) {
@@ -110,122 +101,6 @@ function rootReducer(state: State | undefined, action: Actions): State {
       ...state,
       isUpdating: action.isUpdating,
       isUpdateError: false,
-    };
-  }
-
-  if (action.type === ActionTypes.ENTRIES_LOADED) {
-    updateFeedsInEntries(action.entries);
-
-    const entries = filterEntries(state.selectedFeeds, action.entries);
-
-    return {
-      ...state,
-      isUpdating: false,
-      entriesCount: action.entries.length,
-      entries: [...entries],
-      allEntries: [...action.entries],
-    };
-  }
-
-  if (action.type === ActionTypes.UPDATE_UNVIEWED_COUNT) {
-    const feeds = [...state.feeds];
-    let totalCount = 0;
-
-    feeds.forEach((feed: Feed) => {
-      const count = state.entries.filter((entry: Entry) => {
-        return entry.feedId === feed.id && !entry.isViewed;
-      }).length;
-
-      feed.count = count;
-      totalCount = totalCount + count;
-    });
-
-    return {
-      ...state,
-      feeds: feeds,
-      unviewedCount: totalCount,
-    };
-  }
-
-  if (action.type === ActionTypes.UPDATE_VIEWED) {
-    let entries = state.entries.map((entry: Entry) => {
-      if (action.ids.indexOf(entry.id) !== -1) {
-        return { ...entry, isViewed: true };
-      }
-
-      return entry;
-    });
-
-    entries = filterEntries(state.selectedFeeds, entries);
-
-    return {
-      ...state,
-      entries: entries,
-    };
-  }
-
-  if (action.type === ActionTypes.UPDATE_FAVORITE) {
-    let entries = state.entries.map((entry: Entry) => {
-      return entry.id === action.id
-        ? { ...entry, isFavorite: action.isFavorite }
-        : entry;
-    });
-
-    entries = filterEntries(state.selectedFeeds, entries);
-
-    return {
-      ...state,
-      entries: entries,
-    };
-  }
-
-  if (action.type === ActionTypes.UPDATE_READ) {
-    let entries = state.entries.map((entry: Entry) => {
-      return entry.id === action.id
-        ? { ...entry, isRead: action.isRead }
-        : entry;
-    });
-
-    entries = filterEntries(state.selectedFeeds, entries);
-
-    return {
-      ...state,
-      entries: entries,
-    };
-  }
-
-  if (action.type === ActionTypes.UPDATE_ENTRIES_COUNT) {
-    const feeds = [...state.feeds];
-
-    feeds.forEach((feed: Feed) => {
-      feed.count = state.entries.filter((entry: Entry) => {
-        return entry.feedId === feed.id;
-      }).length;
-    });
-
-    return {
-      ...state,
-      feeds: feeds,
-    };
-  }
-
-  if (action.type === ActionTypes.FEEDS_SELECT) {
-    const selectedFeeds = [...state.selectedFeeds];
-
-    const index = selectedFeeds.indexOf(action.id);
-
-    if (index === -1) {
-      selectedFeeds.push(action.id);
-    } else {
-      selectedFeeds.splice(index, 1);
-    }
-
-    const entries = filterEntries(selectedFeeds, state.allEntries);
-
-    return {
-      ...state,
-      selectedFeeds: selectedFeeds,
-      entries: [...entries],
     };
   }
 
@@ -274,30 +149,6 @@ function rootReducer(state: State | undefined, action: Actions): State {
   }
 
   return state;
-}
-
-function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
-  let entries: Entry[] = [];
-
-  if (selectedFeeds.length > 0) {
-    entries = allEntries.filter((entry: Entry) => {
-      return selectedFeeds.includes(entry.feedId);
-    });
-  } else {
-    entries = allEntries;
-  }
-
-  return entries;
-}
-
-function getFeedById(id: number): Feed {
-  return feedsDict[id];
-}
-
-function updateFeedsInEntries(entries: Entry[]): void {
-  entries.forEach((entry) => {
-    entry.feed = getFeedById(entry.feedId);
-  });
 }
 
 export default rootReducer;
