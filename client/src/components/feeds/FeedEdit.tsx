@@ -15,7 +15,13 @@ interface FeedEditProps {
   onAdd: (link: string) => void;
 }
 
-function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEditProps): JSX.Element {
+function FeedEdit({
+  isDisabled,
+  isScrolled,
+  isEditing,
+  onEdit,
+  onAdd,
+}: FeedEditProps): JSX.Element {
   const [isFormVisible, setFormVisible] = useState(false);
   const linkFieldRef = useRef<HTMLInputElement>(null);
 
@@ -29,9 +35,15 @@ function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEdi
     }
   };
 
-  const blockClass = block.addModifier(isDisabled ? 'disabled' : '').addModifier(isScrolled ? 'scrolled' : '').toString();
+  const blockClass = block
+    .addModifier(isDisabled ? 'disabled' : '')
+    .addModifier(isScrolled ? 'scrolled' : '')
+    .toString();
   const iconClass = block.getElement('icon').toString();
-  const editIconClass = block.getElement('icon').addModifier(isEditing ? 'editing' : '').toString();
+  const editIconClass = block
+    .getElement('icon')
+    .addModifier(isEditing ? 'editing' : '')
+    .toString();
   const buttonClass = block.getElement('button').toString();
   const formButtonClass = fromBlock.getElement('button').toString();
 
@@ -39,12 +51,24 @@ function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEdi
     return (
       <div className={blockClass}>
         <div className={fromBlock.toString()}>
-          <input ref={linkFieldRef} className={fromBlock.getElement('field').toString()} placeholder="ссылка на канал" type="text" />
+          <input
+            ref={linkFieldRef}
+            className={fromBlock.getElement('field').toString()}
+            placeholder="ссылка на канал"
+            type="text"
+          />
           <button className={formButtonClass} onClick={onAddClick}>
-            <div className={iconClass}><CheckmarkIcon /></div>
+            <div className={iconClass}>
+              <CheckmarkIcon />
+            </div>
           </button>
-          <button className={formButtonClass} onClick={() => setFormVisible(false)}>
-            <div className={iconClass}><CloseIcon /></div>
+          <button
+            className={formButtonClass}
+            onClick={() => setFormVisible(false)}
+          >
+            <div className={iconClass}>
+              <CloseIcon />
+            </div>
           </button>
         </div>
       </div>
@@ -53,10 +77,14 @@ function FeedEdit({ isDisabled, isScrolled, isEditing, onEdit, onAdd } : FeedEdi
     return (
       <div className={blockClass}>
         <button className={buttonClass} onClick={() => setFormVisible(true)}>
-          <div className={iconClass}><AddIcon /></div>
+          <div className={iconClass}>
+            <AddIcon />
+          </div>
         </button>
         <button className={buttonClass} onClick={onEdit}>
-          <div className={editIconClass}><EditIcon /></div>
+          <div className={editIconClass}>
+            <EditIcon />
+          </div>
         </button>
       </div>
     );

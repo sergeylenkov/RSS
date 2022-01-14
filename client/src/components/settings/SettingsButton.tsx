@@ -11,9 +11,15 @@ interface SettingsButtonProps {
   onClick: () => void;
 }
 
-function SettingsButton({ isActive, onClick } : SettingsButtonProps): JSX.Element {
+function SettingsButton({
+  isActive,
+  onClick,
+}: SettingsButtonProps): JSX.Element {
   const blockClass = block.addModifier(isActive ? 'active' : '').toString();
-  const iconClass = block.getElement('icon').addModifier(isActive ? 'active' : '').toString();
+  const iconClass = block
+    .getElement('icon')
+    .addModifier(isActive ? 'active' : '')
+    .toString();
 
   return (
     <button className={blockClass} onClick={onClick}>

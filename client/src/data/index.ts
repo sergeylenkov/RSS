@@ -59,74 +59,87 @@ class Data {
 
   update() {
     return new Promise<Entry[]>((resolve, reject) => {
-      fetch(`${this._url}feeds/update`).then((response) => {
-        return response.json();
-      }).then((data) => {
-        resolve(data);
-      }).catch((error) => {
-        reject(error);
-      })
+      fetch(`${this._url}feeds/update`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   }
 
   getFeeds() {
     return new Promise<Feed[]>((resolve) => {
-      fetch(`${this._url}feeds`).then((response) => {
-        return response.json();
-      }).then((feeds: Feed[]) => {
-        feeds.forEach((feed: Feed) => {
-          const a = document.createElement('a');
-          a.href = feed.link;
+      fetch(`${this._url}feeds`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((feeds: Feed[]) => {
+          feeds.forEach((feed: Feed) => {
+            const a = document.createElement('a');
+            a.href = feed.link;
 
-          if (feed.image && feed.image.length > 0) {
-            feed.icon = feed.image;
-          } else {
-            feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-          }
+            if (feed.image && feed.image.length > 0) {
+              feed.icon = feed.image;
+            } else {
+              feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+            }
+          });
+
+          resolve(feeds);
         });
-
-        resolve(feeds);
-      });
     });
   }
 
   allEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries`).then((response) => {
-        return response.json();
-      }).then((entries: Entry[]) => {
-        resolve(entries);
-      });
+      fetch(`${this._url}entries`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((entries: Entry[]) => {
+          resolve(entries);
+        });
     });
   }
 
   readEntries() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/read`).then((response) => {
-        return response.json();
-      }).then((entries: Entry[]) => {
-        resolve(entries);
-      });
+      fetch(`${this._url}entries/read`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((entries: Entry[]) => {
+          resolve(entries);
+        });
     });
   }
 
   getFavorites() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/favorites`).then((response) => {
-        return response.json();
-      }).then((entries: Entry[]) => {
-        resolve(entries);
-      });
+      fetch(`${this._url}entries/favorites`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((entries: Entry[]) => {
+          resolve(entries);
+        });
     });
   }
 
   getUnviewed() {
     return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/unviewed`).then((response) => {
-        return response.json();
-      }).then((entries: Entry[]) => {
-        resolve(entries);
-      });
+      fetch(`${this._url}entries/unviewed`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((entries: Entry[]) => {
+          resolve(entries);
+        });
     });
   }
 
@@ -136,13 +149,15 @@ class Data {
         method: 'POST',
         body: JSON.stringify({ ids: ids }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => {
-        return response.json();
-      }).then((response: SetViewedResponse) => {
-        resolve(response);
-      });
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: SetViewedResponse) => {
+          resolve(response);
+        });
     });
   }
 
@@ -151,12 +166,14 @@ class Data {
       const method = isRead ? 'PUT' : 'DELETE';
 
       fetch(`${this._url}entries/${id}/read`, {
-        method: method
-      }).then((response) => {
-        return response.json();
-      }).then((response: SetReadResponse) => {
-        resolve(response);
-      });
+        method: method,
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: SetReadResponse) => {
+          resolve(response);
+        });
     });
   }
 
@@ -165,12 +182,14 @@ class Data {
       const method = isFavorite ? 'PUT' : 'DELETE';
 
       fetch(`${this._url}entries/${id}/favorite`, {
-        method: method
-      }).then((response) => {
-        return response.json();
-      }).then((response: SetFavoriteResponse) => {
-        resolve(response);
-      });
+        method: method,
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: SetFavoriteResponse) => {
+          resolve(response);
+        });
     });
   }
 
@@ -180,13 +199,15 @@ class Data {
         method: 'POST',
         body: JSON.stringify({ link: link }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => {
-        return response.json();
-      }).then((feed: Feed) => {
-        resolve(feed);
-      });
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((feed: Feed) => {
+          resolve(feed);
+        });
     });
   }
 
@@ -196,35 +217,41 @@ class Data {
         method: 'PATCH',
         body: JSON.stringify(feed),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => {
-        return response.json();
-      }).then((response: UpdateFeedResponse) => {
-        resolve(response);
-      });
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: UpdateFeedResponse) => {
+          resolve(response);
+        });
     });
   }
 
   deleteFeed(id: number) {
     return new Promise<DeleteFeedResponse>((resolve) => {
       fetch(`${this._url}feeds/${id}`, {
-        method: 'DELETE'
-      }).then((response) => {
-        return response.json();
-      }).then((response: DeleteFeedResponse) => {
-        resolve(response);
-      });
+        method: 'DELETE',
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: DeleteFeedResponse) => {
+          resolve(response);
+        });
     });
   }
 
   clearEntries(days: number) {
     return new Promise<ClearEntriesResponse>((resolve) => {
-      fetch(`${this._url}entries/clear/${days}`).then((response) => {
-        return response.json();
-      }).then((response: ClearEntriesResponse) => {
-        resolve(response);
-      });
+      fetch(`${this._url}entries/clear/${days}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: ClearEntriesResponse) => {
+          resolve(response);
+        });
     });
   }
 }

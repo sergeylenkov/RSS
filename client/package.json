@@ -30,6 +30,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
     "jest-sonar-reporter": "^2.0.0",
+    "prettier": "^2.5.1",
     "react-test-renderer": "^17.0.2",
     "stylelint": "^13.13.1",
     "stylelint-config-idiomatic-order": "^8.1.0",
@@ -44,16 +45,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "lint": "eslint --ext .ts,.js,.tsx src/",
-    "lint:json": "eslint --ext .ts,.js,.tsx --format json --output-file eslint-report.json src/",
-    "lint:styles": "stylelint **/*.scss",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:update": "npm test -- -u",
-    "scan": "npm run test:coverage && npm run lint:json"
+    "lint": "eslint --config ./config/eslint.config.js --ext .ts,.js,.tsx src/",
+    "lint:json": "eslint --config ./config/eslint.config.js --ext .ts,.js,.tsx --format json --output-file reports/eslint-report.json src/",
+    "lint:styles": "stylelint --config ./config/stylelint.config.js **/*.scss",
+    "test": "jest -coverage=false",
+    "test:coverage": "jest --coverage=true",
+    "test:update": "jest --update-snapshot",
+    "scan": "npm run test:coverage && npm run lint:json",
+    "prettier:check": "prettier --config ./config/prettier.config.js --check .",
+    "prettier:write": "prettier --config ./config/prettier.config.js --write ."
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -79,7 +85,7 @@
     }
   },
   "jestSonar": {
-    "reportPath": "__tests__",
+    "reportPath": "reports",
     "reportFile": "sonar-reporter.xml",
     "indent": 4
   },

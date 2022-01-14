@@ -9,7 +9,9 @@ import Menu from '../src/components/menu/Menu';
 test('Menu', () => {
   const render = renderer.create(
     <Provider store={store}>
-      <BrowserRouter><Menu onUpdate={action} /></BrowserRouter>
+      <BrowserRouter>
+        <Menu onUpdate={action} />
+      </BrowserRouter>
     </Provider>
   );
   expect(render).toMatchSnapshot();

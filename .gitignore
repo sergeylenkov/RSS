@@ -1,12 +1,8 @@
-api/node_modules/
 node_modules/
 database.sqlite
 .DS_Store
-client/build
+build
 .idea
-client/.scannerwork
-client/tests/sonar-reporter.xml
-client/coverage
-client/__tests__/sonar-reporter.xml
-client/eslint-report.json
+.scannerwork
+reports
 server/web/static

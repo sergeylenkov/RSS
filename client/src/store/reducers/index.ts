@@ -4,20 +4,20 @@ import { Actions } from '../actions/type';
 import { isSystemDarkTheme } from '../../utils';
 
 export interface State {
-  isInitialized: boolean,
-  isUpdating: boolean,
-  isFeedsEditing: boolean,
-  isUpdateError: boolean,
-  isDarkTheme: boolean,
-  isCollapseLong: boolean,
-  keepDays: number,
-  isGrid: boolean,
-  entriesCount: number,
-  unviewedCount: number,
-  feeds: Feed[],
-  allEntries: Entry[],
-  entries: Entry[],
-  selectedFeeds: number[]
+  isInitialized: boolean;
+  isUpdating: boolean;
+  isFeedsEditing: boolean;
+  isUpdateError: boolean;
+  isDarkTheme: boolean;
+  isCollapseLong: boolean;
+  keepDays: number;
+  isGrid: boolean;
+  entriesCount: number;
+  unviewedCount: number;
+  feeds: Feed[];
+  allEntries: Entry[];
+  entries: Entry[];
+  selectedFeeds: number[];
 }
 
 export const initialState: State = {
@@ -25,23 +25,31 @@ export const initialState: State = {
   isUpdating: false,
   isFeedsEditing: false,
   isUpdateError: false,
-  isDarkTheme: localStorage.getItem('darkTheme') ? JSON.parse(<string>localStorage.getItem('darkTheme')) : isSystemDarkTheme(),
-  isCollapseLong: localStorage.getItem('collapseLong') ? JSON.parse(<string>localStorage.getItem('collapseLong')) : true,
-  keepDays: localStorage.getItem('keepDays') ? parseInt(<string>localStorage.getItem('keepDays')) : 30,
-  isGrid: localStorage.getItem('grid') ? JSON.parse(<string>localStorage.getItem('grid')) : false,
+  isDarkTheme: localStorage.getItem('darkTheme')
+    ? JSON.parse(<string>localStorage.getItem('darkTheme'))
+    : isSystemDarkTheme(),
+  isCollapseLong: localStorage.getItem('collapseLong')
+    ? JSON.parse(<string>localStorage.getItem('collapseLong'))
+    : true,
+  keepDays: localStorage.getItem('keepDays')
+    ? parseInt(<string>localStorage.getItem('keepDays'))
+    : 30,
+  isGrid: localStorage.getItem('grid')
+    ? JSON.parse(<string>localStorage.getItem('grid'))
+    : false,
   entriesCount: 0,
   unviewedCount: 0,
   feeds: [],
   allEntries: [],
   entries: [],
-  selectedFeeds: []
+  selectedFeeds: [],
 };
 
 const feedsDict: { [key: string]: Feed } = {};
 
 function rootReducer(state: State | undefined, action: Actions): State {
   if (!state) {
-    return {...initialState};
+    return { ...initialState };
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATED) {
@@ -53,8 +61,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
       ...state,
       isUpdating: false,
       isInitialized: true,
-      feeds: [...action.feeds]
-    }
+      feeds: [...action.feeds],
+    };
   }
 
   if (action.type === ActionTypes.FEEDS_ADD) {
@@ -64,45 +72,45 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      feeds: feeds
-    }
+      feeds: feeds,
+    };
   }
 
   if (action.type === ActionTypes.FEEDS_UPDATE) {
     const feeds = state.feeds.map((feed: Feed) => {
-      return feed.id === action.id ? { ...feed, ...action.feed } : feed
+      return feed.id === action.id ? { ...feed, ...action.feed } : feed;
     });
 
     return {
       ...state,
-      feeds: feeds
-    }
+      feeds: feeds,
+    };
   }
 
   if (action.type === ActionTypes.FEEDS_DELETE) {
     const feeds = state.feeds.filter((feed: Feed) => {
-      return feed.id !== action.id
+      return feed.id !== action.id;
     });
 
     return {
       ...state,
-      feeds: feeds
-    }
+      feeds: feeds,
+    };
   }
 
   if (action.type === ActionTypes.FEEDS_EDITING) {
     return {
       ...state,
-      isFeedsEditing: action.isEditing
-    }
+      isFeedsEditing: action.isEditing,
+    };
   }
 
   if (action.type === ActionTypes.ENTRIES_UPDATING) {
     return {
       ...state,
       isUpdating: action.isUpdating,
-      isUpdateError: false
-    }
+      isUpdateError: false,
+    };
   }
 
   if (action.type === ActionTypes.ENTRIES_LOADED) {
@@ -115,8 +123,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
       isUpdating: false,
       entriesCount: action.entries.length,
       entries: [...entries],
-      allEntries: [...action.entries]
-    }
+      allEntries: [...action.entries],
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_UNVIEWED_COUNT) {
@@ -125,7 +133,7 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     feeds.forEach((feed: Feed) => {
       const count = state.entries.filter((entry: Entry) => {
-        return entry.feedId === feed.id && !entry.isViewed
+        return entry.feedId === feed.id && !entry.isViewed;
       }).length;
 
       feed.count = count;
@@ -135,14 +143,14 @@ function rootReducer(state: State | undefined, action: Actions): State {
     return {
       ...state,
       feeds: feeds,
-      unviewedCount: totalCount
-    }
+      unviewedCount: totalCount,
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_VIEWED) {
     let entries = state.entries.map((entry: Entry) => {
       if (action.ids.indexOf(entry.id) !== -1) {
-        return { ...entry, isViewed: true }
+        return { ...entry, isViewed: true };
       }
 
       return entry;
@@ -152,34 +160,38 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      entries: entries
-    }
+      entries: entries,
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_FAVORITE) {
     let entries = state.entries.map((entry: Entry) => {
-      return entry.id === action.id ? { ...entry, isFavorite: action.isFavorite } : entry
+      return entry.id === action.id
+        ? { ...entry, isFavorite: action.isFavorite }
+        : entry;
     });
 
     entries = filterEntries(state.selectedFeeds, entries);
 
     return {
       ...state,
-      entries: entries
-    }
+      entries: entries,
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_READ) {
     let entries = state.entries.map((entry: Entry) => {
-      return entry.id === action.id ? { ...entry, isRead: action.isRead } : entry
+      return entry.id === action.id
+        ? { ...entry, isRead: action.isRead }
+        : entry;
     });
 
     entries = filterEntries(state.selectedFeeds, entries);
 
     return {
       ...state,
-      entries: entries
-    }
+      entries: entries,
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_ENTRIES_COUNT) {
@@ -187,14 +199,14 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     feeds.forEach((feed: Feed) => {
       feed.count = state.entries.filter((entry: Entry) => {
-        return entry.feedId === feed.id
+        return entry.feedId === feed.id;
       }).length;
     });
 
     return {
       ...state,
-      feeds: feeds
-    }
+      feeds: feeds,
+    };
   }
 
   if (action.type === ActionTypes.FEEDS_SELECT) {
@@ -213,8 +225,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
     return {
       ...state,
       selectedFeeds: selectedFeeds,
-      entries: [...entries]
-    }
+      entries: [...entries],
+    };
   }
 
   if (action.type === ActionTypes.TOGGLE_THEME) {
@@ -222,16 +234,16 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      isDarkTheme: action.isDarkTheme
-    }
+      isDarkTheme: action.isDarkTheme,
+    };
   }
 
   if (action.type === ActionTypes.ENTRIES_UPDATE_ERROR) {
     return {
       ...state,
       isUpdating: false,
-      isUpdateError: true
-    }
+      isUpdateError: true,
+    };
   }
 
   if (action.type === ActionTypes.TOGGLE_COLLAPSE_LONG) {
@@ -239,8 +251,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      isCollapseLong: action.isCollapse
-    }
+      isCollapseLong: action.isCollapse,
+    };
   }
 
   if (action.type === ActionTypes.UPDATE_KEEP_DAYS) {
@@ -248,8 +260,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      keepDays: action.days
-    }
+      keepDays: action.days,
+    };
   }
 
   if (action.type === ActionTypes.TOGGLE_GRID) {
@@ -257,8 +269,8 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
     return {
       ...state,
-      isGrid: action.isGrid
-    }
+      isGrid: action.isGrid,
+    };
   }
 
   return state;
@@ -269,7 +281,7 @@ function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
 
   if (selectedFeeds.length > 0) {
     entries = allEntries.filter((entry: Entry) => {
-      return selectedFeeds.includes(entry.feedId)
+      return selectedFeeds.includes(entry.feedId);
     });
   } else {
     entries = allEntries;
@@ -283,7 +295,7 @@ function getFeedById(id: number): Feed {
 }
 
 function updateFeedsInEntries(entries: Entry[]): void {
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     entry.feed = getFeedById(entry.feedId);
   });
 }

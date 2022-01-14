@@ -38,7 +38,7 @@ interface EntriesLoadedAction extends Action<ActionTypes.ENTRIES_LOADED> {
   entries: Entry[];
 }
 
-type UpdateUnviewedCountAction = Action<ActionTypes.UPDATE_UNVIEWED_COUNT>
+type UpdateUnviewedCountAction = Action<ActionTypes.UPDATE_UNVIEWED_COUNT>;
 
 interface UpdateViewedAction extends Action<ActionTypes.UPDATE_VIEWED> {
   ids: number[];
@@ -61,7 +61,8 @@ interface ToggleThemeAction extends Action<ActionTypes.TOGGLE_THEME> {
   isDarkTheme: boolean;
 }
 
-interface ToggleCollapseLongAction extends Action<ActionTypes.TOGGLE_COLLAPSE_LONG> {
+interface ToggleCollapseLongAction
+  extends Action<ActionTypes.TOGGLE_COLLAPSE_LONG> {
   isCollapse: boolean;
 }
 
@@ -73,9 +74,25 @@ interface ToggleGridAction extends Action<ActionTypes.TOGGLE_GRID> {
   isGrid: boolean;
 }
 
-export type Actions = FeedsUpdatedAction | FeedsAddAction | FeedsDeleteAction | FeedsEditingAction | FeedsSelectAction | FeedsUpdateAction
-| EntriesUpdatingAction | EntriesLoadedAction | UpdateUnviewedCountAction | UpdateViewedAction | UpdateFavoriteAction | UpdateReadAction
-| UpdateEntriesCountAction | EntriesUpdateErrorAction | ToggleThemeAction | ToggleCollapseLongAction | UpdateKeepDaysAction | ToggleGridAction;
+export type Actions =
+  | FeedsUpdatedAction
+  | FeedsAddAction
+  | FeedsDeleteAction
+  | FeedsEditingAction
+  | FeedsSelectAction
+  | FeedsUpdateAction
+  | EntriesUpdatingAction
+  | EntriesLoadedAction
+  | UpdateUnviewedCountAction
+  | UpdateViewedAction
+  | UpdateFavoriteAction
+  | UpdateReadAction
+  | UpdateEntriesCountAction
+  | EntriesUpdateErrorAction
+  | ToggleThemeAction
+  | ToggleCollapseLongAction
+  | UpdateKeepDaysAction
+  | ToggleGridAction;
 
 export type {
   FeedsUpdatedAction,
@@ -95,5 +112,5 @@ export type {
   ToggleThemeAction,
   ToggleCollapseLongAction,
   UpdateKeepDaysAction,
-  ToggleGridAction
-}
+  ToggleGridAction,
+};
