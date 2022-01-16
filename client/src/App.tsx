@@ -10,7 +10,7 @@ import {
   feedsEditing,
   feedsUpdate,
   feedsUpdated,
-  updateUnviewedCount
+  updateUnviewedCount,
 } from './store/actions';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,31 +26,33 @@ import './App.scss';
 
 function App(): JSX.Element {
   const [isSettingsVisible, setSettingsVisible] = useState(false);
-  const isGrid = useSelector<State, boolean>(state => state.isGrid);
-  const isDarkTheme = useSelector<State, boolean>(state => state.isDarkTheme);
-  const keepDays = useSelector<State, number>(state => state.keepDays);
+  const isGrid = useSelector<State, boolean>((state) => state.isGrid);
+  const isDarkTheme = useSelector<State, boolean>((state) => state.isDarkTheme);
+  const keepDays = useSelector<State, number>((state) => state.keepDays);
   const dispatch = useDispatch();
 
   const onUpdate = () => {
     dispatch(entriesUpdating(true));
 
-    Data.update().then((entries: Entry[]) => {
-      const unviewed = entries.filter((entry: Entry) => {
-        return !entry.isViewed;
-      });
+    Data.update()
+      .then((entries: Entry[]) => {
+        const unviewed = entries.filter((entry: Entry) => {
+          return !entry.isViewed;
+        });
 
-      dispatch(entriesUpdated(unviewed));
-      dispatch(updateUnviewedCount());
-    }).catch(() => {
-      dispatch(entriesUpdateError());
-    });
+        dispatch(entriesUpdated(unviewed));
+        dispatch(updateUnviewedCount());
+      })
+      .catch(() => {
+        dispatch(entriesUpdateError());
+      });
   };
 
   const onAddFeed = (link: string) => {
     Data.addFeed(link).then((feed: Feed) => {
       dispatch(feedsAdd(feed));
       dispatch(feedsEditing(false));
-    })
+    });
   };
 
   const onChangeFeed = (feed: Feed) => {
@@ -95,13 +97,18 @@ function App(): JSX.Element {
 
   return (
     <BrowserRouter>
-      <div className={`container ${isGrid ? 'grid' : ''} ${isDarkTheme ? 'dark' : ''}`}>
-        <div className='header'>
-          <div className='header__content'>
-            <Menu
-              onUpdate={onUpdate}
+      <div
+        className={`container ${isGrid ? 'grid' : ''} ${
+          isDarkTheme ? 'dark' : ''
+        }`}
+      >
+        <div className="header">
+          <div className="header__content">
+            <Menu onUpdate={onUpdate} />
+            <SettingsButton
+              isActive={isSettingsVisible}
+              onClick={onToggleSettings}
             />
-            <SettingsButton isActive={isSettingsVisible} onClick={onToggleSettings} />
 
             <CSSTransition
               in={isSettingsVisible}
@@ -114,24 +121,32 @@ function App(): JSX.Element {
             </CSSTransition>
           </div>
         </div>
-        {isGrid &&
-          <div className='feeds'>
-            <FeedsList onAddFeed={onAddFeed} onChangeFeed={onChangeFeed} onDeleteFeed={onDeleteFeed} />
+        {isGrid && (
+          <div className="feeds">
+            <FeedsList
+              onAddFeed={onAddFeed}
+              onChangeFeed={onChangeFeed}
+              onDeleteFeed={onDeleteFeed}
+            />
           </div>
-        }
-        <div className='content'>
+        )}
+        <div className="content">
           <Switch>
-            <Route path='/'>
-              <div className='list'>
+            <Route path="/">
+              <div className="list">
                 <EntriesList />
               </div>
             </Route>
           </Switch>
-          {!isGrid &&
-            <div className='feeds'>
-              <FeedsList onAddFeed={onAddFeed} onChangeFeed={onChangeFeed} onDeleteFeed={onDeleteFeed} />
+          {!isGrid && (
+            <div className="feeds">
+              <FeedsList
+                onAddFeed={onAddFeed}
+                onChangeFeed={onChangeFeed}
+                onDeleteFeed={onDeleteFeed}
+              />
             </div>
-          }
+          )}
         </div>
       </div>
     </BrowserRouter>

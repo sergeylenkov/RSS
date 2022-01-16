@@ -27,13 +27,13 @@ class Bem {
   }
 
   _build(): string {
-    const modifiers = this._modifiers.map(modifier => {
+    const modifiers = this._modifiers.map((modifier) => {
       return `${this._modifierSeparator}${modifier}`;
     });
 
-    const classes = modifiers.map(modifier => {
+    const classes = modifiers.map((modifier) => {
       return `${this._block}${modifier}`;
-    })
+    });
 
     return [this._block, ...classes].join(' ');
   }

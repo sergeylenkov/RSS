@@ -1,6 +1,17 @@
 import React from 'react';
-import renderer  from 'react-test-renderer';
-import { AddIcon, CheckmarkIcon, CloseIcon, EditIcon, FavoriteIcon, FavoriteSelectedIcon, ReadIcon, ReloadIcon, SettingsIcon, TrashIcon } from '../src/components/Icons';
+import renderer from 'react-test-renderer';
+import {
+  AddIcon,
+  CheckmarkIcon,
+  CloseIcon,
+  EditIcon,
+  FavoriteIcon,
+  FavoriteSelectedIcon,
+  ReadIcon,
+  ReloadIcon,
+  SettingsIcon,
+  TrashIcon,
+} from '../src/components/Icons';
 
 test('ReloadIcon', () => {
   const render = renderer.create(<ReloadIcon />);

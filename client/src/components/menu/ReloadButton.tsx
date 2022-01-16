@@ -16,14 +16,32 @@ interface ReloadButtonProps {
   onUpdate: () => void;
 }
 
-function ReloadButton({ isSelected, count, isActive, isError, onUpdate, onClick } : ReloadButtonProps): JSX.Element {
+function ReloadButton({
+  isSelected,
+  count,
+  isActive,
+  isError,
+  onUpdate,
+  onClick,
+}: ReloadButtonProps): JSX.Element {
   const blockClass = block.addModifier(isActive ? 'active' : '').toString();
-  const buttonClass = block.getElement('icon').addModifier(isActive ? 'active' : '').addModifier(isError ? 'error' : '').toString();
+  const buttonClass = block
+    .getElement('icon')
+    .addModifier(isActive ? 'active' : '')
+    .addModifier(isError ? 'error' : '')
+    .toString();
 
   return (
     <div className={blockClass}>
-      <button className={buttonClass} onClick={onUpdate}><ReloadIcon /></button>
-      <MenuButton title={'Свежее'} isSelected={isSelected} count={count} onClick={onClick} />
+      <button className={buttonClass} onClick={onUpdate}>
+        <ReloadIcon />
+      </button>
+      <MenuButton
+        title={'Свежее'}
+        isSelected={isSelected}
+        count={count}
+        onClick={onClick}
+      />
     </div>
   );
 }

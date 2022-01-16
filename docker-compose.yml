@@ -1,0 +1,16 @@
+# Файл docker-compose должен начинаться с тега версии.
+# Мы используем "3" так как это - самая свежая версия на момент написания этого кода.
+
+version: "3"
+services:
+  server:
+    build: server/
+    volumes:
+      - d:/projects/rss/server/db:/app/db
+    ports:
+      - 9000:9000
+
+  client:
+    build: client/
+    ports:
+      - 8080:80

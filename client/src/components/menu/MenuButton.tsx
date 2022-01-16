@@ -12,7 +12,12 @@ interface MenuButtonProps {
   onClick: () => void;
 }
 
-function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JSX.Element {
+function MenuButton({
+  isSelected,
+  count,
+  title,
+  onClick,
+}: MenuButtonProps): JSX.Element {
   const onClickHandle = useCallback(() => {
     if (!isSelected) {
       onClick();
@@ -20,7 +25,10 @@ function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JS
   }, [isSelected]);
 
   const blockClass = block.toString();
-  const labelClass = block.getElement('label').addModifier(isSelected ? 'selected' : '').toString();
+  const labelClass = block
+    .getElement('label')
+    .addModifier(isSelected ? 'selected' : '')
+    .toString();
   const counterClass = block.getElement('counter').toString();
 
   return (
@@ -28,7 +36,7 @@ function MenuButton({ isSelected, count, title, onClick } : MenuButtonProps): JS
       <div className={labelClass}>{title}</div>
       {isSelected && <div className={counterClass}>{count}</div>}
     </button>
-  )
+  );
 }
 
 export default MenuButton;

@@ -10,7 +10,7 @@ export function removeSelfLinks(description: string, link: string): string {
     return !!(href && href.indexOf(link) !== -1);
   });
 
-  links.forEach(el => el.remove());
+  links.forEach((el) => el.remove());
 
   return element.innerHTML;
 }

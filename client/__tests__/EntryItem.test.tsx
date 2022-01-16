@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer  from 'react-test-renderer';
+import renderer from 'react-test-renderer';
 import { Feed, Entry } from '../src/data';
 import { action } from '../src/utils/tests';
 import EntryItem from '../src/components/entries/EntryItem';
@@ -10,8 +10,8 @@ const feed: Feed = {
   link: 'https://www.test.com',
   image: '',
   icon: '',
-  count: 1
-}
+  count: 1,
+};
 
 const entry: Entry = {
   id: 1,
@@ -22,15 +22,29 @@ const entry: Entry = {
   isFavorite: false,
   isRead: false,
   feed: feed,
-  feedId: 0
-}
+  feedId: 0,
+};
 
 test('EntryItem isCollapseLong = true', () => {
-  const render = renderer.create(<EntryItem entry={entry} isCollapseLong onSetRead={action} onSetFavorite={action} />);
+  const render = renderer.create(
+    <EntryItem
+      entry={entry}
+      isCollapseLong
+      onSetRead={action}
+      onSetFavorite={action}
+    />
+  );
   expect(render).toMatchSnapshot();
 });
 
 test('EntryItem isCollapseLong = false', () => {
-  const render = renderer.create(<EntryItem entry={entry} isCollapseLong={false} onSetRead={action} onSetFavorite={action} />);
+  const render = renderer.create(
+    <EntryItem
+      entry={entry}
+      isCollapseLong={false}
+      onSetRead={action}
+      onSetFavorite={action}
+    />
+  );
   expect(render).toMatchSnapshot();
 });

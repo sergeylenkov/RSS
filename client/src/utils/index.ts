@@ -1,22 +1,20 @@
-export function debounce(func: (...args: unknown[]) => void, wait: number, immediate: boolean): () => void {
-	let timeout: number | null;
+export const debounce = <F extends (...args: any[]) => any>(
+  func: F,
+  waitFor: number,
+) => {
+  let timeout = 0;
 
-	return (...args: unknown[]) => {
-		const later = function() {
-			timeout = null;
-			if (!immediate) func.apply(this, args);
-		};
+  const debounced = (...args: any[]) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), waitFor) as unknown as number;
+  }
 
-		const callNow = immediate && !timeout;
-
-		timeout && clearTimeout(timeout);
-
-		timeout = window.setTimeout(later, wait);
-
-		if (callNow) func.apply(this, args);
-	};
+  return debounced as unknown as (...args: Parameters<F>) => ReturnType<F>
 }
 
 export function isSystemDarkTheme(): boolean {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
 }

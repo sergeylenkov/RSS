@@ -8,7 +8,11 @@ import FeedsList from '../src/components/feeds/FeedsList';
 test('FeedsList', () => {
   const render = renderer.create(
     <Provider store={store}>
-      <FeedsList onAddFeed={action} onChangeFeed={action} onDeleteFeed={action} />
+      <FeedsList
+        onAddFeed={action}
+        onChangeFeed={action}
+        onDeleteFeed={action}
+      />
     </Provider>
   );
   expect(render).toMatchSnapshot();

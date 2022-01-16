@@ -8,7 +8,9 @@ import EntriesList from '../src/components/entries/EntriesList';
 test('EntriesList', () => {
   const render = renderer.create(
     <Provider store={store}>
-      <BrowserRouter><EntriesList /></BrowserRouter>
+      <BrowserRouter>
+        <EntriesList />
+      </BrowserRouter>
     </Provider>
   );
   expect(render).toMatchSnapshot();

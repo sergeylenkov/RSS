@@ -1,34 +1,35 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
+    "target": "es2020",
+    "module": "commonjs",
     "allowJs": true,
     "jsx": "react",
     "sourceMap": true,
+    "outDir": "./build",
+    "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
     "moduleResolution": "node",
+    "baseUrl": "src",
+    "rootDirs": ["src"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "noImplicitThis": false,
-    "plugins": [
-      {
-        "name": "css-module-types"
-      }
-    ]
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@api/*": ["api/*"],
+      "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@locales/*": ["locales/*"],
+      "@mocks/*": ["mocks/*"],
+      "@models/*": ["models/*"],
+      "@store/*": ["store/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"]
+    }
   },
-  "include": [
-    "src",
-    "global.d.ts",
-    "__tests__"
-  ]
+  "include": ["src/**/**/*"]
 }

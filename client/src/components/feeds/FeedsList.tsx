@@ -14,44 +14,54 @@ interface FeedsListProps {
   onDeleteFeed: (id: number) => void;
 }
 
-function FeedsList({ onAddFeed, onChangeFeed, onDeleteFeed }: FeedsListProps): JSX.Element {
+function FeedsList({
+  onAddFeed,
+  onChangeFeed,
+  onDeleteFeed,
+}: FeedsListProps): JSX.Element {
   const dispatch = useDispatch();
-  const isFeedsEditing = useSelector<State, boolean>(state => state.isFeedsEditing);
-  const feeds = useSelector<State, Feed[]>(state => state.feeds);
-  const selectedFeeds = useSelector<State, number[]>(state => state.selectedFeeds);
+  const isFeedsEditing = useSelector<State, boolean>(
+    (state) => state.isFeedsEditing
+  );
+  const feeds = useSelector<State, Feed[]>((state) => state.feeds);
+  const selectedFeeds = useSelector<State, number[]>(
+    (state) => state.selectedFeeds
+  );
 
   const onChange = (id: number, title: string) => {
-    const feed = feeds.find(el => el.id === id);
+    const feed = feeds.find((el) => el.id === id);
 
     if (feed) {
       feed.title = title;
       onChangeFeed(feed);
     }
-  }
+  };
 
   return (
-    <div className='feeds-list'>
-      {
-        feeds.map((feed: Feed) => {
-          const isSelected = selectedFeeds.includes(feed.id);
+    <div className="feeds-list">
+      {feeds.map((feed: Feed) => {
+        const isSelected = selectedFeeds.includes(feed.id);
 
-          return (
-            <FeedItem
-              key={feed.id}
-              id={feed.id}
-              icon={feed.icon}
-              title={feed.title}
-              count={feed.count}
-              isSelected={isSelected}
-              isEditing={isFeedsEditing}
-              onDelete={onDeleteFeed}
-              onChange={onChange}
-              onSelect={(id: number) => dispatch(feedsSelect(id))}
-            />
-          )
-        })
-      }
-      <FeedEdit isEditing={isFeedsEditing} onAdd={onAddFeed} onEdit={() => dispatch(feedsEditing(!isFeedsEditing))} />
+        return (
+          <FeedItem
+            key={feed.id}
+            id={feed.id}
+            icon={feed.icon}
+            title={feed.title}
+            count={feed.count}
+            isSelected={isSelected}
+            isEditing={isFeedsEditing}
+            onDelete={onDeleteFeed}
+            onChange={onChange}
+            onSelect={(id: number) => dispatch(feedsSelect(id))}
+          />
+        );
+      })}
+      <FeedEdit
+        isEditing={isFeedsEditing}
+        onAdd={onAddFeed}
+        onEdit={() => dispatch(feedsEditing(!isFeedsEditing))}
+      />
     </div>
   );
 }
