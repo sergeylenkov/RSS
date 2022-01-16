@@ -39,8 +39,7 @@ function EntriesList(): JSX.Element {
         viewedIds.clear();
       });
     },
-    1000,
-    false
+    1000
   );
 
   const onView = (id: number) => {
