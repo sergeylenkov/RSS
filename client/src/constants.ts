@@ -1,12 +1,12 @@
 const prod = {
   urls: {
-    api: 'http://localhost:8081/',
+    api: 'http://localhost:9000/',
   },
 };
 
 const dev = {
   urls: {
-    api: 'http://localhost:5000/',
+    api: 'http://localhost:9000/',
   },
 };
 

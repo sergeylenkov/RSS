@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin').default;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
@@ -23,7 +24,10 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-    })
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'src/assets', to: '' }],
+    }),
   ],
   module: {
     rules: [
