@@ -1,6 +1,6 @@
 const prod = {
   urls: {
-    api: 'http://localhost:8080/',
+    api: 'http://localhost:8081/',
   },
 };
 

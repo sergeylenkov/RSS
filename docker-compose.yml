@@ -1,0 +1,22 @@
+# Файл docker-compose должен начинаться с тега версии.
+# Мы используем "3" так как это - самая свежая версия на момент написания этого кода.
+
+version: "3"
+services:
+  server:
+    build: server/
+    command: node server/index.js -p 8081
+
+    ports:
+      - 8081:8081
+
+  client:
+    build: client/
+
+    ports:
+      - 8080:8080
+
+    network_mode: host
+
+    depends_on:
+      - server
