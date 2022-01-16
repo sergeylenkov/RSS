@@ -2,7 +2,7 @@ export const debounce = <F extends (...args: any[]) => any>(
   func: F,
   waitFor: number,
 ) => {
-  let timeout: number = 0
+  let timeout = 0;
 
   const debounced = (...args: any[]) => {
     clearTimeout(timeout)

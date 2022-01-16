@@ -4,6 +4,7 @@ const { defaults } = require('jest-config');
 module.exports = {
   rootDir: process.cwd(),
   preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   testMatch: ['**/__tests__/**/*.test.tsx', '**/__tests__/**/*.test.ts'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'

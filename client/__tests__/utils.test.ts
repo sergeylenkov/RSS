@@ -5,8 +5,7 @@ test('debounce', () => {
     () => {
       expect(true).toBe(true);
     },
-    500,
-    false
+    500
   );
 
   action();
@@ -17,8 +16,7 @@ test('debounce immediate', () => {
     () => {
       expect(true).toBe(true);
     },
-    500,
-    true
+    500
   );
 
   action();

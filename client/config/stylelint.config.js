@@ -7,6 +7,7 @@ module.exports = {
   rules: {
     'color-hex-length': 'long',
     'max-nesting-depth': 3,
+    'selector-max-id': 2,
     'shorthand-property-no-redundant-values': null,
     'order/properties-order': [],
     'order/properties-alphabetical-order': null,
