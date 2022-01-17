@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js -p 9000",
     "dev": "nodemon index.js",
     "test": "mocha test/api.js --db=test",
-    "prod": "node index.js -p 8080"
+    "prod": "node index.js -p 9000"
   },
   "keywords": [],
   "author": "",
