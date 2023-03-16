@@ -32,6 +32,7 @@
     "husky": "^7.0.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "jest-sonar": "^0.2.15",
     "mini-css-extract-plugin": "^2.7.4",
     "node-sass": "^8.0.0",

@@ -19,7 +19,7 @@ exports[`EntryItem isCollapseLong = false 1`] = `
     <div
       className="entry-item-feed__icon"
       style={
-        Object {
+        {
           "backgroundImage": "url()",
         }
       }
@@ -33,7 +33,7 @@ exports[`EntryItem isCollapseLong = false 1`] = `
   <div
     className="entry-item__description"
     dangerouslySetInnerHTML={
-      Object {
+      {
         "__html": "",
       }
     }
@@ -80,7 +80,7 @@ exports[`EntryItem isCollapseLong = true 1`] = `
     <div
       className="entry-item-feed__icon"
       style={
-        Object {
+        {
           "backgroundImage": "url()",
         }
       }
@@ -94,7 +94,7 @@ exports[`EntryItem isCollapseLong = true 1`] = `
   <div
     className="entry-item__description"
     dangerouslySetInnerHTML={
-      Object {
+      {
         "__html": "",
       }
     }
