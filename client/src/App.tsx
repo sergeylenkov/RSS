@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import Data, { Entry, Feed, UpdateFeedResponse } from './data';
 import {
   entriesUpdateError,
@@ -131,13 +131,9 @@ function App(): JSX.Element {
           </div>
         )}
         <div className="content">
-          <Switch>
-            <Route path="/">
-              <div className="list">
-                <EntriesList />
-              </div>
-            </Route>
-          </Switch>
+          <div className="list">
+            <EntriesList />
+          </div>
           {!isGrid && (
             <div className="feeds">
               <FeedsList

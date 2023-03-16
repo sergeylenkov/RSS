@@ -15,13 +15,13 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "nodemon": "^1.18.8",
+    "nodemon": "^2.0.21",
     "rss-parser": "^3.9.0",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "minimist": "^1.2.5",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "supertest": "^3.0.0"
   }
 }

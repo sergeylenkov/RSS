@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import MenuButton from './MenuButton';
 import ReloadButton from './ReloadButton';
@@ -15,7 +15,7 @@ interface MenuProps {
 }
 
 function Menu({ onUpdate }: MenuProps): JSX.Element {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const isUpdating = useSelector<State, boolean>((state) => state.isUpdating);
   const isUpdateError = useSelector<State, boolean>(
@@ -29,7 +29,7 @@ function Menu({ onUpdate }: MenuProps): JSX.Element {
   );
 
   const onClick = (path: string) => {
-    history.push(path);
+    navigate(path);
   };
 
   return (
