@@ -17,7 +17,7 @@ interface EntryProps {
   onSetFavorite: (id: number, isRead: boolean) => void;
 }
 
-function EntryItem(
+export function EntryItem(
   { entry, isCollapseLong, onSetRead, onSetFavorite }: EntryProps,
   ref: Ref<HTMLDivElement>
 ): JSX.Element {
@@ -108,4 +108,4 @@ function EntryItem(
   );
 }
 
-export default forwardRef(EntryItem);
+export const EntryItemRef = forwardRef(EntryItem);

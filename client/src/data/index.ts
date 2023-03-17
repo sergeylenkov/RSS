@@ -50,210 +50,114 @@ export interface Entry {
   isRead: boolean;
 }
 
-class Data {
-  private _url: string;
+export async function update() {
+  const response = await fetch(`${config.urls.api}feeds/update`);
+  return response.json();
+} 
 
-  constructor(url: string) {
-    this._url = url;
-  }
+export async function getFeeds(): Promise<Feed[]> {
+  const response = await fetch(`${config.urls.api}feeds`);
+  const feeds = await response.json();
 
-  update() {
-    return new Promise<Entry[]>((resolve, reject) => {
-      fetch(`${this._url}feeds/update`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
+  feeds.forEach((feed: Feed) => {
+    const a = document.createElement('a');
+    a.href = feed.link;
 
-  getFeeds() {
-    return new Promise<Feed[]>((resolve) => {
-      fetch(`${this._url}feeds`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((feeds: Feed[]) => {
-          feeds.forEach((feed: Feed) => {
-            const a = document.createElement('a');
-            a.href = feed.link;
+    if (feed.image && feed.image.length > 0) {
+      feed.icon = feed.image;
+    } else {
+      feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+    }
+  });
 
-            if (feed.image && feed.image.length > 0) {
-              feed.icon = feed.image;
-            } else {
-              feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
-            }
-          });
-
-          resolve(feeds);
-        });
-    });
-  }
-
-  allEntries() {
-    return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((entries: Entry[]) => {
-          resolve(entries);
-        });
-    });
-  }
-
-  readEntries() {
-    return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/read`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((entries: Entry[]) => {
-          resolve(entries);
-        });
-    });
-  }
-
-  getFavorites() {
-    return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/favorites`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((entries: Entry[]) => {
-          resolve(entries);
-        });
-    });
-  }
-
-  getUnviewed() {
-    return new Promise<Entry[]>((resolve) => {
-      fetch(`${this._url}entries/unviewed`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((entries: Entry[]) => {
-          resolve(entries);
-        });
-    });
-  }
-
-  setViewed(ids: number[]) {
-    return new Promise<SetViewedResponse>((resolve) => {
-      fetch(`${this._url}entries/view`, {
-        method: 'POST',
-        body: JSON.stringify({ ids: ids }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: SetViewedResponse) => {
-          resolve(response);
-        });
-    });
-  }
-
-  setRead(id: number, isRead: boolean) {
-    return new Promise<SetReadResponse>((resolve) => {
-      const method = isRead ? 'PUT' : 'DELETE';
-
-      fetch(`${this._url}entries/${id}/read`, {
-        method: method,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: SetReadResponse) => {
-          resolve(response);
-        });
-    });
-  }
-
-  setFavorite(id: number, isFavorite: boolean) {
-    return new Promise<SetFavoriteResponse>((resolve) => {
-      const method = isFavorite ? 'PUT' : 'DELETE';
-
-      fetch(`${this._url}entries/${id}/favorite`, {
-        method: method,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: SetFavoriteResponse) => {
-          resolve(response);
-        });
-    });
-  }
-
-  addFeed(link: string) {
-    return new Promise<Feed>((resolve) => {
-      fetch(`${this._url}feeds`, {
-        method: 'POST',
-        body: JSON.stringify({ link: link }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((feed: Feed) => {
-          resolve(feed);
-        });
-    });
-  }
-
-  updateFeed(feed: Feed) {
-    return new Promise<UpdateFeedResponse>((resolve) => {
-      fetch(`${this._url}feeds/${feed.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(feed),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: UpdateFeedResponse) => {
-          resolve(response);
-        });
-    });
-  }
-
-  deleteFeed(id: number) {
-    return new Promise<DeleteFeedResponse>((resolve) => {
-      fetch(`${this._url}feeds/${id}`, {
-        method: 'DELETE',
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: DeleteFeedResponse) => {
-          resolve(response);
-        });
-    });
-  }
-
-  clearEntries(days: number) {
-    return new Promise<ClearEntriesResponse>((resolve) => {
-      fetch(`${this._url}entries/clear/${days}`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: ClearEntriesResponse) => {
-          resolve(response);
-        });
-    });
-  }
+  return feeds;
 }
 
-export default new Data(config.urls.api);
+export async function clearEntries(days: number): Promise<ClearEntriesResponse> {
+  const response = await fetch(`${config.urls.api}entries/clear/${days}`);
+  return response.json();
+}
+
+export async function setViewed(ids: number[]): Promise<SetViewedResponse> {
+  const response = await fetch(`${config.urls.api}entries/view`, {
+    method: 'POST',
+    body: JSON.stringify({ ids: ids }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.json();
+}
+
+export async function setRead(id: number, isRead: boolean) {  
+  const method = isRead ? 'PUT' : 'DELETE';
+
+  const response = await fetch(`${config.urls.api}entries/${id}/read`, {
+    method: method,
+  });
+
+  return response.json();
+}
+
+export async function setFavorite(id: number, isFavorite: boolean) {
+  const method = isFavorite ? 'PUT' : 'DELETE';
+
+  const response = fetch(`${config.urls.api}entries/${id}/favorite`, {
+    method: method,
+  });
+
+  return (await response).json();
+}
+
+export async function allEntries(): Promise<Entry[]> {
+  const response = await fetch(`${config.urls.api}entries`);
+  return response.json();
+}
+
+export async function readEntries(): Promise<Entry[]> {
+  const response = await fetch(`${config.urls.api}entries/read`);
+  return response.json();
+}
+
+export async function getFavorites(): Promise<Entry[]> {
+  const response = await fetch(`${config.urls.api}entries/favorites`);
+  return response.json();
+}
+
+export async function getUnviewed(): Promise<Entry[]> {
+  const response = await fetch(`${config.urls.api}entries/unviewed`);
+  return response.json();
+}  
+
+export async function addFeed(link: string): Promise<Feed> {
+  const response = await fetch(`${config.urls.api}feeds`, {
+    method: 'POST',
+    body: JSON.stringify({ link: link }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.json();
+}
+
+export async function updateFeed(feed: Feed): Promise<UpdateFeedResponse> {
+  const response = await fetch(`${config.urls.api}feeds/${feed.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(feed),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.json();
+}
+
+export async function deleteFeed(id: number): Promise<DeleteFeedResponse> {
+  const response = await fetch(`${config.urls.api}feeds/${id}`, {
+    method: 'DELETE',
+  });
+
+  return response.json();
+}

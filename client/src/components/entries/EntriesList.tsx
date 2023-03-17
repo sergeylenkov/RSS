@@ -9,14 +9,14 @@ import {
   updateViewed,
 } from '../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import Data, { Entry } from '../../data';
+import { allEntries, Entry, getFavorites, getUnviewed, readEntries, setFavorite, setRead, setViewed } from '../../data';
 import { debounce } from '../../utils';
 import { State } from '../../store/reducers';
-import EntryItem from './EntryItem';
+import { EntryItemRef } from './EntryItem';
 
 import './EntriesList.scss';
 
-function EntriesList(): JSX.Element {
+export function EntriesList(): JSX.Element {
   const { pathname } = useLocation();
   const isInitialized = useSelector<State, boolean>(
     (state) => state.isInitialized
@@ -32,7 +32,7 @@ function EntriesList(): JSX.Element {
 
   const OnViewDebonce = debounce(
     () => {
-      Data.setViewed([...viewedIds]).then(() => {
+      setViewed([...viewedIds]).then(() => {
         dispatch(updateViewed([...viewedIds]));
         dispatch(updateUnviewedCount());
 
@@ -48,13 +48,13 @@ function EntriesList(): JSX.Element {
   };
 
   const onSetRead = (id: number, isRead: boolean) => {
-    Data.setRead(id, isRead).then(() => {
+    setRead(id, isRead).then(() => {
       dispatch(updateRead(id, isRead));
     });
   };
 
   const onSetFavorite = (id: number, isFavorite: boolean) => {
-    Data.setFavorite(id, isFavorite).then(() => {
+    setFavorite(id, isFavorite).then(() => {
       dispatch(updateFavorite(id, isFavorite));
     });
   };
@@ -65,28 +65,28 @@ function EntriesList(): JSX.Element {
     }
 
     if (path === '/') {
-      Data.getUnviewed().then((response: Entry[]) => {
+      getUnviewed().then((response: Entry[]) => {
         dispatch(entriesUpdated(response));
         dispatch(updateUnviewedCount());
       });
     }
 
     if (path === '/all') {
-      Data.allEntries().then((response: Entry[]) => {
+      allEntries().then((response: Entry[]) => {
         dispatch(entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/read') {
-      Data.readEntries().then((response: Entry[]) => {
+      readEntries().then((response: Entry[]) => {
         dispatch(entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
     }
 
     if (path === '/favorites') {
-      Data.getFavorites().then((response: Entry[]) => {
+      getFavorites().then((response: Entry[]) => {
         dispatch(entriesUpdated(response));
         dispatch(updateEntriesCount());
       });
@@ -124,7 +124,7 @@ function EntriesList(): JSX.Element {
     <div className="entries-list">
       {entries.map((entry: Entry) => {
         return (
-          <EntryItem
+          <EntryItemRef
             ref={(ref) => {
               if (ref && observer.current && !entry.isViewed) {
                 entryItems.set(entry.id, ref);
@@ -142,5 +142,3 @@ function EntriesList(): JSX.Element {
     </div>
   );
 }
-
-export default EntriesList;

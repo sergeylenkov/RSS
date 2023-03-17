@@ -12,7 +12,7 @@ interface MenuButtonProps {
   onClick: () => void;
 }
 
-function MenuButton({
+export function MenuButton({
   isSelected,
   count,
   title,
@@ -38,5 +38,3 @@ function MenuButton({
     </button>
   );
 }
-
-export default MenuButton;

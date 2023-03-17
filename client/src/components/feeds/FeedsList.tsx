@@ -1,24 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { feedsEditing, feedsSelect } from '../../store/actions';
+import { feedsAdd, feedsDelete, feedsEditing, feedsSelect, feedsUpdate } from '../../store/actions';
 import { State } from '../../store/reducers';
-import { Feed } from '../../data';
-import FeedEdit from './FeedEdit';
-import FeedItem from './FeedItem';
+import { addFeed, deleteFeed, Feed, updateFeed, UpdateFeedResponse } from '../../data';
+import { FeedEdit } from './FeedEdit';
+import { FeedItem } from './FeedItem';
 
 import './FeedsList.scss';
 
-interface FeedsListProps {
-  onAddFeed: (link: string) => void;
-  onChangeFeed: (feed: Feed) => void;
-  onDeleteFeed: (id: number) => void;
-}
-
-function FeedsList({
-  onAddFeed,
-  onChangeFeed,
-  onDeleteFeed,
-}: FeedsListProps): JSX.Element {
+export function FeedsList(): JSX.Element {
   const dispatch = useDispatch();
   const isFeedsEditing = useSelector<State, boolean>(
     (state) => state.isFeedsEditing
@@ -27,6 +17,27 @@ function FeedsList({
   const selectedFeeds = useSelector<State, number[]>(
     (state) => state.selectedFeeds
   );
+
+  const onAddFeed = (link: string) => {
+    addFeed(link).then((feed: Feed) => {
+      dispatch(feedsAdd(feed));
+      dispatch(feedsEditing(false));
+    });
+  };
+
+  const onChangeFeed = (feed: Feed) => {
+    updateFeed(feed).then((response: UpdateFeedResponse) => {
+      dispatch(feedsUpdate(response.id, response.feed));
+      dispatch(feedsEditing(false));
+    });
+  };
+
+  const onDeleteFeed = (id: number) => {
+    deleteFeed(id).then(() => {
+      dispatch(feedsDelete(id));
+      dispatch(feedsEditing(false));
+    });
+  };
 
   const onChange = (id: number, title: string) => {
     const feed = feeds.find((el) => el.id === id);
@@ -65,5 +76,3 @@ function FeedsList({
     </div>
   );
 }
-
-export default FeedsList;

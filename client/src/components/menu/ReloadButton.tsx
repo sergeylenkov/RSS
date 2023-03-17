@@ -1,5 +1,5 @@
-import MenuButton from './MenuButton';
 import React from 'react';
+import { MenuButton } from './MenuButton';
 import { ReloadIcon } from '../Icons';
 import { Bem } from '../../utils/bem';
 
@@ -16,7 +16,7 @@ interface ReloadButtonProps {
   onUpdate: () => void;
 }
 
-function ReloadButton({
+export function ReloadButton({
   isSelected,
   count,
   isActive,
@@ -45,5 +45,3 @@ function ReloadButton({
     </div>
   );
 }
-
-export default ReloadButton;

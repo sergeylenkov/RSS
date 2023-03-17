@@ -15,7 +15,7 @@ interface FeedEditProps {
   onAdd: (link: string) => void;
 }
 
-function FeedEdit({
+export function FeedEdit({
   isDisabled,
   isScrolled,
   isEditing,
@@ -90,5 +90,3 @@ function FeedEdit({
     );
   }
 }
-
-export default FeedEdit;

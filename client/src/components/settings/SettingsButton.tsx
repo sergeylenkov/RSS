@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { Bem } from '../../utils/bem';
 import { SettingsIcon } from '../Icons';
 
@@ -8,10 +8,10 @@ const block = new Bem('settings-button');
 
 interface SettingsButtonProps {
   isActive: boolean;
-  onClick: () => void;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-function SettingsButton({
+export function SettingsButton({
   isActive,
   onClick,
 }: SettingsButtonProps): JSX.Element {
@@ -29,5 +29,3 @@ function SettingsButton({
     </button>
   );
 }
-
-export default SettingsButton;

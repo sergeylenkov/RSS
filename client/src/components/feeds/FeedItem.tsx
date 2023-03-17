@@ -18,7 +18,7 @@ interface FeedProps {
   onChange: (id: number, title: string) => void;
 }
 
-function FeedItem({
+export function FeedItem({
   id,
   icon,
   title,
@@ -88,5 +88,3 @@ function FeedItem({
     </div>
   );
 }
-
-export default FeedItem;
