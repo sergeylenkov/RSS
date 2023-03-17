@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { action } from '../src/utils/tests';
-import ReloadButton from '../src/components/menu/ReloadButton';
+import { ReloadButton } from '../src/components/menu/ReloadButton';
 
 test('ReloadButton isActive = true', () => {
   const render = renderer.create(

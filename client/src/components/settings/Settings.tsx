@@ -11,7 +11,7 @@ export function Settings(): JSX.Element {
   }, [isSettingsVisible]);
 
   useEffect(() => {
-    let handler = () => {
+    const handler = () => {
       hideSettings();
     };
 
@@ -21,7 +21,7 @@ export function Settings(): JSX.Element {
       if (handler) {
         document.removeEventListener('click', handler);
       }
-    }
+    };
   }, [hideSettings]);
 
   const onClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -33,10 +33,7 @@ export function Settings(): JSX.Element {
 
   return (
     <>
-      <SettingsButton
-        isActive={isSettingsVisible}
-        onClick={onClick}
-      />
+      <SettingsButton isActive={isSettingsVisible} onClick={onClick} />
 
       <CSSTransition
         in={isSettingsVisible}
@@ -48,5 +45,5 @@ export function Settings(): JSX.Element {
         <SettingsPopup isVisible={isSettingsVisible} />
       </CSSTransition>
     </>
-  )
+  );
 }

@@ -2,7 +2,19 @@ import { ActionTypes } from '../constants';
 import { Feed, Entry } from '../../data';
 import { Actions } from '../actions/type';
 import { isSystemDarkTheme } from '../../utils';
-import { addFeed, removeFeed, selectFeed, updateEntries, updateEntriesCount, updateFavorite, updateFeed, updateFeeds, updateRead, updateUnviewedCount, updateViewed } from './utils';
+import {
+  addFeed,
+  removeFeed,
+  selectFeed,
+  updateEntries,
+  updateEntriesCount,
+  updateFavorite,
+  updateFeed,
+  updateFeeds,
+  updateRead,
+  updateUnviewedCount,
+  updateViewed,
+} from './utils';
 
 export interface State {
   isInitialized: boolean;
@@ -62,7 +74,7 @@ function rootReducer(state: State | undefined, action: Actions): State {
       return updateFeed(state, action.id, action.feed);
 
     case ActionTypes.FEEDS_DELETE:
-      return removeFeed(state, action.id)
+      return removeFeed(state, action.id);
 
     case ActionTypes.FEEDS_SELECT:
       return selectFeed(state, action.id);
@@ -77,13 +89,13 @@ function rootReducer(state: State | undefined, action: Actions): State {
       return updateFavorite(state, action.id, action.isFavorite);
 
     case ActionTypes.UPDATE_READ:
-      return updateRead(state, action.id, action.isRead)
+      return updateRead(state, action.id, action.isRead);
 
     case ActionTypes.UPDATE_ENTRIES_COUNT:
       return updateEntriesCount(state);
 
     case ActionTypes.ENTRIES_LOADED:
-      return updateEntries(state, action.entries)
+      return updateEntries(state, action.entries);
 
     default:
       break;

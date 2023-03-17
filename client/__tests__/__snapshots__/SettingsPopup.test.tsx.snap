@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingsPopup isVisible = false 1`] = `null`;
+
+exports[`SettingsPopup isVisible = true 1`] = `
+<div
+  className="settings"
+  onClick={[Function]}
+>
+  <div
+    className="settings__item"
+  >
+    <input
+      className="settings__checkbox"
+      id="1"
+      onChange={[Function]}
+      type="checkbox"
+    />
+    <label
+      className="settings__label"
+      htmlFor="1"
+    >
+      Темная тема
+    </label>
+  </div>
+  <div
+    className="settings__item"
+  >
+    <input
+      checked={true}
+      className="settings__checkbox"
+      id="0"
+      onChange={[Function]}
+      type="checkbox"
+    />
+    <label
+      className="settings__label"
+      htmlFor="0"
+    >
+      Сворачивать длинные посты
+    </label>
+  </div>
+  <div
+    className="settings__item"
+  >
+    <input
+      checked={true}
+      className="settings__checkbox"
+      id="2"
+      onChange={[Function]}
+      type="checkbox"
+    />
+    <label
+      className="settings__label"
+      htmlFor="2"
+    >
+      Показывать лентой
+    </label>
+  </div>
+  <div
+    className="settings__item"
+  >
+    <div
+      className="settings__label"
+    >
+      Удалять посты старше
+       
+      <input
+        className="settings__days"
+        onChange={[Function]}
+        type="text"
+        value={30}
+      />
+       
+      дней
+    </div>
+  </div>
+</div>
+`;

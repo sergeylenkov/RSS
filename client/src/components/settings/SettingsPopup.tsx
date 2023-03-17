@@ -17,7 +17,9 @@ interface SettingsProps {
   isVisible: boolean;
 }
 
-export function SettingsPopup({ isVisible }: SettingsProps): JSX.Element | null {
+export function SettingsPopup({
+  isVisible,
+}: SettingsProps): JSX.Element | null {
   const collapseFieldRef = useRef<HTMLInputElement>(null);
   const daysFieldRef = useRef<HTMLInputElement>(null);
   const themeFieldRef = useRef<HTMLInputElement>(null);

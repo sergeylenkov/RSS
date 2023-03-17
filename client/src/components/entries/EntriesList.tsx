@@ -9,7 +9,16 @@ import {
   updateViewed,
 } from '../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { allEntries, Entry, getFavorites, getUnviewed, readEntries, setFavorite, setRead, setViewed } from '../../data';
+import {
+  allEntries,
+  Entry,
+  getFavorites,
+  getUnviewed,
+  readEntries,
+  setFavorite,
+  setRead,
+  setViewed,
+} from '../../data';
 import { debounce } from '../../utils';
 import { State } from '../../store/reducers';
 import { EntryItemRef } from './EntryItem';
@@ -30,17 +39,14 @@ export function EntriesList(): JSX.Element {
   const viewedIds = useRef<Set<number>>(new Set()).current;
   const observer = useRef<IntersectionObserver>();
 
-  const OnViewDebonce = debounce(
-    () => {
-      setViewed([...viewedIds]).then(() => {
-        dispatch(updateViewed([...viewedIds]));
-        dispatch(updateUnviewedCount());
+  const OnViewDebonce = debounce(() => {
+    setViewed([...viewedIds]).then(() => {
+      dispatch(updateViewed([...viewedIds]));
+      dispatch(updateUnviewedCount());
 
-        viewedIds.clear();
-      });
-    },
-    1000
-  );
+      viewedIds.clear();
+    });
+  }, 1000);
 
   const onView = (id: number) => {
     viewedIds.add(id);

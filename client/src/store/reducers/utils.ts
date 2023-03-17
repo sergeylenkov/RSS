@@ -106,11 +106,13 @@ export function updateViewed(state: State, ids: number[]): State {
   };
 }
 
-export function updateFavorite(state: State, id: number, isFavorite: boolean): State {
+export function updateFavorite(
+  state: State,
+  id: number,
+  isFavorite: boolean
+): State {
   let entries = state.entries.map((entry: Entry) => {
-    return entry.id === id
-      ? { ...entry, isFavorite: isFavorite }
-      : entry;
+    return entry.id === id ? { ...entry, isFavorite: isFavorite } : entry;
   });
 
   entries = filterEntries(state.selectedFeeds, entries);
@@ -123,9 +125,7 @@ export function updateFavorite(state: State, id: number, isFavorite: boolean): S
 
 export function updateRead(state: State, id: number, isRead: boolean): State {
   let entries = state.entries.map((entry: Entry) => {
-    return entry.id === id
-      ? { ...entry, isRead: isRead }
-      : entry;
+    return entry.id === id ? { ...entry, isRead: isRead } : entry;
   });
 
   entries = filterEntries(state.selectedFeeds, entries);

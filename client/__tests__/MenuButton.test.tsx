@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { action } from '../src/utils/tests';
-import MenuButton from '../src/components/menu/MenuButton';
+import { MenuButton } from '../src/components/menu/MenuButton';
 
 test('MenuButton isSelected = true', () => {
   const render = renderer.create(

@@ -53,7 +53,7 @@ export interface Entry {
 export async function update() {
   const response = await fetch(`${config.urls.api}feeds/update`);
   return response.json();
-} 
+}
 
 export async function getFeeds(): Promise<Feed[]> {
   const response = await fetch(`${config.urls.api}feeds`);
@@ -73,7 +73,9 @@ export async function getFeeds(): Promise<Feed[]> {
   return feeds;
 }
 
-export async function clearEntries(days: number): Promise<ClearEntriesResponse> {
+export async function clearEntries(
+  days: number
+): Promise<ClearEntriesResponse> {
   const response = await fetch(`${config.urls.api}entries/clear/${days}`);
   return response.json();
 }
@@ -90,7 +92,7 @@ export async function setViewed(ids: number[]): Promise<SetViewedResponse> {
   return response.json();
 }
 
-export async function setRead(id: number, isRead: boolean) {  
+export async function setRead(id: number, isRead: boolean) {
   const method = isRead ? 'PUT' : 'DELETE';
 
   const response = await fetch(`${config.urls.api}entries/${id}/read`, {
@@ -128,7 +130,7 @@ export async function getFavorites(): Promise<Entry[]> {
 export async function getUnviewed(): Promise<Entry[]> {
   const response = await fetch(`${config.urls.api}entries/unviewed`);
   return response.json();
-}  
+}
 
 export async function addFeed(link: string): Promise<Feed> {
   const response = await fetch(`${config.urls.api}feeds`, {

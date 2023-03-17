@@ -7,11 +7,11 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/__tests__/**/*.test.tsx', '**/__tests__/**/*.test.ts'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
   moduleNameMapper: {
-    '\\.(css|scss)$': 'identity-obj-proxy'
+    '\\.(css|scss)$': 'identity-obj-proxy',
   },
   reporters: [
     'default',
@@ -24,4 +24,4 @@ module.exports = {
     ],
   ],
   coverageDirectory: 'reports/coverage',
-}
+};

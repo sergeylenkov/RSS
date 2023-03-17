@@ -1,8 +1,20 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { feedsAdd, feedsDelete, feedsEditing, feedsSelect, feedsUpdate } from '../../store/actions';
+import {
+  feedsAdd,
+  feedsDelete,
+  feedsEditing,
+  feedsSelect,
+  feedsUpdate,
+} from '../../store/actions';
 import { State } from '../../store/reducers';
-import { addFeed, deleteFeed, Feed, updateFeed, UpdateFeedResponse } from '../../data';
+import {
+  addFeed,
+  deleteFeed,
+  Feed,
+  updateFeed,
+  UpdateFeedResponse,
+} from '../../data';
 import { FeedEdit } from './FeedEdit';
 import { FeedItem } from './FeedItem';
 

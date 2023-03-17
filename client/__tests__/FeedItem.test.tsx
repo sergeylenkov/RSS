@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import FeedItem from '../src/components/feeds/FeedItem';
+import { FeedItem } from '../src/components/feeds/FeedItem';
 import { action } from '../src/utils/tests';
 
 test('FeedItem isSelected = true', () => {

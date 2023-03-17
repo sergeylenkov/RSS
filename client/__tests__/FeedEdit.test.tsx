@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import FeedEdit from '../src/components/feeds/FeedEdit';
+import { FeedEdit } from '../src/components/feeds/FeedEdit';
 import { action } from '../src/utils/tests';
 
 test('FeedEdit isEditing = true', () => {
