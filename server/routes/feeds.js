@@ -1,9 +1,11 @@
 const express = require('express');
 const feeds = require('../models/feeds');
+const { log } = require('../utils');
 
 let router = express.Router();
 
 router.get('/', function(req, res) {
+    log('GET feeds /');
     feeds.all().then((items) => {
         return res.json(items);
     }).catch((error) => {
@@ -12,6 +14,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/update', function(req, res) {
+    log('GET feeds /update');
     feeds.update().then((items) => {
         return res.json(items);
     }).catch((error) => {

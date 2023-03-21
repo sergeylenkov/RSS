@@ -1,9 +1,11 @@
 const db = require('../db');
 const Parser = require('rss-parser');
+const { log } = require('../utils');
 
 module.exports.all = function() {
   return new Promise((resolve, reject) => {
     _getFeeds().then((items) => {
+      log('Get all feeds', items);
       resolve(items);
     }).catch((error) => {
       reject(error);
@@ -26,6 +28,7 @@ module.exports.update = function() {
         const promise = _updateFeed(feed).then((entries) => {
           items = items.concat(entries);
         }).catch((error) => {
+          log('Update feed error: ', error);
         });
 
         promises.push(promise);
@@ -157,6 +160,7 @@ function _addFeed(link) {
 function _updateFeed(feed) {
   return new Promise((resolve, reject) => {
     const parser = new Parser();
+    log('Update feed: ', feed.rss);
     parser.parseURL(feed.rss, (error, rss) => {
       if (error) {
         reject(error);
@@ -169,7 +173,7 @@ function _updateFeed(feed) {
           } else {
             let items = [];
             let promises = [];
-
+            log('Get feed items ', rss.items);
             rss.items.forEach((entry) => {
               const newEntry = _prepareEntry(feed, entry);
 

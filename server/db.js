@@ -1,12 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
-const args = require('minimist')(process.argv.slice(2));
-
-let name = 'db/database.sqlite';
-
-if (args.db === 'test') {
-    name = 'test/test.sqlite';
-}
-
-const db = new sqlite3.Database(name);
-
+const settings = require('./settings');
+const utils = require('./utils/index');
+console.log(settings);
+const db = new sqlite3.Database(settings.db);
+utils.log(`Database open ${settings.db}`);
 module.exports = db;

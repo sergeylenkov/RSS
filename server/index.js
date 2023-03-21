@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const feeds = require('./routes/feeds');
 const entries = require('./routes/entries');
+const settings = require('./settings');
 
 const app = express();
 
@@ -17,15 +18,8 @@ app.use(bodyParser.json());
 app.use('/feeds', feeds);
 app.use('/entries', entries);
 
-const args = require('minimist')(process.argv.slice(2));
-let port = 5000;
+app.listen(settings.port);
 
-if (args.p) {
-    port = args.p;
-}
-
-app.listen(port);
-
-console.log('App is listening on port ' + port);
+console.log('App is listening on port ' + settings.port);
 
 module.exports = app;
