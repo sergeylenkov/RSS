@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js --p=9000 --db=test/test.sqlite",    
-    "debug": "node index.js --p=9000 --debug --db=db/database.sqlite",
+    "debug": "nodemon index.js --p=9000 --debug --db=db/database.sqlite",
     "test": "mocha test/api.js --db=test/test.sqlite"    
   },
   "keywords": [],
