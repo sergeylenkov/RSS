@@ -6,6 +6,16 @@ const feedsDict: { [key: string]: Feed } = {};
 export function updateFeeds(state: State, feeds: Feed[]): State {
   feeds.forEach((feed: Feed) => {
     feedsDict[feed.id] = feed;
+
+    const iconId = `icon_${feed.id}`;
+
+    feed.icon = localStorage.getItem(iconId) || feed.iconUrl;
+
+    if (!localStorage.getItem(iconId)) {
+      toDataURL(feed.iconUrl).then(data => {
+        localStorage.setItem(iconId, data);
+      });    
+    }
   });
 
   return {
@@ -187,4 +197,18 @@ function updateFeedsInEntries(entries: Entry[]): void {
   entries.forEach((entry) => {
     entry.feed = getFeedById(entry.feedId);
   });
+}
+
+function toDataURL(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fetch(url)
+    .then(response => response.blob())
+    .then(blob => {
+      const reader = new FileReader()
+
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    });
+  });  
 }

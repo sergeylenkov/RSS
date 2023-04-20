@@ -34,6 +34,7 @@ export interface Feed {
   title: string;
   link: string;
   image: string;
+  iconUrl: string;
   icon: string;
   count: number;
 }
@@ -64,9 +65,9 @@ export async function getFeeds(): Promise<Feed[]> {
     a.href = feed.link;
 
     if (feed.image && feed.image.length > 0) {
-      feed.icon = feed.image;
+      feed.iconUrl = feed.image;
     } else {
-      feed.icon = `${a.protocol}//${a.hostname}/favicon.ico`;
+      feed.iconUrl = `${a.protocol}//${a.hostname}/favicon.ico`;
     }
   });
 
