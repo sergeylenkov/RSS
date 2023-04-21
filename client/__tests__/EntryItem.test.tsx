@@ -11,6 +11,7 @@ const feed: Feed = {
   image: '',
   icon: '',
   count: 1,
+  iconUrl: ''
 };
 
 const entry: Entry = {
