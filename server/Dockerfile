@@ -9,4 +9,4 @@ RUN npm install
 
 EXPOSE 9000
 
-CMD ["node", "index.js", "-p 9000"]
+CMD ["node", "index.js", "--p=9000", "--db=db/database.sqlite"]
