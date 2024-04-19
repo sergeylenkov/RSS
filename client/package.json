@@ -40,7 +40,7 @@
     "react-test-renderer": "^18.2.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.2",
-    "stylelint": "^15.2.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^10.0.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
