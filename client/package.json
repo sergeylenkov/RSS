@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.30.4",
     "react-transition-group": "^4.4.5",
     "redux": "^4.2.1"
   },
