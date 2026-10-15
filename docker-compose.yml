@@ -3,11 +3,11 @@ services:
   server:
     build: server/
     volumes:
-      - d:/projects/rss/server/db:/app/db
+      - C:/Users/sergl/Projects/rss/server/db:/app/db
     ports:
       - 9000:9000
 
   client:
     build: client/
     ports:
-      - 8080:80
+      - 9001:80

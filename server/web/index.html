@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test</title>
+    <script type="text/javascript">
+      window.onload = () => {
+        console.log('start');
+		const element = document.getElementById('element');
+		
+        let acl = new Accelerometer({frequency: 20});
+        acl.addEventListener('reading', () => {
+		  let x = (acl.x * 10).toFixed(2);
+		  let y = (acl.y * -10).toFixed(2);
+		  
+		  const xSign = x < 0 ? '-' : '';
+		  const ySign = y < 0 ? '-' : '';
+		  
+		  x = Math.abs(x);
+		  y = Math.abs(y);
+		  
+		  const max = Math.max(x, y);
+		  const xStep = x / max;
+		  const yStep = y / max;
+		  
+		  let style = '';
+		  
+		  for (let i = 0; i < max; i++) {
+			style = style + `rgb(0 0 0) ${xSign}${x}px ${ySign}${y}px 0px, `;
+			
+			x = x - xStep;
+			y = y - yStep;
+			
+			if (x < 0) x = 0;
+			if (y < 0) y = 0;
+		  }
+
+		  element.style.boxShadow = style.slice(0, -2);
+        });
+
+        acl.start();
+      }
+
+
+    </script>
+    <style>
+      html {
+        font-family: system-ui;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #root {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+      }
+
+      .element {
+        width: 250px;
+        height: 250px;
+        margin: auto;
+        background-color: brown;
+        box-shadow: rgb(0 0 0 / 40%) 10px 10px 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="element" class="element"></div>
+    </div>
+  </body>
+</html>

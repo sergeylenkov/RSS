@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Projects\RSS\client\__tests__\entry.test.ts">
+        <testCase name="entry utils removeSelfLinks" duration="14"/>
+        <testCase name="entry utils isLong (short text)" duration="2"/>
+        <testCase name="entry utils isLong (images &gt; 3)" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\utils.test.ts">
+        <testCase name="debounce" duration="1"/>
+        <testCase name="debounce immediate" duration="1"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\SettingsButton.test.tsx">
+        <testCase name="SettingsButton isActive = true" duration="16"/>
+        <testCase name="SettingsButton isActive = false" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\EntryItem.test.tsx">
+        <testCase name="EntryItem isCollapseLong = true" duration="23"/>
+        <testCase name="EntryItem isCollapseLong = false" duration="3"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\Settings.test.tsx">
+        <testCase name="Settings isVisible = true" duration="22"/>
+        <testCase name="Settings isVisible = false" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\MenuButton.test.tsx">
+        <testCase name="MenuButton isSelected = true" duration="2"/>
+        <testCase name="MenuButton isSelected = false" duration="1"/>
+        <testCase name="MenuButton count = 0" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\FeedsList.test.tsx">
+        <testCase name="FeedsList" duration="5"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\Menu.test.tsx">
+        <testCase name="Menu" duration="10"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\EntriesList.test.tsx">
+        <testCase name="EntriesList" duration="20"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\App.test.tsx">
+        <testCase name="App" duration="25"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\bem.test.ts">
+        <testCase name="bem block" duration="0"/>
+        <testCase name="bem in template litarals" duration="0"/>
+        <testCase name="bem toString" duration="0"/>
+        <testCase name="bem block with modifier" duration="0"/>
+        <testCase name="bem block element" duration="0"/>
+        <testCase name="bem block element with modifier" duration="1"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\ReloadButton.test.tsx">
+        <testCase name="ReloadButton isActive = true" duration="3"/>
+        <testCase name="ReloadButton isActive = false" duration="1"/>
+        <testCase name="ReloadButton isError = true" duration="1"/>
+        <testCase name="ReloadButton isSelected = true" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\Icons.test.tsx">
+        <testCase name="ReloadIcon" duration="2"/>
+        <testCase name="AddIcon" duration="1"/>
+        <testCase name="EditIcon" duration="1"/>
+        <testCase name="CloseIcon" duration="1"/>
+        <testCase name="TrashIcon" duration="1"/>
+        <testCase name="SettingsIcon" duration="1"/>
+        <testCase name="ReadIcon" duration="1"/>
+        <testCase name="FavoriteIcon" duration="1"/>
+        <testCase name="FavoriteSelectedIcon" duration="1"/>
+        <testCase name="CheckmarkIcon" duration="1"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\FeedItem.test.tsx">
+        <testCase name="FeedItem isSelected = true" duration="3"/>
+        <testCase name="FeedItem isEditing = true" duration="2"/>
+    </file>
+    <file path="D:\Projects\RSS\client\__tests__\FeedEdit.test.tsx">
+        <testCase name="FeedEdit isEditing = true" duration="2"/>
+        <testCase name="FeedEdit isDisabled = true" duration="2"/>
+        <testCase name="FeedEdit isScrolled = true" duration="1"/>
+    </file>
+</testExecutions>

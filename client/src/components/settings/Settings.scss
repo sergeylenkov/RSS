@@ -1,0 +1,32 @@
+.settings {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-radius: 4px 0 4px 4px;
+  box-shadow: 0 10px 10px 1px rgba(0, 0, 0, 0.1);
+
+  &__item {
+    display: flex;
+    width: 100%;
+    height: 40px;
+  }
+
+  &__label {
+    margin: auto 0;
+    font-size: 14px;
+  }
+
+  &__checkbox {
+    margin: auto 10px auto 0;
+  }
+
+  &__days {
+    width: 30px;
+    margin: 0 5px;
+    text-align: right;
+  }
+}
