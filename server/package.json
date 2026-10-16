@@ -1,26 +1,30 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js --p=9000 --db=db/database.sqlite",    
+    "start": "node index.js --p=9000 --db=db/database.sqlite",
     "debug": "nodemon index.js --p=9000 --debug --db=db/database.sqlite",
-    "test": "mocha test/api.js --db=test/test.sqlite"    
+    "test": "mocha test/api.js --db=test/test.sqlite"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
+    "bindings": "^1.5.0",
+    "body-parser": "^2.3.0",
+    "express": "^5.3.0",
     "nodemon": "^3.1.7",
     "rss-parser": "^3.9.0",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^6.0.1"
   },
   "devDependencies": {
     "minimist": "^1.2.5",
     "mocha": "^10.2.0",
     "supertest": "^3.0.0"
+  },
+  "allowScripts": {
+    "sqlite3@6.0.1": true
   }
 }
