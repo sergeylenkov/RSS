@@ -10,7 +10,6 @@ jobs:
           working-directory: client
 
       - name: Build client
-<<<<<<< Updated upstream
         run: npm run build:dev
         working-directory: client
 
@@ -20,15 +19,9 @@ jobs:
 
       - name: Run Stylelint
         run: npm run lint:styles
-=======
         run: npm build
->>>>>>> Stashed changes
         working-directory: client
 
       - name: Test client
         run: npm run test
-<<<<<<< Updated upstream
         working-directory: client
-=======
-        working-directory: client
->>>>>>> Stashed changes
