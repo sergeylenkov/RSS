@@ -10,7 +10,7 @@ jobs:
           working-directory: client
 
       - name: Build client
-        run: npm run build:dev
+        run: npm run build:prod
         working-directory: client
 
       - name: Run ESLlint
@@ -19,7 +19,6 @@ jobs:
 
       - name: Run Stylelint
         run: npm run lint:styles
-        run: npm build
         working-directory: client
 
       - name: Test client
