@@ -28,13 +28,13 @@
     "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^7.1.5",
     "eslint": "^8.36.0",
-    "html-webpack-plugin": "^5.5.0",
-    "husky": "^7.0.4",
+    "html-webpack-plugin": "^5.6.8",
+    "husky": "^9.1.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "jest-sonar": "^0.2.15",
-    "mini-css-extract-plugin": "^2.7.4",
+    "mini-css-extract-plugin": "^2.10.2",
     "prettier": "^3.9.10",
     "react-test-renderer": "^18.2.0",
     "sass": "^1.105.2",
@@ -50,7 +50,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
-    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "tsconfig-paths-webpack-plugin": "^4.2.0",
     "typescript": "^4.9.5",
     "webpack": "^5.112.0",
     "webpack-cli": "^7.2.3",
@@ -76,5 +76,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
+  }
 }
