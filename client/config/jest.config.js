@@ -9,10 +9,16 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.test.json',
+    },
+  },
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
   },
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   reporters: [
     'default',
     [

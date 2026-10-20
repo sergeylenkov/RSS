@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import {
   AddIcon,
   CheckmarkIcon,
@@ -13,52 +13,28 @@ import {
   TrashIcon,
 } from '../src/components/Icons';
 
-test('ReloadIcon', () => {
-  const render = renderer.create(<ReloadIcon />);
-  expect(render).toMatchSnapshot();
-});
+const icons = {
+  ReloadIcon,
+  AddIcon,
+  EditIcon,
+  CloseIcon,
+  TrashIcon,
+  SettingsIcon,
+  ReadIcon,
+  FavoriteIcon,
+  FavoriteSelectedIcon,
+  CheckmarkIcon,
+};
 
-test('AddIcon', () => {
-  const render = renderer.create(<AddIcon />);
-  expect(render).toMatchSnapshot();
-});
+describe('Icons', () => {
+  Object.entries(icons).forEach(([name, Icon]) => {
+    test(`renders ${name} as svg`, () => {
+      const { container } = render(<Icon />);
 
-test('EditIcon', () => {
-  const render = renderer.create(<EditIcon />);
-  expect(render).toMatchSnapshot();
-});
+      const svg = container.querySelector('svg');
 
-test('CloseIcon', () => {
-  const render = renderer.create(<CloseIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('TrashIcon', () => {
-  const render = renderer.create(<TrashIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('SettingsIcon', () => {
-  const render = renderer.create(<SettingsIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('ReadIcon', () => {
-  const render = renderer.create(<ReadIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('FavoriteIcon', () => {
-  const render = renderer.create(<FavoriteIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('FavoriteSelectedIcon', () => {
-  const render = renderer.create(<FavoriteSelectedIcon />);
-  expect(render).toMatchSnapshot();
-});
-
-test('CheckmarkIcon', () => {
-  const render = renderer.create(<CheckmarkIcon />);
-  expect(render).toMatchSnapshot();
+      expect(svg).toBeInTheDocument();
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
+    });
+  });
 });

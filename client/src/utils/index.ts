@@ -13,8 +13,8 @@ export const debounce = <F extends (...args: unknown[]) => unknown>(
 };
 
 export function isSystemDarkTheme(): boolean {
-  return (
+  return Boolean(
     window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
+      window.matchMedia('(prefers-color-scheme: dark)').matches
   );
 }

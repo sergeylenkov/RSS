@@ -75,7 +75,7 @@ export function SettingsPopup({
           id={themeId}
           className={checkboxClass}
           type="checkbox"
-          checked={isDarkTheme}
+          checked={Boolean(isDarkTheme)}
           onChange={onToggleTheme}
         />
         <label className={labelClass} htmlFor={themeId}>
@@ -89,7 +89,7 @@ export function SettingsPopup({
           id={collapseId}
           className={checkboxClass}
           type="checkbox"
-          checked={isCollapseLong}
+          checked={Boolean(isCollapseLong)}
           onChange={onToggleCollapse}
         />
         <label className={labelClass} htmlFor={collapseId}>
@@ -118,7 +118,7 @@ export function SettingsPopup({
             className={block.getElement('days').toString()}
             ref={daysFieldRef}
             type="text"
-            value={keepDays}
+            value={keepDays === undefined || keepDays === null ? '' : keepDays}
             onChange={onChangeDays}
           />{' '}
           дней

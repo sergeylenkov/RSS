@@ -1,23 +1,49 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import renderer from 'react-test-renderer';
-import store from '../src/store';
+import { screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders } from './test-utils';
 import { SettingsPopup } from '../src/components/settings/SettingsPopup';
 
-test('SettingsPopup isVisible = true', () => {
-  const render = renderer.create(
-    <Provider store={store}>
-      <SettingsPopup isVisible />
-    </Provider>
-  );
-  expect(render).toMatchSnapshot();
-});
-
-test('SettingsPopup isVisible = false', () => {
-  const render = renderer.create(
-    <Provider store={store}>
+describe('SettingsPopup', () => {
+  test('renders nothing when isVisible = false', () => {
+    const { container } = renderWithProviders(
       <SettingsPopup isVisible={false} />
-    </Provider>
-  );
-  expect(render).toMatchSnapshot();
+    );
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test('renders settings labels when isVisible = true', () => {
+    renderWithProviders(<SettingsPopup isVisible />);
+
+    expect(screen.getByText('Темная тема')).toBeInTheDocument();
+    expect(screen.getByText('Сворачивать длинные посты')).toBeInTheDocument();
+    expect(screen.getByText('Показывать лентой')).toBeInTheDocument();
+    expect(screen.getByText(/Удалять посты старше/)).toBeInTheDocument();
+  });
+
+  test('renders three checkboxes', () => {
+    renderWithProviders(<SettingsPopup isVisible />);
+
+    expect(screen.getAllByRole('checkbox')).toHaveLength(3);
+  });
+
+  test('toggles theme checkbox on click', () => {
+    renderWithProviders(<SettingsPopup isVisible />);
+
+    const themeCheckbox = screen.getByLabelText('Темная тема') as HTMLInputElement;
+    const initial = themeCheckbox.checked;
+
+    fireEvent.click(themeCheckbox);
+
+    expect(themeCheckbox.checked).toBe(!initial);
+  });
+
+  test('renders a days input', () => {
+    renderWithProviders(<SettingsPopup isVisible />);
+
+    const daysInput = screen.getByRole('textbox') as HTMLInputElement;
+
+    expect(daysInput).toBeInTheDocument();
+    expect(daysInput.value).not.toBe('');
+  });
 });

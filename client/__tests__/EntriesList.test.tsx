@@ -1,17 +1,23 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
-import store from '../src/store';
+import { screen } from '@testing-library/react';
+import { renderWithProviders } from './test-utils';
 import { EntriesList } from '../src/components/entries/EntriesList';
 
-test('EntriesList', () => {
-  const render = renderer.create(
-    <Provider store={store}>
-      <BrowserRouter>
-        <EntriesList />
-      </BrowserRouter>
-    </Provider>
-  );
-  expect(render).toMatchSnapshot();
+describe('EntriesList', () => {
+  test('renders the entries list container', () => {
+    const { container } = renderWithProviders(<EntriesList />, {
+      useRouter: true,
+    });
+
+    expect(container.querySelector('.entries-list')).toBeInTheDocument();
+  });
+
+  test('renders no entry items when the store has no entries', () => {
+    const { container } = renderWithProviders(<EntriesList />, {
+      useRouter: true,
+    });
+
+    expect(container.querySelectorAll('.entry-item')).toHaveLength(0);
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
 });
