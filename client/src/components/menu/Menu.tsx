@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
+import { useSelector } from 'react-redux';
 import { MenuButton } from './MenuButton';
 import { ReloadButton } from './ReloadButton';
 import { Bem } from '../../utils/bem';
@@ -17,10 +18,10 @@ import './Menu.scss';
 
 const block = new Bem('menu');
 
-export function Menu(): JSX.Element {
+export function Menu(): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isUpdating = useSelector<State, boolean>((state) => state.isUpdating);
   const isUpdateError = useSelector<State, boolean>(
     (state) => state.isUpdateError

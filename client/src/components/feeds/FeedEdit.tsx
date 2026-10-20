@@ -21,7 +21,7 @@ export function FeedEdit({
   isEditing,
   onEdit,
   onAdd,
-}: FeedEditProps): JSX.Element {
+}: FeedEditProps): React.JSX.Element {
   const [isFormVisible, setFormVisible] = useState(false);
   const linkFieldRef = useRef<HTMLInputElement>(null);
 

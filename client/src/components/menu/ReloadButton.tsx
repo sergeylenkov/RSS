@@ -23,7 +23,7 @@ export function ReloadButton({
   isError,
   onUpdate,
   onClick,
-}: ReloadButtonProps): JSX.Element {
+}: ReloadButtonProps): React.JSX.Element {
   const blockClass = block.addModifier(isActive ? 'active' : '').toString();
   const buttonClass = block
     .getElement('icon')

@@ -14,7 +14,7 @@ interface SettingsButtonProps {
 export function SettingsButton({
   isActive,
   onClick,
-}: SettingsButtonProps): JSX.Element {
+}: SettingsButtonProps): React.JSX.Element {
   const blockClass = block.addModifier(isActive ? 'active' : '').toString();
   const iconClass = block
     .getElement('icon')

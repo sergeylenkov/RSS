@@ -7,12 +7,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/__tests__/**/*.test.tsx', '**/__tests__/**/*.test.ts'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.test.json',
-    },
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.test.json' }],
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
   moduleNameMapper: {

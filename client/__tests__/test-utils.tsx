@@ -31,7 +31,7 @@ export function renderWithProviders(
       preloadedState as State | undefined
     );
 
-  function Wrapper({ children }: { children: ReactNode }): JSX.Element {
+  function Wrapper({ children }: { children: ReactNode }): React.JSX.Element {
     const content = useRouter ? (
       <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
     ) : (

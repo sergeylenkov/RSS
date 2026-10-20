@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ReloadIcon(): JSX.Element {
+function ReloadIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <g>
@@ -12,7 +12,7 @@ function ReloadIcon(): JSX.Element {
   );
 }
 
-function AddIcon(): JSX.Element {
+function AddIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <g fill="none">
@@ -23,7 +23,7 @@ function AddIcon(): JSX.Element {
   );
 }
 
-function EditIcon(): JSX.Element {
+function EditIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <polygon
@@ -36,7 +36,7 @@ function EditIcon(): JSX.Element {
   );
 }
 
-function CloseIcon(): JSX.Element {
+function CloseIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <g>
@@ -47,7 +47,7 @@ function CloseIcon(): JSX.Element {
   );
 }
 
-function TrashIcon(): JSX.Element {
+function TrashIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path
@@ -58,7 +58,7 @@ function TrashIcon(): JSX.Element {
   );
 }
 
-function SettingsIcon(): JSX.Element {
+function SettingsIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path
@@ -69,7 +69,7 @@ function SettingsIcon(): JSX.Element {
   );
 }
 
-function ReadIcon(): JSX.Element {
+function ReadIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" />
@@ -77,7 +77,7 @@ function ReadIcon(): JSX.Element {
   );
 }
 
-function FavoriteIcon(): JSX.Element {
+function FavoriteIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path d="M17,18L12,15.82L7,18V5H17M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z" />
@@ -85,7 +85,7 @@ function FavoriteIcon(): JSX.Element {
   );
 }
 
-function FavoriteSelectedIcon(): JSX.Element {
+function FavoriteSelectedIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z" />
@@ -93,7 +93,7 @@ function FavoriteSelectedIcon(): JSX.Element {
   );
 }
 
-function CheckmarkIcon(): JSX.Element {
+function CheckmarkIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24">
       <path

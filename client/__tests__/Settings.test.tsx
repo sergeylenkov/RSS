@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from './test-utils';
 import { Settings } from '../src/components/settings/Settings';
 
@@ -20,13 +20,18 @@ describe('Settings', () => {
     expect(screen.getByText('Темная тема')).toBeInTheDocument();
   });
 
-  test('closes the popup when clicking outside', () => {
+  test('closes the popup when clicking outside', async () => {
     renderWithProviders(<Settings />);
 
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('Темная тема')).toBeInTheDocument();
 
     fireEvent.click(document.body);
-    expect(screen.queryByText('Темная тема')).not.toBeInTheDocument();
+
+    // The popup unmounts only after the CSSTransition exit animation
+    // completes, so we wait for it to leave the DOM.
+    await waitFor(() => {
+      expect(screen.queryByText('Темная тема')).not.toBeInTheDocument();
+    });
   });
 });

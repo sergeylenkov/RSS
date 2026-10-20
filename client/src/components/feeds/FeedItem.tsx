@@ -28,7 +28,7 @@ export function FeedItem({
   onSelect,
   onDelete,
   onChange,
-}: FeedProps): JSX.Element {
+}: FeedProps): React.JSX.Element {
   const titleFieldRef = useRef<HTMLInputElement>(null);
 
   const onChangeTitle = (): void => {

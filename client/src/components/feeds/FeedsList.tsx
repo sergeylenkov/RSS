@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
+import { useSelector } from 'react-redux';
 import {
   feedsAdd,
   feedsDelete,
@@ -20,8 +21,8 @@ import { FeedItem } from './FeedItem';
 
 import './FeedsList.scss';
 
-export function FeedsList(): JSX.Element {
-  const dispatch = useDispatch();
+export function FeedsList(): React.JSX.Element {
+  const dispatch = useAppDispatch();
   const isFeedsEditing = useSelector<State, boolean>(
     (state) => state.isFeedsEditing
   );

@@ -8,7 +8,8 @@ import {
   updateUnviewedCount,
   updateViewed,
 } from '../../store/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
+import { useSelector } from 'react-redux';
 import {
   allEntries,
   Entry,
@@ -25,7 +26,7 @@ import { EntryItemRef } from './EntryItem';
 
 import './EntriesList.scss';
 
-export function EntriesList(): JSX.Element {
+export function EntriesList(): React.JSX.Element {
   const { pathname } = useLocation();
   const isInitialized = useSelector<State, boolean>(
     (state) => state.isInitialized
@@ -34,10 +35,10 @@ export function EntriesList(): JSX.Element {
     (state) => state.isCollapseLong
   );
   const entries = useSelector<State, Entry[]>((state) => state.entries);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const entryItems = useRef<Map<number, HTMLDivElement>>(new Map()).current;
   const viewedIds = useRef<Set<number>>(new Set()).current;
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver | null>(null);
 
   const OnViewDebonce = debounce(() => {
     setViewed([...viewedIds]).then(() => {

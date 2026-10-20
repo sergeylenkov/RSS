@@ -17,7 +17,7 @@ export function MenuButton({
   count,
   title,
   onClick,
-}: MenuButtonProps): JSX.Element {
+}: MenuButtonProps): React.JSX.Element {
   const onClickHandle = useCallback(() => {
     if (!isSelected) {
       onClick();

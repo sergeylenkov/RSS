@@ -4,16 +4,8 @@ import { renderWithProviders } from './test-utils';
 import { SettingsPopup } from '../src/components/settings/SettingsPopup';
 
 describe('SettingsPopup', () => {
-  test('renders nothing when isVisible = false', () => {
-    const { container } = renderWithProviders(
-      <SettingsPopup isVisible={false} />
-    );
-
-    expect(container).toBeEmptyDOMElement();
-  });
-
-  test('renders settings labels when isVisible = true', () => {
-    renderWithProviders(<SettingsPopup isVisible />);
+  test('renders settings labels', () => {
+    renderWithProviders(<SettingsPopup />);
 
     expect(screen.getByText('Темная тема')).toBeInTheDocument();
     expect(screen.getByText('Сворачивать длинные посты')).toBeInTheDocument();
@@ -22,13 +14,13 @@ describe('SettingsPopup', () => {
   });
 
   test('renders three checkboxes', () => {
-    renderWithProviders(<SettingsPopup isVisible />);
+    renderWithProviders(<SettingsPopup />);
 
     expect(screen.getAllByRole('checkbox')).toHaveLength(3);
   });
 
   test('toggles theme checkbox on click', () => {
-    renderWithProviders(<SettingsPopup isVisible />);
+    renderWithProviders(<SettingsPopup />);
 
     const themeCheckbox = screen.getByLabelText('Темная тема') as HTMLInputElement;
     const initial = themeCheckbox.checked;
@@ -39,11 +31,18 @@ describe('SettingsPopup', () => {
   });
 
   test('renders a days input', () => {
-    renderWithProviders(<SettingsPopup isVisible />);
+    renderWithProviders(<SettingsPopup />);
 
     const daysInput = screen.getByRole('textbox') as HTMLInputElement;
 
     expect(daysInput).toBeInTheDocument();
     expect(daysInput.value).not.toBe('');
+  });
+
+  test('forwards ref to the root element', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    renderWithProviders(<SettingsPopup ref={ref} />);
+
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });

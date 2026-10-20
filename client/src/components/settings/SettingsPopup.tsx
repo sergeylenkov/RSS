@@ -1,11 +1,12 @@
-import React, { MouseEvent, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { forwardRef, MouseEvent, Ref, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import {
   toggleTheme,
   toggleCollapseLong,
   updateKeepDays,
   toggleGrid,
 } from '../../store/actions';
+import { useAppDispatch } from '../../store/hooks';
 import { State } from '../../store/reducers';
 import { Bem } from '../../utils/bem';
 
@@ -13,13 +14,10 @@ import './SettingsPopup.scss';
 
 const block = new Bem('settings');
 
-interface SettingsProps {
-  isVisible: boolean;
-}
-
-export function SettingsPopup({
-  isVisible,
-}: SettingsProps): JSX.Element | null {
+function SettingsPopupContent(
+  _props: unknown,
+  ref: Ref<HTMLDivElement>
+): React.JSX.Element {
   const collapseFieldRef = useRef<HTMLInputElement>(null);
   const daysFieldRef = useRef<HTMLInputElement>(null);
   const themeFieldRef = useRef<HTMLInputElement>(null);
@@ -30,7 +28,7 @@ export function SettingsPopup({
   );
   const isGrid = useSelector<State, boolean>((state) => state.isGrid);
   const keepDays = useSelector<State, number>((state) => state.keepDays);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const collapseId = '0';
   const themeId = '1';
   const gridId = '2';
@@ -59,16 +57,12 @@ export function SettingsPopup({
     e.nativeEvent.stopImmediatePropagation();
   };
 
-  if (!isVisible) {
-    return null;
-  }
-
   const itemClass = block.getElement('item').toString();
   const labelClass = block.getElement('label').toString();
   const checkboxClass = block.getElement('checkbox').toString();
 
   return (
-    <div className={block.toString()} onClick={onClick}>
+    <div ref={ref} className={block.toString()} onClick={onClick}>
       <div className={itemClass}>
         <input
           ref={themeFieldRef}
@@ -127,3 +121,5 @@ export function SettingsPopup({
     </div>
   );
 }
+
+export const SettingsPopup = forwardRef(SettingsPopupContent);

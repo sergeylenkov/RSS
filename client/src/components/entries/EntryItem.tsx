@@ -20,7 +20,7 @@ interface EntryProps {
 export function EntryItem(
   { entry, isCollapseLong, onSetRead, onSetFavorite }: EntryProps,
   ref: Ref<HTMLDivElement>
-): JSX.Element {
+): React.JSX.Element {
   const [isExpanded, setExpanded] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
 

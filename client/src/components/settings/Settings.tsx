@@ -1,10 +1,11 @@
-import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
+import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { SettingsPopup } from './SettingsPopup';
 import { SettingsButton } from './SettingsButton';
 
-export function Settings(): JSX.Element {
+export function Settings(): React.JSX.Element {
   const [isSettingsVisible, setSettingsVisible] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const hideSettings = useCallback(() => {
     isSettingsVisible && setSettingsVisible(false);
@@ -37,12 +38,13 @@ export function Settings(): JSX.Element {
 
       <CSSTransition
         in={isSettingsVisible}
+        nodeRef={popupRef}
         timeout={200}
         classNames="fade"
         unmountOnExit
         mountOnEnter
       >
-        <SettingsPopup isVisible={isSettingsVisible} />
+        <SettingsPopup ref={popupRef} />
       </CSSTransition>
     </>
   );
