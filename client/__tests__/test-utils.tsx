@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { createStore, Store } from 'redux';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import rootReducer, { State } from '../src/store/reducers';
+import rootReducer, { initialState, State } from '../src/store/reducers';
 
 interface Options extends Omit<RenderOptions, 'wrapper'> {
   route?: string;
@@ -28,7 +28,9 @@ export function renderWithProviders(
     store ||
     createStore(
       rootReducer as unknown as (state: State | undefined, action: unknown) => State,
-      preloadedState as State | undefined
+      // `preloadedState` is only a set of overrides: merging it with
+      // `initialState` keeps every other field defined.
+      { ...initialState, ...preloadedState } as State
     );
 
   function Wrapper({ children }: { children: ReactNode }): React.JSX.Element {

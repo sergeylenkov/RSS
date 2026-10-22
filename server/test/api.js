@@ -18,6 +18,10 @@ const app = require("../index");
 
 const QUIET_FEED_URL = "https://quiet.example/rss";
 
+// The feed is seeded with a `last_update` of 1970, so every item below is
+// "newer" than the last synchronisation would suggest.
+const DATE_AFTER_UPDATE = "2010-01-01T00:00:00.000Z";
+
 const FEED_ITEMS = [
   {
     guid: "g1",
@@ -252,6 +256,196 @@ describe("GET /feeds/update", function () {
 
       assert(titles.includes("Interesting"));
       assert(titles.includes("Boring"));
+    } finally {
+      Parser.prototype.parseURL = original;
+    }
+  });
+
+  it("does not slip back into the old wrong filter", async function () {
+    // Regression: `newEntry.date >= feed.lastUpdate` used to hide every item
+    // published before the previous synchronisation. Here the feed is marked
+    // as synchronised *now*, while the items are from 2001, so under the old
+    // comparison nothing would be stored.
+    await run("DELETE FROM entries");
+    await run("UPDATE feeds SET last_update = ? WHERE rss = ?", [
+      new Date().toISOString(),
+      QUIET_FEED_URL,
+    ]);
+
+    const rows = await all("SELECT last_update FROM feeds WHERE rss = ?", [
+      QUIET_FEED_URL,
+    ]);
+
+    assert.strictEqual(rows.length, 1);
+    assert(
+      new Date(rows[0].last_update).getTime() >
+        new Date(FEED_ITEMS[0].isoDate).getTime(),
+      "precondition: the feed looks newer than the items it publishes"
+    );
+
+    const original = Parser.prototype.parseURL;
+
+    Parser.prototype.parseURL = function parseURL(url, callback) {
+      if (url === QUIET_FEED_URL) {
+        return callback(null, { title: "Quiet", items: FEED_ITEMS });
+      }
+
+      return original.call(this, url, callback);
+    };
+
+    try {
+      const res = await request(app).get("/feeds/update").expect(200);
+
+      assert.strictEqual(res.body.length, FEED_ITEMS.length);
+    } finally {
+      Parser.prototype.parseURL = original;
+    }
+  });
+
+  it("picks up items added after the previous update", async function () {
+    // The second synchronisation must not lose new items either: `last_update`
+    // is already in the past, but the guid lookup is what decides whether an
+    // item is new.
+    await run("DELETE FROM entries");
+
+    const fresh = {
+      guid: "g3",
+      link: "https://quiet.example/3",
+      title: "Fresh",
+      content: "Just published",
+      isoDate: new Date(DATE_AFTER_UPDATE).toISOString(),
+    };
+
+    const original = Parser.prototype.parseURL;
+
+    Parser.prototype.parseURL = function parseURL(url, callback) {
+      if (url === QUIET_FEED_URL) {
+        return callback(null, { title: "Quiet", items: [fresh] });
+      }
+
+      return original.call(this, url, callback);
+    };
+
+    try {
+      await request(app).get("/feeds/update").expect(200);
+
+      const titles = (await all("SELECT title FROM entries")).map(
+        (row) => row.title
+      );
+
+      assert.deepStrictEqual(titles, ["Fresh"]);
+    } finally {
+      Parser.prototype.parseURL = original;
+    }
+  });
+
+  it("does not create duplicates on a repeated update", async function () {
+    const original = Parser.prototype.parseURL;
+
+    Parser.prototype.parseURL = function parseURL(url, callback) {
+      if (url === QUIET_FEED_URL) {
+        return callback(null, { title: "Quiet", items: FEED_ITEMS });
+      }
+
+      return original.call(this, url, callback);
+    };
+
+    try {
+      await request(app).get("/feeds/update").expect(200);
+      await request(app).get("/feeds/update").expect(200);
+
+      const rows = await all(
+        "SELECT guid, COUNT(*) as total FROM entries GROUP BY guid"
+      );
+
+      rows.forEach((row) => {
+        assert.strictEqual(row.total, 1, `guid ${row.guid} must be unique`);
+      });
+    } finally {
+      Parser.prototype.parseURL = original;
+    }
+  });
+
+  it("keeps the user flags of an already known entry", async function () {
+    await run("DELETE FROM entries");
+
+    const original = Parser.prototype.parseURL;
+
+    Parser.prototype.parseURL = function parseURL(url, callback) {
+      if (url === QUIET_FEED_URL) {
+        return callback(null, { title: "Quiet", items: FEED_ITEMS });
+      }
+
+      return original.call(this, url, callback);
+    };
+
+    try {
+      await request(app).get("/feeds/update").expect(200);
+
+      const stored = await all(
+        "SELECT id, read, viewed, favorite, title FROM entries WHERE guid = ?",
+        ["g1"]
+      );
+
+      const id = stored[0].id;
+
+      await run("UPDATE entries SET read = 1, favorite = 1 WHERE id = ?", [id]);
+
+      // The title in the feed changes, so the row is updated on the next sync.
+      Parser.prototype.parseURL = function parseURL(url, callback) {
+        if (url === QUIET_FEED_URL) {
+          return callback(null, {
+            title: "Quiet",
+            items: [{ ...FEED_ITEMS[0], title: "Renamed" }],
+          });
+        }
+
+        return original.call(this, url, callback);
+      };
+
+      await request(app).get("/feeds/update").expect(200);
+
+      const rows = await all(
+        "SELECT title, read, favorite FROM entries WHERE id = ?",
+        [id]
+      );
+
+      assert.strictEqual(rows[0].title, "Renamed");
+      assert.strictEqual(rows[0].read, 1, "read flag must survive the sync");
+      assert.strictEqual(
+        rows[0].favorite,
+        1,
+        "favorite flag must survive the sync"
+      );
+    } finally {
+      Parser.prototype.parseURL = original;
+    }
+  });
+
+  it("survives a feed without an image", async function () {
+    // `rss.image.url` used to throw on such feeds during the update.
+    const original = Parser.prototype.parseURL;
+
+    Parser.prototype.parseURL = function parseURL(url, callback) {
+      if (url === QUIET_FEED_URL) {
+        return callback(null, {
+          title: "No image",
+          image: undefined,
+          items: [{ ...FEED_ITEMS[0], guid: "no-image" }],
+        });
+      }
+
+      return original.call(this, url, callback);
+    };
+
+    try {
+      await request(app).get("/feeds/update").expect(200);
+
+      const rows = await all("SELECT image FROM feeds WHERE rss = ?", [
+        QUIET_FEED_URL,
+      ]);
+
+      assert.strictEqual(rows[0].image, "", "missing image becomes empty");
     } finally {
       Parser.prototype.parseURL = original;
     }

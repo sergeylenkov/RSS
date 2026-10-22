@@ -20,14 +20,21 @@ import {
   setRead,
   setViewed,
 } from '../../data';
-import { debounce } from '../../utils';
+import { debounce, normalizePath } from '../../utils';
 import { State } from '../../store/reducers';
 import { EntryItemRef } from './EntryItem';
 
 import './EntriesList.scss';
 
+/** Tabs the list knows how to load. Any other path shows nothing. */
+const TAB_PATHS = ['/', '/all', '/read', '/favorites'];
+
 export function EntriesList(): React.JSX.Element {
   const { pathname } = useLocation();
+  // Normalising makes the comparison below tolerant to a trailing slash or a
+  // percent-encoded character, so `/all/` and `/%61ll` still open the "all"
+  // tab instead of silently falling through every check.
+  const path = normalizePath(pathname);
   const isInitialized = useSelector<State, boolean>(
     (state) => state.isInitialized
   );
@@ -101,8 +108,18 @@ export function EntriesList(): React.JSX.Element {
   };
 
   useEffect(() => {
-    getEntries(pathname);
-  }, [pathname]);
+    if (!TAB_PATHS.includes(path)) {
+      // Unknown route: drop the entries of the previous tab instead of
+      // rendering them as if they belonged to the current one.
+      dispatch(entriesUpdated([]));
+      return;
+    }
+
+    getEntries(path);
+    // `isInitialized` is a dependency on purpose: on the very first render the
+    // feeds are usually not loaded yet, `getEntries` bails out early and the
+    // list would stay empty until the user switched tabs.
+  }, [path, isInitialized]);
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
