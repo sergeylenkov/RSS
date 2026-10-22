@@ -68,13 +68,13 @@ export function EntryItem(
       <div ref={titleRef} className={block.getElement('title').toString()}>
         <a href={entry.link}>{entry.title}</a>
       </div>
-      <div className={feedBlock.toString()}>
+            <div className={feedBlock.toString()}>
         <div
           className={feedBlock.getElement('icon').toString()}
-          style={{ backgroundImage: `url(${entry.feed.icon})` }}
+          style={{ backgroundImage: `url(${entry.feed?.icon ?? ''})` }}
         />
         <div className={feedBlock.getElement('title').toString()}>
-          {entry.feed.title}
+          {entry.feed?.title ?? ''}
         </div>
       </div>
       <div

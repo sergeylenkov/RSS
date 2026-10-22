@@ -42,7 +42,8 @@ export interface Feed {
 export interface Entry {
   id: number;
   feedId: number;
-  feed: Feed;
+  /** Attached from the feeds list; undefined until the feeds are loaded. */
+  feed?: Feed;
   title: string;
   description: string;
   link: string;

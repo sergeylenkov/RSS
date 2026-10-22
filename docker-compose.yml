@@ -1,13 +1,16 @@
-version: "3"
 services:
   server:
     build: server/
     volumes:
-      - C:/Users/sergl/Projects/rss/server/db:/app/db
+      # Relative to this file, so the setup works on any machine.
+      - ./server/db:/app/db
     ports:
       - 9000:9000
 
   client:
     build: client/
+    depends_on:
+      - server
     ports:
       - 9001:80
+

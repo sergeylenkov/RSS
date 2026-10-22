@@ -6,3 +6,9 @@ build
 .scannerwork
 reports
 server/web/static
+
+# Generated artefacts that must not be committed
+coverage/
+eslint-report.json
+*.log
+

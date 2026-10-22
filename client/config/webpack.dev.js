@@ -7,5 +7,14 @@ module.exports = merge(common, {
   devServer: {
     port: 9090,
     historyApiFallback: true,
+    // The client talks to `/feeds` and `/entries`, so the dev server forwards
+    // them to the API instead of requiring a hardcoded host.
+    proxy: [
+      {
+        context: ['/feeds', '/entries'],
+        target: process.env.API_URL || 'http://localhost:9000',
+        changeOrigin: true,
+      },
+    ],
   },
 });

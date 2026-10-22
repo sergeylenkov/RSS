@@ -1,8 +1,15 @@
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
+/**
+ * Base URL of the API. In a container the client is usually served from the
+ * same origin as the API, so an empty value (a relative URL) is the default.
+ */
+const apiUrl = process.env.API_URL ?? 'http://localhost:9000/';
 
 module.exports = {
   mode: 'development',
@@ -18,6 +25,9 @@ module.exports = {
     plugins: [new TsconfigPathsPlugin()],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __API_URL__: JSON.stringify(apiUrl),
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

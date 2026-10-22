@@ -25,7 +25,14 @@ export interface State {
   isCollapseLong: boolean;
   keepDays: number;
   isGrid: boolean;
+  /** Total number of loaded entries (all tabs). */
   entriesCount: number;
+  /** Entries in the "Все" tab. */
+  allEntriesCount: number;
+  /** Entries in the "Прочитанное" tab. */
+  readEntriesCount: number;
+  /** Entries in the "Избранное" tab. */
+  favoriteEntriesCount: number;
   unviewedCount: number;
   feeds: Feed[];
   allEntries: Entry[];
@@ -51,6 +58,9 @@ export const initialState: State = {
     ? JSON.parse(<string>localStorage.getItem('grid'))
     : false,
   entriesCount: 0,
+  allEntriesCount: 0,
+  readEntriesCount: 0,
+  favoriteEntriesCount: 0,
   unviewedCount: 0,
   feeds: [],
   allEntries: [],

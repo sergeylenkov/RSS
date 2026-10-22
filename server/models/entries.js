@@ -1,4 +1,5 @@
 const db = require("../db");
+const utils = require("../utils");
 
 module.exports.all = function () {
   return new Promise((resolve, reject) => {
@@ -7,7 +8,7 @@ module.exports.all = function () {
       [30],
       (error, rows) => {
         if (error) {
-          reject(err);
+          reject(error);
           return;
         }
 
@@ -98,16 +99,27 @@ module.exports.read = function () {
 
 module.exports.setViewed = function (ids) {
   return new Promise((resolve, reject) => {
-    const idsQuery = ids.join(",");
+    // Only numeric ids are accepted: the list is interpolated as placeholders,
+    // never as raw SQL, so a malformed payload cannot inject a query.
+    const values = (Array.isArray(ids) ? ids : [])
+      .map((id) => Number(id))
+      .filter((id) => Number.isInteger(id));
+
+    if (values.length === 0) {
+      resolve({ ids: [], isViewed: true });
+      return;
+    }
+
+    const placeholders = values.map(() => "?").join(",");
 
     db.run(
-      `UPDATE entries SET viewed = ? WHERE id IN(${idsQuery})`,
-      [true],
+      `UPDATE entries SET viewed = ? WHERE id IN(${placeholders})`,
+      [true, ...values],
       (error) => {
         if (error) {
           reject(error);
         } else {
-          resolve({ ids: ids, isViewed: true });
+          resolve({ ids: values, isViewed: true });
         }
       }
     );
@@ -115,15 +127,17 @@ module.exports.setViewed = function (ids) {
 };
 
 module.exports.setRead = function (id, isRead) {
+  const entryId = Number(id);
+
   return new Promise((resolve, reject) => {
     db.run(
       `UPDATE entries SET read = ? WHERE id = ?`,
-      [isRead, id],
+      [isRead, entryId],
       (error) => {
         if (error) {
           reject(error);
         } else {
-          resolve({ id: id, isRead: isRead });
+          resolve({ id: entryId, isRead: isRead });
         }
       }
     );
@@ -131,15 +145,17 @@ module.exports.setRead = function (id, isRead) {
 };
 
 module.exports.setFavorite = function (id, isFavorite) {
+  const entryId = Number(id);
+
   return new Promise((resolve, reject) => {
     db.run(
       `UPDATE entries SET favorite = ? WHERE id = ?`,
-      [isFavorite, id],
+      [isFavorite, entryId],
       (error) => {
         if (error) {
           reject(error);
         } else {
-          resolve({ id: id, isFavorite: isFavorite });
+          resolve({ id: entryId, isFavorite: isFavorite });
         }
       }
     );
@@ -148,20 +164,36 @@ module.exports.setFavorite = function (id, isFavorite) {
 
 module.exports.clear = function (days) {
   return new Promise((resolve, reject) => {
+    const keep = Number(days);
+
+    if (!Number.isInteger(keep) || keep < 0) {
+      reject({ message: "Days must be a non-negative integer" });
+      return;
+    }
+
     const date = new Date();
-    date.setDate(date.getDate() - days);
+    date.setDate(date.getDate() - keep);
 
+    // Old entries are removed unless the user marked them as favorite.
     db.run(
-      `DELETE FROM entries WHERE date < ? AND favorite = ? AND read = ?`,
-      [date.toISOString(), false, false],
-      (error) => {
-        db.run("VACUUM", []);
-
+      `DELETE FROM entries WHERE date < ? AND favorite = ?`,
+      [date.toISOString(), false],
+      function (error) {
         if (error) {
           reject(error);
-        } else {
-          resolve({ days: days });
+          return;
         }
+
+        const removed = this.changes;
+
+        db.run("VACUUM", [], (vacuumError) => {
+          if (vacuumError) {
+            // Cleanup is best effort: entries are already gone.
+            utils.log("VACUUM error", vacuumError);
+          }
+
+          resolve({ days: keep, removed: removed });
+        });
       }
     );
   });

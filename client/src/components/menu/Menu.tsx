@@ -29,8 +29,14 @@ export function Menu(): React.JSX.Element {
   const unviewedCount = useSelector<State, number>(
     (state) => state.unviewedCount
   );
-  const entriesCount = useSelector<State, number>(
-    (state) => state.entriesCount
+    const entriesCount = useSelector<State, number>(
+    (state) => state.allEntriesCount
+  );
+  const readEntriesCount = useSelector<State, number>(
+    (state) => state.readEntriesCount
+  );
+  const favoriteEntriesCount = useSelector<State, number>(
+    (state) => state.favoriteEntriesCount
   );
 
   const onUpdate = useCallback(() => {
@@ -60,7 +66,7 @@ export function Menu(): React.JSX.Element {
         onUpdate={onUpdate}
         onClick={() => navigate('/')}
       />
-      <MenuButton
+            <MenuButton
         title={'Все'}
         isSelected={pathname === '/all'}
         count={entriesCount}
@@ -69,13 +75,13 @@ export function Menu(): React.JSX.Element {
       <MenuButton
         title={'Прочитанное'}
         isSelected={pathname === '/read'}
-        count={entriesCount}
+        count={readEntriesCount}
         onClick={() => navigate('/read')}
       />
       <MenuButton
         title={'Избранное'}
         isSelected={pathname === '/favorites'}
-        count={entriesCount}
+        count={favoriteEntriesCount}
         onClick={() => navigate('/favorites')}
       />
     </div>

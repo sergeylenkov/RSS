@@ -1,20 +1,39 @@
 import { Entry, Feed } from '../../data';
 import { State } from './index';
 
-const feedsDict: { [key: string]: Feed } = {};
+/**
+ * Attaches feeds to entries using the feeds stored in the state.
+ * Entries whose feed is not known yet keep `feed` undefined and are resolved
+ * later, when the feeds arrive (see `updateFeeds`), so the order of the two
+ * requests no longer matters.
+ */
+function withFeeds(entries: Entry[], feeds: Feed[]): Entry[] {
+  if (feeds.length === 0) {
+    return entries;
+  }
+
+  const feedsById = new Map<number, Feed>();
+  feeds.forEach((feed) => {
+    feedsById.set(feed.id, feed);
+  });
+
+  return entries.map((entry) => {
+    const feed = feedsById.get(entry.feedId);
+
+    return entry.feed === feed ? entry : { ...entry, feed };
+  });
+}
 
 export function updateFeeds(state: State, feeds: Feed[]): State {
   feeds.forEach((feed: Feed) => {
-    feedsDict[feed.id] = feed;
-
     const iconId = `icon_${feed.id}`;
 
     feed.icon = localStorage.getItem(iconId) || feed.iconUrl;
 
     if (!localStorage.getItem(iconId)) {
-      toDataURL(feed.iconUrl).then(data => {
+      toDataURL(feed.iconUrl).then((data) => {
         localStorage.setItem(iconId, data);
-      });    
+      });
     }
   });
 
@@ -23,6 +42,8 @@ export function updateFeeds(state: State, feeds: Feed[]): State {
     isUpdating: false,
     isInitialized: true,
     feeds: [...feeds],
+    allEntries: withFeeds(state.allEntries, feeds),
+    entries: withFeeds(state.entries, feeds),
   };
 }
 
@@ -31,9 +52,18 @@ export function updateFeed(state: State, id: number, newFeed: Feed): State {
     return feed.id === id ? { ...feed, ...newFeed } : feed;
   });
 
+  // Entries keep a copy of their feed, so it must be refreshed as well.
+  const allEntries = state.allEntries.map((entry) => {
+    return entry.feedId === id
+      ? { ...entry, feed: { ...entry.feed, ...newFeed } }
+      : entry;
+  });
+
   return {
     ...state,
     feeds: feeds,
+    allEntries: allEntries,
+    entries: filterEntries(state.selectedFeeds, allEntries),
   };
 }
 
@@ -53,9 +83,16 @@ export function removeFeed(state: State, id: number): State {
     return feed.id !== id;
   });
 
+  const selectedFeeds = state.selectedFeeds.filter((feedId) => feedId !== id);
+  const allEntries = state.allEntries.filter((entry) => entry.feedId !== id);
+
   return {
     ...state,
     feeds: feeds,
+    selectedFeeds: selectedFeeds,
+    allEntries: allEntries,
+    entries: filterEntries(selectedFeeds, allEntries),
+    entriesCount: allEntries.length,
   };
 }
 
@@ -100,7 +137,8 @@ export function updateUnviewedCount(state: State): State {
 }
 
 export function updateViewed(state: State, ids: number[]): State {
-  let entries = state.entries.map((entry: Entry) => {
+  // `allEntries` is the source of truth: `entries` is only its filtered view.
+  const allEntries = state.allEntries.map((entry: Entry) => {
     if (ids.indexOf(entry.id) !== -1) {
       return { ...entry, isViewed: true };
     }
@@ -108,11 +146,10 @@ export function updateViewed(state: State, ids: number[]): State {
     return entry;
   });
 
-  entries = filterEntries(state.selectedFeeds, entries);
-
   return {
     ...state,
-    entries: entries,
+    allEntries: allEntries,
+    entries: filterEntries(state.selectedFeeds, allEntries),
   };
 }
 
@@ -121,42 +158,43 @@ export function updateFavorite(
   id: number,
   isFavorite: boolean
 ): State {
-  let entries = state.entries.map((entry: Entry) => {
+  const allEntries = state.allEntries.map((entry: Entry) => {
     return entry.id === id ? { ...entry, isFavorite: isFavorite } : entry;
   });
 
-  entries = filterEntries(state.selectedFeeds, entries);
-
   return {
     ...state,
-    entries: entries,
+    allEntries: allEntries,
+    entries: filterEntries(state.selectedFeeds, allEntries),
   };
 }
 
 export function updateRead(state: State, id: number, isRead: boolean): State {
-  let entries = state.entries.map((entry: Entry) => {
+  const allEntries = state.allEntries.map((entry: Entry) => {
     return entry.id === id ? { ...entry, isRead: isRead } : entry;
   });
 
-  entries = filterEntries(state.selectedFeeds, entries);
-
   return {
     ...state,
-    entries: entries,
+    allEntries: allEntries,
+    entries: filterEntries(state.selectedFeeds, allEntries),
   };
 }
 
 export function updateEntries(state: State, entries: Entry[]): State {
-  updateFeedsInEntries(entries);
-
-  const filteredEntries = filterEntries(state.selectedFeeds, entries);
+  const allEntries = withFeeds(entries, state.feeds);
+  const filteredEntries = filterEntries(state.selectedFeeds, allEntries);
+  const counts = countEntries(allEntries);
 
   return {
     ...state,
     isUpdating: false,
-    entriesCount: entries.length,
+    entriesCount: allEntries.length,
+    allEntriesCount: counts.all,
+    readEntriesCount: counts.read,
+    favoriteEntriesCount: counts.favorite,
     entries: [...filteredEntries],
-    allEntries: [...entries],
+    allEntries: [...allEntries],
   };
 }
 
@@ -164,7 +202,7 @@ export function updateEntriesCount(state: State): State {
   const feeds = [...state.feeds];
 
   feeds.forEach((feed: Feed) => {
-    feed.count = state.entries.filter((entry: Entry) => {
+    feed.count = state.allEntries.filter((entry: Entry) => {
       return entry.feedId === feed.id;
     }).length;
   });
@@ -179,7 +217,7 @@ function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
   let entries: Entry[] = [];
 
   if (selectedFeeds.length > 0) {
-    entries = allEntries.filter((entry: Entry) => {
+    entries = allEntries.filter((entry) => {
       return selectedFeeds.includes(entry.feedId);
     });
   } else {
@@ -189,26 +227,34 @@ function filterEntries(selectedFeeds: number[], allEntries: Entry[]): Entry[] {
   return entries;
 }
 
-function getFeedById(id: number): Feed {
-  return feedsDict[id];
-}
+/** Per-tab counters, computed from the full (unfiltered) entry list. */
+function countEntries(entries: Entry[]): {
+  all: number;
+  read: number;
+  favorite: number;
+} {
+  let read = 0;
+  let favorite = 0;
 
-function updateFeedsInEntries(entries: Entry[]): void {
   entries.forEach((entry) => {
-    entry.feed = getFeedById(entry.feedId);
+    if (entry.isRead) read += 1;
+    if (entry.isFavorite) favorite += 1;
   });
+
+  return { all: entries.length, read, favorite };
 }
 
 function toDataURL(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
     fetch(url)
-    .then(response => response.blob())
-    .then(blob => {
-      const reader = new FileReader()
+      .then((response) => response.blob())
+      .then((blob) => {
+        const reader = new FileReader();
 
-      reader.onloadend = () => resolve(reader.result as string)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-    });
-  });  
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      })
+      .catch(reject);
+  });
 }
