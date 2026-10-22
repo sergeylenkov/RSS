@@ -12,3 +12,6 @@ coverage/
 eslint-report.json
 *.log
 
+# Server build output
+server/dist/
+

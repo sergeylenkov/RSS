@@ -2,11 +2,13 @@
   "name": "server",
   "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js --p=9000 --db=db/database.sqlite",
-    "debug": "nodemon index.js --p=9000 --debug --db=db/database.sqlite",
-    "test": "mocha test/api.js --db=test/test.sqlite"
+    "start": "tsx index.ts --p=9000 --db=db/database.sqlite",
+    "debug": "nodemon --exec tsx index.ts --p=9000 --debug --db=db/database.sqlite",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "test": "mocha --require tsx test/api.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,11 +22,18 @@
     "sqlite3": "^6.0.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^26.6.5",
+    "@types/supertest": "^7.2.1",
     "minimist": "^1.2.5",
     "mocha": "^10.2.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   },
   "allowScripts": {
-    "sqlite3@6.0.1": true
+    "sqlite3@6.0.1": true,
+    "esbuild@0.28.2": true
   }
 }

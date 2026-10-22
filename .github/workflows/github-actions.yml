@@ -1,7 +1,7 @@
 name: github-actions
 on: [push, pull_request]
 jobs:
-  build:
+  test-client:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -46,4 +46,10 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Typecheck server
+        run: npm run typecheck
+
+      - name: Test server
+        run: npm test
 

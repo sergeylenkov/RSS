@@ -1,1 +1,7 @@
 node_modules
+dist
+db
+test
+tsconfig.test.json
+Dockerfile
+.dockerignore
