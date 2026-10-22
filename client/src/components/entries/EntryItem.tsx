@@ -53,7 +53,9 @@ export function EntryItem(
     }
 
     return () => {
-      element && element.removeEventListener('mouseup', onRead);
+      if (element) {
+        element.removeEventListener('mouseup', onRead);
+      }
     };
   }, [entry.isRead]);
 
@@ -109,3 +111,4 @@ export function EntryItem(
 }
 
 export const EntryItemRef = forwardRef(EntryItem);
+

@@ -14,7 +14,9 @@ export function Settings(): React.JSX.Element {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const hideSettings = useCallback(() => {
-    isSettingsVisible && setSettingsVisible(false);
+    if (isSettingsVisible) {
+      setSettingsVisible(false);
+    }
   }, [isSettingsVisible]);
 
   useEffect(() => {
@@ -55,3 +57,4 @@ export function Settings(): React.JSX.Element {
     </>
   );
 }
+
