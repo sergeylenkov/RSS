@@ -3,6 +3,7 @@
   "version": "1.2.6",
   "private": true,
   "dependencies": {
+    "@reduxjs/toolkit": "^2.13.0",
     "react": "^19.1.10",
     "react-dom": "^19.1.10",
     "react-redux": "^9.3.0",

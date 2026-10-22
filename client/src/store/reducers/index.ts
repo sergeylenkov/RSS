@@ -68,44 +68,52 @@ export const initialState: State = {
   selectedFeeds: [],
 };
 
-function rootReducer(state: State | undefined, action: Actions): State {
+function rootReducer(
+  // `configureStore` types the initial state as `Partial<State>`, so both
+  // shapes are accepted. `createStore` used to pass a full `State` or
+  // `undefined`. The caller is responsible for supplying a complete state.
+  state: State | Partial<State> | undefined,
+  action: Actions
+): State {
   if (!state) {
     return { ...initialState };
   }
 
+  const current = state as State;
+
   switch (action.type) {
     case ActionTypes.FEEDS_UPDATED:
-      return updateFeeds(state, action.feeds);
+      return updateFeeds(current, action.feeds);
 
     case ActionTypes.FEEDS_ADD:
-      return addFeed(state, action.feed);
+      return addFeed(current, action.feed);
 
     case ActionTypes.FEEDS_UPDATE:
-      return updateFeed(state, action.id, action.feed);
+      return updateFeed(current, action.id, action.feed);
 
     case ActionTypes.FEEDS_DELETE:
-      return removeFeed(state, action.id);
+      return removeFeed(current, action.id);
 
     case ActionTypes.FEEDS_SELECT:
-      return selectFeed(state, action.id);
+      return selectFeed(current, action.id);
 
     case ActionTypes.UPDATE_UNVIEWED_COUNT:
-      return updateUnviewedCount(state);
+      return updateUnviewedCount(current);
 
     case ActionTypes.UPDATE_VIEWED:
-      return updateViewed(state, action.ids);
+      return updateViewed(current, action.ids);
 
     case ActionTypes.UPDATE_FAVORITE:
-      return updateFavorite(state, action.id, action.isFavorite);
+      return updateFavorite(current, action.id, action.isFavorite);
 
     case ActionTypes.UPDATE_READ:
-      return updateRead(state, action.id, action.isRead);
+      return updateRead(current, action.id, action.isRead);
 
     case ActionTypes.UPDATE_ENTRIES_COUNT:
-      return updateEntriesCount(state);
+      return updateEntriesCount(current);
 
     case ActionTypes.ENTRIES_LOADED:
-      return updateEntries(state, action.entries);
+      return updateEntries(current, action.entries);
 
     default:
       break;
@@ -113,14 +121,14 @@ function rootReducer(state: State | undefined, action: Actions): State {
 
   if (action.type === ActionTypes.FEEDS_EDITING) {
     return {
-      ...state,
+      ...current,
       isFeedsEditing: action.isEditing,
     };
   }
 
   if (action.type === ActionTypes.ENTRIES_UPDATING) {
     return {
-      ...state,
+      ...current,
       isUpdating: action.isUpdating,
       isUpdateError: false,
     };
@@ -130,14 +138,14 @@ function rootReducer(state: State | undefined, action: Actions): State {
     localStorage.setItem('darkTheme', String(action.isDarkTheme));
 
     return {
-      ...state,
+      ...current,
       isDarkTheme: action.isDarkTheme,
     };
   }
 
   if (action.type === ActionTypes.ENTRIES_UPDATE_ERROR) {
     return {
-      ...state,
+      ...current,
       isUpdating: false,
       isUpdateError: true,
     };
@@ -147,7 +155,7 @@ function rootReducer(state: State | undefined, action: Actions): State {
     localStorage.setItem('collapseLong', String(action.isCollapse));
 
     return {
-      ...state,
+      ...current,
       isCollapseLong: action.isCollapse,
     };
   }
@@ -156,7 +164,7 @@ function rootReducer(state: State | undefined, action: Actions): State {
     localStorage.setItem('keepDays', String(action.days));
 
     return {
-      ...state,
+      ...current,
       keepDays: action.days,
     };
   }
@@ -165,12 +173,12 @@ function rootReducer(state: State | undefined, action: Actions): State {
     localStorage.setItem('grid', String(action.isGrid));
 
     return {
-      ...state,
+      ...current,
       isGrid: action.isGrid,
     };
   }
 
-  return state;
+  return current;
 }
 
 export default rootReducer;
