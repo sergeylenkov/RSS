@@ -117,16 +117,16 @@ export function selectFeed(state: State, id: number): State {
 }
 
 export function updateUnviewedCount(state: State): State {
-  const feeds = [...state.feeds];
   let totalCount = 0;
 
-  feeds.forEach((feed: Feed) => {
+  const feeds = state.feeds.map((feed: Feed) => {
     const count = state.entries.filter((entry: Entry) => {
       return entry.feedId === feed.id && !entry.isViewed;
     }).length;
 
-    feed.count = count;
     totalCount = totalCount + count;
+
+    return feed.count === count ? feed : { ...feed, count };
   });
 
   return {
@@ -199,12 +199,12 @@ export function updateEntries(state: State, entries: Entry[]): State {
 }
 
 export function updateEntriesCount(state: State): State {
-  const feeds = [...state.feeds];
-
-  feeds.forEach((feed: Feed) => {
-    feed.count = state.allEntries.filter((entry: Entry) => {
+  const feeds = state.feeds.map((feed: Feed) => {
+    const count = state.allEntries.filter((entry: Entry) => {
       return entry.feedId === feed.id;
     }).length;
+
+    return feed.count === count ? feed : { ...feed, count };
   });
 
   return {
