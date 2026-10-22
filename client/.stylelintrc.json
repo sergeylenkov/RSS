@@ -1,8 +1,5 @@
 {
-  "plugins": [
-		"stylelint-order",
-    "stylelint-config-rational-order/plugin"
-	],
+  "plugins": ["stylelint-order", "stylelint-config-rational-order/plugin"],
   "extends": [
     "stylelint-config-sass-guidelines",
     "stylelint-config-rational-order"
@@ -13,9 +10,12 @@
     "shorthand-property-no-redundant-values": null,
     "order/properties-order": [],
     "order/properties-alphabetical-order": null,
-    "plugin/rational-order": [true, {
-      "border-in-box-model": false,
-      "empty-line-between-groups": false
-    }]
+    "plugin/rational-order": [
+      true,
+      {
+        "border-in-box-model": false,
+        "empty-line-between-groups": false
+      }
+    ]
   }
 }

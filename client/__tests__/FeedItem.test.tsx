@@ -18,9 +18,7 @@ describe('FeedItem', () => {
   });
 
   test('renders title and counter when not editing', () => {
-    render(
-      <FeedItem {...baseProps} isEditing={false} isSelected={false} />
-    );
+    render(<FeedItem {...baseProps} isEditing={false} isSelected={false} />);
 
     expect(screen.getByText('Test feed')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
@@ -37,9 +35,7 @@ describe('FeedItem', () => {
   });
 
   test('calls onSelect with id when clicking the feed button', () => {
-    render(
-      <FeedItem {...baseProps} isEditing={false} isSelected={false} />
-    );
+    render(<FeedItem {...baseProps} isEditing={false} isSelected={false} />);
 
     fireEvent.click(screen.getByRole('button'));
 

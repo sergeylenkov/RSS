@@ -10,7 +10,9 @@ describe('SettingsButton', () => {
   });
 
   test('adds active modifier when isActive = true', () => {
-    const { container } = render(<SettingsButton isActive onClick={jest.fn()} />);
+    const { container } = render(
+      <SettingsButton isActive onClick={jest.fn()} />
+    );
 
     expect(container.querySelector('.settings-button')).toHaveClass(
       'settings-button',

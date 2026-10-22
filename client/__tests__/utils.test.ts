@@ -55,4 +55,3 @@ describe('normalizePath', () => {
     expect(normalizePath('/unknown')).toBe('/unknown');
   });
 });
-

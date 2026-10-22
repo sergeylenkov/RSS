@@ -26,8 +26,7 @@ const createEntry = (overrides: Partial<Entry> = {}): Entry => ({
   ...overrides,
 });
 
-const longDescription =
-  '<img></img><img></img><img></img><img></img>';
+const longDescription = '<img></img><img></img><img></img><img></img>';
 
 describe('EntryItem', () => {
   test('renders title, feed title and description', () => {
@@ -120,7 +119,9 @@ describe('EntryItem', () => {
       />
     );
 
-    fireEvent.click(container.querySelector('.entry-item-expand-button') as Element);
+    fireEvent.click(
+      container.querySelector('.entry-item-expand-button') as Element
+    );
 
     expect(container.querySelector('.entry-item')).not.toHaveClass(
       'entry-item_collapsed'
@@ -156,8 +157,8 @@ describe('EntryItem', () => {
       />
     );
 
-    expect(
-      container.querySelectorAll('.entry-item-info__item')
-    ).toHaveLength(2);
+    expect(container.querySelectorAll('.entry-item-info__item')).toHaveLength(
+      2
+    );
   });
 });

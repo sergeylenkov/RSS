@@ -1,4 +1,10 @@
-import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { SettingsPopup } from './SettingsPopup';
 import { SettingsButton } from './SettingsButton';

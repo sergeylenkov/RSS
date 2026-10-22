@@ -22,7 +22,9 @@ describe('SettingsPopup', () => {
   test('toggles theme checkbox on click', () => {
     renderWithProviders(<SettingsPopup />);
 
-    const themeCheckbox = screen.getByLabelText('Темная тема') as HTMLInputElement;
+    const themeCheckbox = screen.getByLabelText(
+      'Темная тема'
+    ) as HTMLInputElement;
     const initial = themeCheckbox.checked;
 
     fireEvent.click(themeCheckbox);

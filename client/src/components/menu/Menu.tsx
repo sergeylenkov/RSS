@@ -29,7 +29,7 @@ export function Menu(): React.JSX.Element {
   const unviewedCount = useSelector<State, number>(
     (state) => state.unviewedCount
   );
-    const entriesCount = useSelector<State, number>(
+  const entriesCount = useSelector<State, number>(
     (state) => state.allEntriesCount
   );
   const readEntriesCount = useSelector<State, number>(
@@ -66,7 +66,7 @@ export function Menu(): React.JSX.Element {
         onUpdate={onUpdate}
         onClick={() => navigate('/')}
       />
-            <MenuButton
+      <MenuButton
         title={'Все'}
         isSelected={pathname === '/all'}
         count={entriesCount}

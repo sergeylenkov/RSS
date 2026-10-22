@@ -63,7 +63,9 @@ describe('FeedEdit', () => {
     expect(screen.getByPlaceholderText('ссылка на канал')).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole('button')[1]);
-    expect(screen.queryByPlaceholderText('ссылка на канал')).not.toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText('ссылка на канал')
+    ).not.toBeInTheDocument();
   });
 
   test('adds disabled and scrolled modifiers', () => {

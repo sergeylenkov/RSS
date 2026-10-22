@@ -61,8 +61,7 @@ interface ToggleThemeAction extends Action<ActionTypes.TOGGLE_THEME> {
   isDarkTheme: boolean;
 }
 
-interface ToggleCollapseLongAction
-  extends Action<ActionTypes.TOGGLE_COLLAPSE_LONG> {
+interface ToggleCollapseLongAction extends Action<ActionTypes.TOGGLE_COLLAPSE_LONG> {
   isCollapse: boolean;
 }
 

@@ -27,7 +27,10 @@ export function renderWithProviders(
   const testStore =
     store ||
     createStore(
-      rootReducer as unknown as (state: State | undefined, action: unknown) => State,
+      rootReducer as unknown as (
+        state: State | undefined,
+        action: unknown
+      ) => State,
       // `preloadedState` is only a set of overrides: merging it with
       // `initialState` keeps every other field defined.
       { ...initialState, ...preloadedState } as State
