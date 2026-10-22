@@ -11,6 +11,13 @@ module.exports = {
     'shorthand-property-no-redundant-values': null,
     'order/properties-order': [],
     'order/properties-alphabetical-order': null,
+    /*
+     * Stylelint misparses concatenated BEM `&` selectors: for a nested rule
+     * inside `&__edit_button`, it resolves `&` to the bare `__edit_button`
+     * fragment and parses it as a type selector, then falsely reports it as
+     * a qualifying type. Allow class qualifiers so these rules stay valid.
+     */
+    'selector-no-qualifying-type': [true, { ignore: ['class'] }],
     'plugin/rational-order': [
       true,
       {
@@ -20,3 +27,4 @@ module.exports = {
     ],
   },
 };
+
