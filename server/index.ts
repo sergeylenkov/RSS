@@ -34,7 +34,7 @@ if (require.main === module) {
   app.listen(settings.port);
 
   log('App is listening on port ' + settings.port);
-  log('App settings: ', settings);
+  log(`App settings: port=${settings.port}, db=${settings.db}, debug=${settings.debug} `);
 }
 
 export default app;

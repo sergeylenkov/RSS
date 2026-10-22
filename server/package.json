@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsx index.ts --p=9000 --db=db/database.sqlite",
-    "debug": "nodemon --exec tsx index.ts --p=9000 --debug --db=db/database.sqlite",
+    "start": "cross-env RSS_PORT=9000 RSS_DB=db/database.sqlite tsx index.ts",
+    "debug": "cross-env RSS_PORT=9000 RSS_DB=db/database.sqlite RSS_DEBUG=1 nodemon --exec tsx index.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.test.json",
     "test": "mocha --require tsx test/api.ts"
@@ -26,6 +26,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^26.6.5",
     "@types/supertest": "^7.2.1",
+    "cross-env": "^7.0.3",
     "minimist": "^1.2.5",
     "mocha": "^10.2.0",
     "supertest": "^3.0.0",
@@ -37,3 +38,4 @@
     "esbuild@0.28.2": true
   }
 }
+
