@@ -9,7 +9,10 @@ interface Settings {
 }
 
 function arg(value: unknown): string | undefined {
-  return typeof value === 'string' ? value : undefined;
+  // minimist turns `--p=9000` into a number, so numbers are accepted as well.
+  return typeof value === 'string' || typeof value === 'number'
+    ? String(value)
+    : undefined;
 }
 
 /**

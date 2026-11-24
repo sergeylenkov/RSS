@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=20.17.0"
+  },
   "scripts": {
     "start": "cross-env RSS_PORT=9000 RSS_DB=db/database.sqlite tsx index.ts",
     "debug": "cross-env RSS_PORT=9000 RSS_DB=db/database.sqlite RSS_DEBUG=1 nodemon --exec tsx index.ts",
