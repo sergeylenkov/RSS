@@ -10,7 +10,7 @@
     "react": "^19.1.10",
     "react-dom": "^19.1.10",
     "react-redux": "^9.3.0",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.30.6",
     "react-transition-group": "^4.4.5",
     "redux": "^5.0.1"
   },
