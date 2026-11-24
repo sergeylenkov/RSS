@@ -6,6 +6,7 @@ import {
   Entry,
   Feed,
   FeedPatch,
+  IconData,
   ParsedEntry,
   PatchResult,
 } from '../types/models';
@@ -15,6 +16,9 @@ const SELECT_FEEDS = `SELECT f.*, COUNT(e.id) as total
   LEFT JOIN entries e ON e.feed_id = f.id
   WHERE f.deleted = 0
   GROUP BY f.id`;
+
+const ICON_TIMEOUT_MS = 10_000;
+const ICON_MAX_BYTES = 5 * 1024 * 1024;
 
 function convertRowFeed(row: FeedRow): Feed {
   return {
@@ -55,6 +59,64 @@ export async function getAll(): Promise<Feed[]> {
   log('Get all feeds', items);
 
   return items;
+}
+
+/**
+ * Downloads a feed icon on the client's behalf. Browsers block cross-origin
+ * `fetch` calls to servers without CORS headers (most icon hosts), so the
+ * client asks the API for the bytes instead.
+ */
+export async function getIcon(url: string): Promise<IconData> {
+  let target: URL;
+
+  try {
+    target = new URL(url);
+  } catch {
+    throw { message: 'Invalid icon URL' };
+  }
+
+  if (target.protocol !== 'http:' && target.protocol !== 'https:') {
+    throw { message: 'Only http(s) icon URLs are supported' };
+  }
+
+  const response = await fetch(target, {
+    redirect: 'follow',
+    signal: AbortSignal.timeout(ICON_TIMEOUT_MS),
+  });
+
+  if (!response.ok) {
+    throw { message: `Icon request failed with status ${response.status}` };
+  }
+
+  const contentType = (response.headers.get('content-type') ?? '').toLowerCase();
+
+  // A misconfigured icon URL often returns an HTML error page; refusing it here
+  // keeps the client from caching that page as an image.
+  if (
+    contentType !== '' &&
+    !contentType.startsWith('image/') &&
+    !contentType.startsWith('application/octet-stream')
+  ) {
+    throw { message: 'The URL does not point to an image' };
+  }
+
+  const declaredLength = Number(response.headers.get('content-length') ?? 0);
+
+  if (declaredLength > ICON_MAX_BYTES) {
+    throw { message: 'The icon is too large' };
+  }
+
+  const data = Buffer.from(await response.arrayBuffer());
+
+  if (data.length === 0) {
+    throw { message: 'The icon is empty' };
+  }
+
+  if (data.length > ICON_MAX_BYTES) {
+    throw { message: 'The icon is too large' };
+  }
+
+  return { data, contentType: contentType || 'application/octet-stream' };
 }
 
 export async function update(): Promise<Entry[]> {

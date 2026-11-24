@@ -82,3 +82,9 @@ export interface ClearResult {
   days: number;
   removed: number;
 }
+
+/** An image downloaded by the server on behalf of the client. */
+export interface IconData {
+  data: Buffer;
+  contentType: string;
+}

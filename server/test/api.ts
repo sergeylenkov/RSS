@@ -427,3 +427,48 @@ describe('GET /feeds/update', () => {
     assert.strictEqual(rows[0]?.image, '', 'missing image becomes empty');
   });
 });
+
+describe('GET /feeds/icon', () => {
+  const originalFetch = globalThis.fetch;
+  const icon = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  it('returns a remote image through the API', async () => {
+    globalThis.fetch = (async () =>
+      new Response(icon, {
+        headers: { 'Content-Type': 'image/png' },
+      })) as typeof fetch;
+
+    const res = await request(app)
+      .get('/feeds/icon')
+      .query({
+        url: 'https://bureau.ru/soviet/announcement/files/fav-neo-32.png',
+      })
+      .expect(200);
+
+    assert.strictEqual(res.headers['content-type'], 'image/png');
+    assert.deepStrictEqual(Buffer.from(res.body), icon);
+  });
+
+  it('rejects URLs that are not http(s)', async () => {
+    await request(app)
+      .get('/feeds/icon')
+      .query({ url: 'file:///etc/passwd' })
+      .expect(500);
+  });
+
+  it('rejects responses that are not images', async () => {
+    globalThis.fetch = (async () =>
+      new Response('<html></html>', {
+        headers: { 'Content-Type': 'text/html' },
+      })) as typeof fetch;
+
+    await request(app)
+      .get('/feeds/icon')
+      .query({ url: 'https://example.com' })
+      .expect(500);
+  });
+});

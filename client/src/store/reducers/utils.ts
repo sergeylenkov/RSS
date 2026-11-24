@@ -1,4 +1,5 @@
 import { Entry, Feed } from '../../data';
+import { config } from '../../constants';
 import { State } from './index';
 
 /**
@@ -30,10 +31,14 @@ export function updateFeeds(state: State, feeds: Feed[]): State {
 
     feed.icon = localStorage.getItem(iconId) || feed.iconUrl;
 
-    if (!localStorage.getItem(iconId)) {
-      toDataURL(feed.iconUrl).then((data) => {
-        localStorage.setItem(iconId, data);
-      });
+    if (!localStorage.getItem(iconId) && feed.iconUrl) {
+      toDataURL(feed.iconUrl)
+        .then((data) => {
+          localStorage.setItem(iconId, data);
+        })
+        .catch(() => {
+          // Caching is optional: the icon still loads from `iconUrl`.
+        });
     }
   });
 
@@ -245,9 +250,19 @@ function countEntries(entries: Entry[]): {
 }
 
 function toDataURL(url: string): Promise<string> {
+  // Remote hosts rarely send CORS headers, so the image is downloaded through
+  // the API — the browser then only talks to our own origin.
+  const source = `${config.urls.api}feeds/icon?url=${encodeURIComponent(url)}`;
+
   return new Promise((resolve, reject) => {
-    fetch(url)
-      .then((response) => response.blob())
+    fetch(source)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Icon request failed with status ${response.status}`);
+        }
+
+        return response.blob();
+      })
       .then((blob) => {
         const reader = new FileReader();
 
